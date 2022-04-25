@@ -8,16 +8,16 @@ The `teesy_backend` folder contains the code that needs to be uploaded to the Te
 
 ## To Build the Software
 
-#Frontend
+# Frontend
 
 The frontend runs using the 'dear imgui' (https://github.com/ocornut/imgui) c++ interface with opengl3.
 
 Installations of this package is required. Many tutorials exist and I point you to those.
 
-#Backned
+# Backned
 
 This code is compiled using platformio plugin on visual studio code. However direct upload is also possible.
 
 
-###To-Do:
+### To-Do:
 - Input interfaces
