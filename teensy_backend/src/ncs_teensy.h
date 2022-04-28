@@ -1,3 +1,5 @@
+#include "teensy_interface.h"
+
 //SPAIC chip values. Other chips need to change these values
 //DAC configs for SPIAC
 const int dac_rst = 33; // DAC reset on Teensy pin 33
@@ -10,6 +12,7 @@ const int a0 = 30;      // DAC address A0 on Teeensy pin 30
 //const int a0 = 37;      // DAC address A0 on Teeensy pin 30
 
 //SPI configs
+bool BIAS_GEN = true;
 bool SPI1_ON= true;
 bool SPI2_ON= true;
 
@@ -17,7 +20,7 @@ bool SPI2_ON= true;
 const int slaveSelectPin_SPI_BGEN = 10;
 const int BGRST = 9;
 const int BGMOSI = 11;
-const int BGSCK = 13  ;
+const int BGSCK = 13;
 
 //SPI1
 const int slaveSelectPin_SPI1_CRST = 0 ;
@@ -41,10 +44,11 @@ int aero_data[aero_num_data_pins] = {9, 8, 7};
 constexpr int aer_delays = 0; // Delay in microseconds after toggling aer handshake output pins
 
 // buffers
-constexpr int rx_buf_size = 1024;
+P2TPkt rx_buf;
+
 constexpr int tx_buf_size = 1024;
-constexpr int ac_buf_size = 511;
 uint8_t tx_buf[tx_buf_size];
-uint8_t rx_buf[rx_buf_size];
 uint8_t aero_buf[tx_buf_size - 2];
+
+uint8_t msg_buf[0];
 

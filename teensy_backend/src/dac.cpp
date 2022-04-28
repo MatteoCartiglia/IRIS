@@ -1,6 +1,8 @@
 #include "dac.h"
 #include <Wire.h>
 
+
+
 DAC::DAC(const int dac_rst, const int a0, const int a1) {
   _dac_rst = dac_rst;
   _a0 =  a0;
@@ -28,17 +30,24 @@ void DAC::setup_dacs(){
   Serial.println("Setup DAC complete ");
 }
 
-void DAC::write_dacs(int a, int b, int c){
-
-  Wire2.beginTransmission(12);                 
-  Wire2.write(a);             
-  Wire2.write(b);           
-  Wire2.write(c);          
-  Wire2.endTransmission(); 
-  delay(100);
+void DAC::write_dacs(uint8_t command_addess, int value){
+    uint8_t a = command_addess; 
+    uint8_t b = (value >> 8); 
+    uint8_t c = value;
+    Wire2.beginTransmission(12);                 
+    Wire2.write(a);             
+    Wire2.write(b);           
+    Wire2.write(c);          
+    Wire2.endTransmission(); 
+    delay(100);
 }
 
 void DAC::turn_reference_off(){
 // turn off internal reference Voltage                            
-    write_dacs(0x70, 0x00, 0x01); 
+    Wire2.beginTransmission(12);                 
+    Wire2.write(0x70);             
+    Wire2.write(0x00);           
+    Wire2.write(0x01);          
+    Wire2.endTransmission(); 
+    delay(100);
 }

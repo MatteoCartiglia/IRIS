@@ -12,7 +12,7 @@ class DAC {
 
     void setup_dacs();
     bool reset_dacs();
-    void write_dacs(int a, int b, int c);
+    void write_dacs(uint8_t address, int value);
     void turn_reference_off();
 
 

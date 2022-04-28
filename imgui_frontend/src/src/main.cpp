@@ -143,6 +143,7 @@ int main(int, char**)
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
+
         //Dac config window
         if (show_dac_config)
         {   
@@ -198,7 +199,7 @@ int main(int, char**)
                 *&bg_upload[i] =  ImGui::Button(b_label);
                 if (*&bg_upload[i]){
                         std::stringstream ssp, ssp1, ssp2, ssp3;
-                        std::string BGE_port = "BGE_";
+                        std::string BGE_port = "b__";
                         ssp3 << std::setw(2) << std::setfill('0') << i;
                         BGE_port += ssp3.str();
                         ssp << std::setw(1) << std::setfill('0') << bg_course[i];
@@ -235,7 +236,7 @@ int main(int, char**)
         if (SPI_upload){
 
             std::stringstream ssp, ssp1, ssp2;
-            std::string SPI_port = "SPI_";
+            std::string SPI_port = "s";
             ssp << std::setw(1) << std::setfill('0') << SPInumber;
             SPI_port += ssp.str();
             ssp1 << std::setw(3) << std::setfill('0') << SPIaddess;
@@ -261,7 +262,7 @@ int main(int, char**)
             for(int i=0; i<13; i++){
                 std::this_thread::sleep_for(std::chrono::microseconds(10));
                 std::stringstream ss, ss1;
-                std::string DAC_port = "DAC_";
+                std::string DAC_port = "d";
                 printf("\n DAC number: %02d with value : %04d \n", i,DACvalue[i]);
                 ss << std::setw(2) << std::setfill('0') << i;
                 DAC_port += ss.str();;
