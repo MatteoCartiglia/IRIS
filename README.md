@@ -18,7 +18,7 @@ However if you need to debug I recommend to install and run the gitlab repo. Man
 
 Compiler: c++11
 
-### Backned
+### Backend
 
 This code is compiled using platformIO plugin on visual studio code. However direct upload is also possible.
 
