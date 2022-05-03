@@ -1,3 +1,6 @@
+#ifndef NCS_TEENSY_H
+#define NCS_TEENSY_H
+
 #include "teensy_interface.h"
 
 //SPAIC chip values. Other chips need to change these values
@@ -50,5 +53,9 @@ constexpr int tx_buf_size = 1024;
 uint8_t tx_buf[tx_buf_size];
 uint8_t aero_buf[tx_buf_size - 2];
 
-uint8_t msg_buf[0];
+uint8_t msg_buf[1];
+
+
+#endif 
+
 

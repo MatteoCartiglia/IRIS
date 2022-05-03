@@ -68,7 +68,7 @@ void loop() {
                 break;
                     } 
             case  P2tPktType::P2tRequestAerOutput: { // aer
-                AER_out(rx_buf);
+              //  AER_out(rx_buf);
                 Serial.print("aer");
                 Serial.print("\n");
                 break;

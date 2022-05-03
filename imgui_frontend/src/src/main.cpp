@@ -2,6 +2,8 @@
 #include "teensy.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "../../../teensy_backend/src/teensy_interface.h"
+
 
 #include <stdio.h>
 #include <stack>         
@@ -31,7 +33,7 @@ char port_name[100] = "/dev/cu.usbmodem105688601";
 char biasgen_por_file[100] = "biasgen_por.csv";
 bool show_bg_spi_config =true;
 bool show_dac_config = true;
-bool show_spi_config =true;
+bool show_spi_config =false;
 
 // Biasgen defined masks
 #define bias_type 0x0001
@@ -41,7 +43,7 @@ bool show_spi_config =true;
 // Header of helper fuction. Definition at eof
 char port_opened[100] = "Serial port opened\n";
 std::vector<int> readbias_file(const std::string& path);
-static double course_current[6]= {60*pow(10, -6), 460*pow(10, -6), 3.8*pow(10, -3), 30*pow(10, -3), 240*pow(10, -3), 1.9*pow(10, 0)};
+static double course_current[6]= {60*pow(10, -6), 460*pow(10, -6), 3.8*pow(10, -3), 30*pow(10, -3), 240*pow(10, -3), 1.9*pow(10, 0)}; //uA
 static void glfw_error_callback(int error, const char* description);
 
 int main(int, char**)
@@ -120,7 +122,7 @@ int main(int, char**)
         
 
     // Dac controls
-    int DACvalue [13] = {};
+    std::uint16_t DACvalue [13] = {};
     bool DAC_upload=false;
 
     SPI_event last_SPI_command = {};
@@ -198,6 +200,7 @@ int main(int, char**)
                 ImGui::SameLine();
                 *&bg_upload[i] =  ImGui::Button(b_label);
                 if (*&bg_upload[i]){
+
                         std::stringstream ssp, ssp1, ssp2, ssp3;
                         std::string BGE_port = "b__";
                         ssp3 << std::setw(2) << std::setfill('0') << i;
@@ -260,17 +263,14 @@ int main(int, char**)
         if (DAC_upload){
           
             for(int i=0; i<13; i++){
-                std::this_thread::sleep_for(std::chrono::microseconds(10));
-                std::stringstream ss, ss1;
-                std::string DAC_port = "d";
-                printf("\n DAC number: %02d with value : %04d \n", i,DACvalue[i]);
-                ss << std::setw(2) << std::setfill('0') << i;
-                DAC_port += ss.str();;
-                ss1 << std::setw(4) << std::setfill('0') << DACvalue[i];
-                DAC_port += ss1.str();
-                const char *dac_label = DAC_port.c_str();
-                printf(dac_label);
-                write(serial_port, dac_label, sizeof(dac_label));
+
+                DAC_command dac;
+                dac.dac_number = 0;
+                dac.command_address = 3 << 4 | i ;
+                dac.data = DACvalue[i];
+                P2TPkt communication(dac); 
+                write(serial_port, communication, sizeof(communication));
+
             }
             DAC_upload = false;
         }
