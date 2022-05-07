@@ -16,7 +16,8 @@ enum class P2tPktType { // keep Compatible with PLANE+COACH
     P2tRequestAerOutput   = 11U << PKT_HDR_PKT_TYPE_SHIFT,
     P2tSendEvents         = 14U << PKT_HDR_PKT_TYPE_SHIFT,
     P2tGetTeensySN        = 15U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSetSPI             = 16U << PKT_HDR_PKT_TYPE_SHIFT,
+    P2tSetBiasGen         = 16U << PKT_HDR_PKT_TYPE_SHIFT,
+    P2tSetSPI             = 17U << PKT_HDR_PKT_TYPE_SHIFT,
 
 };
 
@@ -48,13 +49,17 @@ struct P2TPkt {
     P2TPkt(const SPI_command& sp) : header((std::uint8_t)P2tPktType::P2tSetSPI) {
         body[0] = sp.spi_number; 
         body[1] = sp.address; 
-        body[2] = sp.value; 
+        body[2] = sp.value >> 8; 
+        body[3] = sp.value & 0xFF;
+
         };
-    P2TPkt(const AER_out& sp) : header((std::uint8_t)P2tPktType::P2tRequestAerOutput) {
-        body[0] = sp.address; 
-        body[1] = sp.ts_1ms >> 8 ; 
-        body[2] = sp.ts_1ms && 0xFF; 
+    P2TPkt(const BIASGEN_command& bg) : header((std::uint8_t)P2tPktType::P2tSetBiasGen) {
+        body[0] = bg.address; 
+        body[1] = bg.course_val; 
+        body[2] = bg.fine_val; 
+        body[3] = bg.transistor_type; 
         };
+
     std::uint8_t header; // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
 }__attribute__ ((packed));
@@ -67,16 +72,28 @@ struct DAC_command
 
     uint8_t dac_number;
     uint8_t command_address; 
-    uint16_t data;
+    std::uint16_t data;
 }__attribute__ ((packed));
 
 struct SPI_command{
     SPI_command();
-    SPI_command ( const P2TPkt& pkt) : spi_number(pkt.body[0]), address(pkt.body[1]), value(pkt.body[2]) {};
+    SPI_command ( const P2TPkt& pkt) : spi_number(pkt.body[0]), address(pkt.body[1]),  value( pkt.body[2] << 8 | pkt.body[3] ) {};
 
     uint8_t spi_number;
     uint8_t address;
-    uint8_t value;
+    uint16_t value;
+}__attribute__ ((packed));
+
+struct BIASGEN_command{ 
+    BIASGEN_command();
+    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0]), course_val(pkt.body[1]),  fine_val( pkt.body[2]),transistor_type(pkt.body[3]) {};
+
+    uint8_t address;
+
+    uint8_t course_val;
+    uint8_t fine_val;
+    uint8_t transistor_type;
+
 }__attribute__ ((packed));
 
 struct AER_in_command{

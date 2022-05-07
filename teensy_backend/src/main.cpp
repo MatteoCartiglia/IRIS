@@ -9,8 +9,9 @@
 void spi_controller(SPIClass SPI, int cs, int address, int value);
 void SPI_events(int spi_number, int address, int value);
 void spi_setup(int clk, int cs, int mosi );
-void sendStatus(TeensyMessage msg);
+void sendStatus(TeensyStatus msg);
 void aeroISR();
+
 DAC dac{dac_rst,
     a0, 
     a1
@@ -23,6 +24,7 @@ AER_in aero(aero_req,
             aero_num_data_pins,
             aero_buf,
             aer_delays,
+            
             10,
             false);
 
@@ -47,24 +49,29 @@ void loop() {
 
             case P2tPktType::P2tReset: { // reset
                 Serial.println("Reset recieved");
-                sendStatus(TeensyMessage::Success);
+                sendStatus(TeensyStatus::Success);
                     break;
                     }
-            case P2tPktType::P2tSetSPI: { // BIASGEN +SPIs
+            case P2tPktType::P2tSetBiasGen: { // SPIs
+                Serial.print("Biasgen command recieved \n");
+                BIASGEN_command BG ( *const_cast<const P2TPkt*> (&rx_buf));
+                    break;
+                    }       
+            case P2tPktType::P2tSetSPI: { // SPIs
                 Serial.print("SPI command recieved \n");
                 SPI_command SPI ( *const_cast<const P2TPkt*> (&rx_buf));
                 SPI_events(SPI.spi_number , SPI.address, SPI.value);
-
-                   // int value = (pkt_data[0] << 8) | pkt_data[1];
-                   // int channel = pkt_data[2];
 
                     break;
                     } 
             case P2tPktType::P2tSetDcVoltage : { // DAC
 
                 Serial.print("DAC command recived \n");
-                DAC_command DAC( rx_buf);
+                DAC_command DAC( *const_cast<const P2TPkt*> (&rx_buf));
                 dac.write_dacs(DAC.command_address, DAC.data); 
+
+                sendStatus(TeensyStatus::Success);
+
                 break;
                     } 
             case  P2tPktType::P2tRequestAerOutput: { // aer
@@ -82,7 +89,9 @@ void loop() {
                 } 
            } 
         }
-}
+} 
+//interrupt handler run all the time and through out or put into buffer (flag if full) main loop empties this buffer
+// sending events to the chip: number 1 without isi number two with buffer and timer interupt 
 
 
 void SPI_events(int spi_number, int address, int value)
