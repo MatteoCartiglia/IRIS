@@ -4,6 +4,8 @@
 #include "imgui_impl_opengl3.h"
 #include "../../../teensy_backend/src/teensy_interface.h"
 
+#include "implot.h"
+#include "implot_internal.h"
 
 #include <stdio.h>
 #include <stack>         
@@ -102,6 +104,8 @@ int main(int, char**)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
+
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui::StyleColorsDark();
     // Setup Platform/Renderer backends
@@ -128,9 +132,12 @@ int main(int, char**)
 
     // Dac controls
     DAC_command  *dac[MAX_DAC_CHANNEL];
+    //int DACvalue [12] = {};
+
+
     for (int i=0; i<MAX_DAC_CHANNEL; i++) {
 
-        dac[i]->dac_number = (uint16_t) 0;
+        dac[i]->dac_number = (uint8_t) 0;
         dac[i]->data = (uint16_t) 0;
         dac[i]->command_address = DAC_COMMAND << DAC_COMMAND_SHIFT | i ;
         }
@@ -157,6 +164,9 @@ int main(int, char**)
 
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
+            ImPlot::ShowDemoWindow();
+
+
 
 
         //Dac config window
@@ -164,6 +174,21 @@ int main(int, char**)
         {   
             ImGui::Begin("DAC configuration",&show_dac_config);      
             ImGui::Text("DAC configuration (mV)");      
+
+            /* ImGui::SliderInt("DAC 0 value: ",&DACvalue[0], 0,1800);
+            ImGui::SliderInt("DAC 1 value: ", &DACvalue[1],0,1800);
+            ImGui::SliderInt("DAC 2 value: ", &DACvalue[2],0,1800);
+            ImGui::SliderInt("DAC 3 value: ", &DACvalue[3],0,1800);
+            ImGui::SliderInt("DAC 4 value: ", &DACvalue[4],0,1800);
+            ImGui::SliderInt("DAC 5 value: ", &DACvalue[5],0,1800);
+            ImGui::SliderInt("DAC 6 value: ", &DACvalue[6],0,1800);
+            ImGui::SliderInt("DAC 7 value: ", &DACvalue[7],0,1800);
+            ImGui::SliderInt("DAC 8 value: ", &DACvalue[8],0,1800);
+            ImGui::SliderInt("DAC 9 value: ", &DACvalue[9],0,1800);
+            ImGui::SliderInt("DAC 10 value: ",&DACvalue[10],0,1800);
+            ImGui::SliderInt("DAC 11 value: ", &DACvalue[11],0,1800);
+            ImGui::SliderInt("DAC 12 value: ", &DACvalue[12],0,1800);*/
+
             ImGui::SliderInt("DAC 0 value: ", (int *) dac[0]->data, 0,1800);
             ImGui::SliderInt("DAC 1 value: ", (int *)dac[1]->data,0,1800);
             ImGui::SliderInt("DAC 2 value: ",(int *) dac[2]->data,0,1800);
@@ -175,7 +200,7 @@ int main(int, char**)
             ImGui::SliderInt("DAC 8 value: ",(int *) dac[8]->data,0,1800);
             ImGui::SliderInt("DAC 9 value: ", (int *)dac[9]->data,0,1800);
             ImGui::SliderInt("DAC 10 value: ",(int *) dac[10]->data,0,1800);
-            ImGui::SliderInt("DAC 11 value: ",(int *) dac[11]->data,0,1800);
+            ImGui::SliderInt("DAC 11 value: ",(int *) dac[11]->data,0,1800); 
             ImGui::Checkbox("Upload", &DAC_upload);
             ImGui::End();
         }
@@ -217,8 +242,8 @@ int main(int, char**)
                     P2TPkt p2t_pkt(*bg[i]); 
                     write(serial_port, p2t_pkt, sizeof(p2t_pkt));
                     int retval = read(serial_port, read_buf, sizeof(read_buf));
-                    catch_retval (retval, read_buf);
-                    &bg_upload[i] = false;
+                 //   catch_retval (retval, read_buf);
+                    bg_upload[i] = false;
                         }
                 }
             ImGui::End();
@@ -245,7 +270,7 @@ int main(int, char**)
             P2TPkt p2t_pkt(*spi); 
             write(serial_port, p2t_pkt, sizeof(p2t_pkt));
             int retval = read(serial_port, read_buf, sizeof(read_buf));
-            catch_retval (retval, read_buf);
+         //   catch_retval (retval, read_buf);
             SPI_upload = false;
             }
         
@@ -257,10 +282,21 @@ int main(int, char**)
           
             for(u_int8_t i=0; i<MAX_DAC_CHANNEL; i++){
 
+                //DAC_command dac_com;
+                //dac_com = *dac[i];
                 P2TPkt p2t_pkt(*dac[i]); 
                 write(serial_port, p2t_pkt, sizeof(p2t_pkt));
-                int retval = read(serial_port, read_buf, sizeof(read_buf)); // in while loop?
-                catch_retval (retval, read_buf);
+                int retval = read(serial_port, read_buf, sizeof(read_buf)); // in while loop? 
+
+               /* DAC_command dac;
+                dac.dac_number = 0;
+                dac.command_address = 3 << 4 | i ;
+                dac.data = DACvalue[i];
+                P2TPkt communication(dac); 
+                write(serial_port, &communication, sizeof(communication));*/
+
+
+               // catch_retval (retval, read_buf);
             }
             DAC_upload = false;
         }
@@ -279,6 +315,8 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+    ImPlot::DestroyContext();
+
 
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -302,8 +340,6 @@ std::vector<int> readbias_file(const std::string& path) {
     }
     return biases;
 }
-
-
 
 static void glfw_error_callback(int error, const char* description)
 {
