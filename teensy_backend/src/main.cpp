@@ -159,6 +159,10 @@ void loop() {
                 Serial.print(BG.fine_val);
                 Serial.print(BG.address);
                 Serial.print("\n");
+                int bg_val = ( BG.course_val <<9 & BG.fine_val << 1  & BG.transistor_type);
+                SPI_events(0,bg_val ,BG.address);
+                Serial.print("Biasgen command done  \n");
+
               //  sendStatus(TeensyStatus::Success);
                 break;
             }
