@@ -1,6 +1,7 @@
 #include "aer_in.h"
+#include "teensy_interface.h"
 
-AER_in::AER_in(const int reqPin, const int ackPin, int dataPins[], int numDataPins, byte buff[], int d, int timestampShift, bool activeLow) {
+AER_in::AER_in(const int reqPin, const int ackPin, int dataPins[], int numDataPins, AER_out buff[], int d, int timestampShift, bool activeLow) {
   _numDataPins = numDataPins;
   _reqPin =  reqPin;
   _ackPin = ackPin;
@@ -65,29 +66,19 @@ unsigned int AER_in::record_event_handshake()
 }
 
 unsigned int AER_in::record_event() {
-  unsigned int x = dataRead();
+  unsigned int address = dataRead();
   unsigned int timestamp = (micros() - _t0) >> _timestampShift;
-
-  _buff[_index++] = ((x<<5) & 0xE0) | ((timestamp>>8) & 0x1F);
-  _buff[_index++] =  timestamp & 0xFF;
-
-  return x;
-}
-
-void AER_in::record_event_manual(unsigned int x) {
-  unsigned int timestamp = (micros() - _t0) >> _timestampShift;
-
-  _buff[_index++] = ((x<<5) & 0xE0) | ((timestamp >> 8) & 0x1F);
-  _buff[_index++] =  timestamp & 0xFF;
+  _buff[_index++] = makeAerO(address, timestamp);
+  return address;
 }
 
 
+void AER_in::record_event_manual(unsigned int address) {
+  unsigned int timestamp_1 = (micros() - _t0) >> _timestampShift;
 
-void AER_in::send_packet() {
-  set_t0(micros() >> _timestampShift & 0xFFFF);
-  usb_serial_write(_buff, _index);
-  set_index(0);
+  _buff[_index++] = makeAerO(address, timestamp_1);
 }
+
 
 void AER_in::set_index(int x) {
   _index = x;

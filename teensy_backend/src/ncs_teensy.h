@@ -40,6 +40,8 @@ constexpr int prst = 9; //expander
 constexpr int srst = 8; //expander
 
 //AER PINS
+bool AER_ON = true;
+
 constexpr int aero_ack = 4;
 constexpr int aero_req = 5;
 constexpr int aero_num_data_pins = 3;
@@ -47,13 +49,9 @@ int aero_data[aero_num_data_pins] = {9, 8, 7};
 constexpr int aer_delays = 0; // Delay in microseconds after toggling aer handshake output pins
 
 // buffers
-P2TPkt rx_buf;
 
-constexpr int tx_buf_size = 1024;
-uint8_t tx_buf[tx_buf_size];
-uint8_t aero_buf[tx_buf_size - 2];
+constexpr int aero_buf_size = 1024;
 
-uint8_t msg_buf[1];
 
 
 #endif 
