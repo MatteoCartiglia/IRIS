@@ -4,6 +4,8 @@
 #include "dac.h"
 #include "aer_in.h"
 #include "teensy_interface.h"
+#include <Wire.h>
+
 
 static P2TPkt rx_buf;
 static bool aero_flag;
@@ -113,8 +115,6 @@ static void aeroISR()
 }
 
 
-
-
 // TEENSY 2 PC USB message
 void sendStatus(TeensyStatus msg) {
   msg_buf[0] = (uint8_t) msg;
@@ -122,18 +122,19 @@ void sendStatus(TeensyStatus msg) {
 } // Success is 0
 
 
-
-
-
-
 void setup() {
-    dac.setup_dacs();
+
     if (BIAS_GEN) spi_setup(BGSCK , slaveSelectPin_SPI_BGEN , BGMOSI);
     if (SPI1_ON) spi_setup(CSCK , slaveSelectPin_SPI1_CRST , CMOSI);
     if (SPI2_ON) spi_setup(VSCK , slaveSelectPin_SPI2_VRST , VMOSI);
     
     aero_flag = false;
     attachInterrupt(digitalPinToInterrupt(aero_req), aeroISR, CHANGE);
+
+    dac.setup_dacs();
+    dac.join_i2c_bus();
+    dac.turn_reference_off();
+    Serial.print("SETUP COMPLETE!");
 
     }
 
@@ -144,55 +145,57 @@ void loop() {
 
         switch ((P2tPktType)rx_buf.header) {
 
-            case P2tPktType::P2tReset: // reset
-                Serial.println("Reset recieved");
-                sendStatus(TeensyStatus::Success);
-                    break;
-                    
-            case P2tPktType::P2tSetBiasGen:  // BiasGen
+            case P2tPktType::P2tReset:{ // reset
+                Serial.print("Reset recieved");
+               // sendStatus(TeensyStatus::Success);
+                break;
+            }
+                
+               
+            case P2tPktType::P2tSetBiasGen:{  // BiasGen
                 Serial.print("Biasgen command recieved \n");
                 BIASGEN_command BG (rx_buf);
+                Serial.print(BG.course_val);
+                Serial.print(BG.fine_val);
+                Serial.print(BG.address);
+                Serial.print("\n");
+              //  sendStatus(TeensyStatus::Success);
+                break;
+            }
+            case P2tPktType::P2tSetDcVoltage :{  // DAC
+                DAC_command DAC( rx_buf);
+                dac.write_dacs(DAC.command_address, DAC.data); 
+                delay(100);
+                Serial.print("DAC command recived \n");
                 sendStatus(TeensyStatus::Success);
-
-                    break;
-                         
-            case P2tPktType::P2tSetSPI: // SPIs
+                break;   
+            }
+            case P2tPktType::P2tSetSPI: { // SPIs
                 Serial.print("SPI command recieved \n");
                 SPI_command SPI  (rx_buf);
                 SPI_events(SPI.spi_number , SPI.address, SPI.value);
-                sendStatus(TeensyStatus::Success);
+              //  sendStatus(TeensyStatus::Success);
                 break;
-                
-            case P2tPktType::P2tSetDcVoltage :  // DAC
-
-                Serial.print("DAC command recived \n");
-                DAC_command DAC( rx_buf);
-                dac.write_dacs(DAC.command_address, DAC.data); 
-                sendStatus(TeensyStatus::Success);
-
-                break;
-                    
-            case  P2tPktType::P2tRequestAerOutput:  // aer
+            }
+            case  P2tPktType::P2tRequestAerOutput: { // aer
   
                 aero.set_index(0);
                 aero.set_t0(micros());
                 since_blank_milli = 0;
                 aero_flag = true;
- 
                 break;
-                    
-            case P2tPktType::P2tGetTeensySN:  // SN
+            }
+            case P2tPktType::P2tGetTeensySN:{  // SN
                 break;       
-                 
+            } 
 
-            case P2tPktType::P2tSendEvents: // II     
+            case P2tPktType::P2tSendEvents:{ // II     
                 break;     
-                
+            }   
             default: 
                 sendStatus(TeensyStatus::UnknownCommand);
                 break;  
         } 
    }
     transmitAnyAerEvents();
-   
 } ;

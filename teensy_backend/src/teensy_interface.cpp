@@ -12,7 +12,6 @@ P2TPkt::P2TPkt(const SPI_command& sp) : header((std::uint8_t)P2tPktType::P2tSetS
     body[1] = sp.address; 
     body[2] = sp.value >> 8; 
     body[3] = sp.value & 0xFF;
-
     };
 P2TPkt::P2TPkt(const BIASGEN_command& bg) : header((std::uint8_t)P2tPktType::P2tSetBiasGen) {
     body[0] = bg.address; 

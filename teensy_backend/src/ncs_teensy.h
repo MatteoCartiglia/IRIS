@@ -5,14 +5,14 @@
 
 //SPAIC chip values. Other chips need to change these values
 //DAC configs for SPIAC
-const int dac_rst = 33; // DAC reset on Teensy pin 33
-const int a1 = 31;      // DAC address A1 on Teensy pin 31
-const int a0 = 30;      // DAC address A0 on Teeensy pin 30
+//const int dac_rst = 33; // DAC reset on Teensy pin 33
+//const int a1 = 31;      // DAC address A1 on Teensy pin 31
+//const int a0 = 30;      // DAC address A0 on Teeensy pin 30
 
 //DAC configs for ALIVE
-//const int dac_rst = 33; // DAC reset on Teensy pin 33
-//const int a1 = 36;      // DAC address A1 on Teensy pin 31
-//const int a0 = 37;      // DAC address A0 on Teeensy pin 30
+const int dac_rst = 33; // DAC reset on Teensy pin 33
+const int a1 = 36;      // DAC address A1 on Teensy pin 31
+const int a0 = 37;      // DAC address A0 on Teeensy pin 30
 
 //SPI configs
 bool BIAS_GEN = true;

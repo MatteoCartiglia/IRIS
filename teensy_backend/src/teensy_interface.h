@@ -21,13 +21,13 @@ enum class P2tPktType { // keep Compatible with PLANE+COACH
     P2tSendEvents         = 14U << PKT_HDR_PKT_TYPE_SHIFT,
     P2tGetTeensySN        = 15U << PKT_HDR_PKT_TYPE_SHIFT,
     P2tSetBiasGen         = 16U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSetSPI             = 17U << PKT_HDR_PKT_TYPE_SHIFT,
+    P2tSetSPI             = 4U << PKT_HDR_PKT_TYPE_SHIFT,
 
 };
 
 //readback message
 enum class TeensyStatus {
-    Success = 0,
+    Success = 10,
     HardResetFailed = 1,
     IncorrectCurrentSwitchRange = 2,
     CurrentCannotBeSet = 3,
