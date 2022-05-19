@@ -20,6 +20,8 @@ SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui/imgui.cpp $(IMGUI_DIR)/imgui/imgui_demo.cpp $(IMGUI_DIR)/imgui/imgui_draw.cpp $(IMGUI_DIR)/imgui/imgui_tables.cpp $(IMGUI_DIR)/imgui/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp 
 SOURCES += $(IMGUI_DIR)/imgui/implot.cpp $(IMGUI_DIR)/imgui/implot_items.cpp $(IMGUI_DIR)/imgui/implot_demo.cpp
+SOURCES += $(IMGUI_DIR)/../teensy_backend/src/teensy_interface.cpp
+
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
@@ -78,6 +80,12 @@ endif
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 %.o:$(IMGUI_DIR)/backends/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+%.o:$(IMGUI_DIR)/imgui/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+%.o:$(IMGUI_DIR)/../teensy_backend/src/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 all: $(EXE)
