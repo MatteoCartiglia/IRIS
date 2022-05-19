@@ -6,6 +6,7 @@
 
 #include "../../imgui/implot.h"
 #include "../../imgui/implot_internal.h"
+//#include "bias_control.cpp"
 
 #include <stdio.h>
 #include <stack>         
@@ -34,15 +35,21 @@
 uint8_t read_buf[1];
 //User defined inputs. 
 #define MAX_BG_CHANNELS 37
-#define MAX_DAC_CHANNEL 11
+#define MAX_DAC_CHANNEL 12
 #define DAC_COMMAND 3
 #define DAC_COMMAND_SHIFT 4
 
-char port_name[100] = "/dev/cu.usbmodem105688601";
+#define NUMBER_CHANNELS 9
+
+
+char port_name[100] = "/dev/cu.usbmodem105661701";
+//cu.usbmodem105661701
 char biasgen_por_file[100] = "biasgen_por.csv";
 bool show_bg_spi_config =true;
 bool show_dac_config = true;
 bool show_spi_config =true;
+bool show_aero =true;
+
 
 // Biasgen defined masks
 #define bias_type 0x0001
@@ -54,6 +61,10 @@ char port_opened[100] = "Serial port opened\n";
 std::vector<int> readbias_file(const std::string& path);
 static double course_current[6]= {60*pow(10, -6), 460*pow(10, -6), 3.8*pow(10, -3), 30*pow(10, -3), 240*pow(10, -3), 1.9*pow(10, 0)}; //uA
 static void glfw_error_callback(int error, const char* description);
+
+
+
+
 
 int main(int, char**)
 {
@@ -114,7 +125,7 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Our state
-    bool show_demo_window = false;
+    bool show_demo_window = true;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Bias Gen controls
@@ -145,17 +156,18 @@ int main(int, char**)
 
     // Dac controls
     DAC_command  dac[MAX_DAC_CHANNEL];
-    int DACvalue[MAX_DAC_CHANNEL]={};
+    int DACvalue[MAX_DAC_CHANNEL];
 
 
     for (int i=0; i<MAX_DAC_CHANNEL; i++) {
 
         dac[i].dac_number = (uint8_t) 0;
         dac[i].data = (uint16_t) 0;
+        DACvalue[i] = 500;
         dac[i].command_address = DAC_COMMAND << DAC_COMMAND_SHIFT | i ;
         }
         
-    bool DAC_upload=false;
+    bool DAC_upload[MAX_DAC_CHANNEL];
 
     // SPI controls
     int spi_number=0, spi_value=0, spi_address=0;
@@ -176,8 +188,7 @@ int main(int, char**)
 
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
-            ImPlot::ShowDemoWindow();
-
+            ImPlot::ShowDemoWindow(&show_demo_window);
 
 
 
@@ -186,19 +197,35 @@ int main(int, char**)
         {   
             ImGui::Begin("DAC configuration",&show_dac_config);      
             ImGui::Text("DAC configuration (mV)");      
+            for(int i=0; i<MAX_DAC_CHANNEL; i++){
+                std::string label = "##_";
+                label += std::to_string(i);         
+                const char *label_c = label.c_str();       
+                std::string labelb =label +  "but";
+                const char *label_b = labelb.c_str(); 
 
-            ImGui::SliderInt("DAC 0 value: ", &DACvalue[0], 0,1800);
-            ImGui::SliderInt("DAC 1 value: ", &DACvalue[1],0,1800);
-            ImGui::SliderInt("DAC 2 value: ", &DACvalue[2],0,1800);
-            ImGui::SliderInt("DAC 3 value: ", &DACvalue[3],0,1800);
-            ImGui::SliderInt("DAC 4 value: ", &DACvalue[4],0,1800);
-            ImGui::SliderInt("DAC 5 value: ", &DACvalue[5],0,1800);
-            ImGui::SliderInt("DAC 6 value: ", &DACvalue[6],0,1800);
-            ImGui::SliderInt("DAC 7 value: ", &DACvalue[7],0,1800);
-            ImGui::SliderInt("DAC 8 value: ", &DACvalue[8],0,1800);
-            ImGui::SliderInt("DAC 9 value: ", &DACvalue[9],0,1800);
-            ImGui::SliderInt("DAC 10 value: ",&DACvalue[10],0,1800);
-            ImGui::SliderInt("DAC 11 value: ",&DACvalue[11],0,1800);
+                ImGui::Text("Dac number %d", i);
+                ImGui::SameLine();
+                ImGui::SliderInt(label_c, &DACvalue[i],0,1800);
+                ImGui::SameLine();
+                *&DAC_upload[i] =  ImGui::Button(label_b);
+
+                //showSaveLoadBiases();
+
+
+                // Upload DAC statee
+                if (*&DAC_upload[i]){
+                
+                    dac[i].data = (uint16_t) DACvalue[i];
+                    P2TPkt p2t_pk(dac[i]); 
+                    write(serial_port, (void *) &p2t_pk, sizeof(p2t_pk));
+                    int retval = read(serial_port, &read_buf, sizeof(read_buf)); // in while loop? 
+                    //std::printf("\n read: %d, %d , %d ,%d \n", &read_buf, read_buf, *read_buf, retval);
+
+                    // catch_retval (retval, read_buf);
+                    DAC_upload[i] = false;                
+                }
+            }
             ImGui::End();
         }
         //Bias Gen config window
@@ -234,7 +261,6 @@ int main(int, char**)
                 *&bg_upload[i] =  ImGui::Button(b_label);
                 if (*&bg_upload[i]){
                     //BIASGEN course 3bits - fine value 8bits - P or N type 1 Bit
-                   // printf("%d, %d, %d, %d", bg_address[i] ,bg_course_val[i], bg_fine_val[i], bg_transistor_type[i]);
                     bg[i].address = (uint8_t)bg_address[i];
                     bg[i].course_val = (uint8_t)bg_course_val[i];
                     bg[i].fine_val = (uint8_t)bg_fine_val[i];
@@ -242,14 +268,18 @@ int main(int, char**)
 
                     P2TPkt p2t_pkt(bg[i]); 
                     write(serial_port,(void *) &p2t_pkt, sizeof(p2t_pkt));
-                    //std::printf("header, body: %d, %d \n", p2t_pkt.header, p2t_pkt.body[]);
-                    //std::printf("course val, fine val: %d, %d\n", bg[i].course_val,bg[i].fine_val);
+                    //printf(p2t_pkt.header)
 
-                    int retval = read(serial_port, read_buf, sizeof(read_buf));
+                    std::printf("BG header, body.addess: %d, %d \n", p2t_pkt.header, p2t_pkt.body[0]);
+                    //std::printf("course val, fine val: %d, %d\n", bg[i].course_val,bg[i].fine_val);
+            
+
+
+                 //   int retval = read(serial_port, read_buf, sizeof(read_buf));
                  //   catch_retval (retval, read_buf);
                     bg_upload[i] = false;
                         }
-                }
+            }   
             ImGui::End();
         }
 
@@ -272,11 +302,14 @@ int main(int, char**)
         if (SPI_upload){
             spi.spi_number = (uint8_t)spi_number;
             spi.address = (uint8_t)spi_address;
-            spi.address = (uint16_t)spi_value;
+            spi.value = (uint16_t)spi_value;
             last_spi_command = spi;
+            
             P2TPkt p2t_pkt(spi); 
             write(serial_port, (void *) &p2t_pkt, sizeof(p2t_pkt));
-            int retval = read(serial_port, read_buf, sizeof(read_buf));
+            std::printf("header, body: %d, %d \n", p2t_pkt.header, p2t_pkt.body);
+
+          //  int retval = read(serial_port, read_buf, sizeof(read_buf));
          //   catch_retval (retval, read_buf);
             SPI_upload = false;
             }
@@ -284,18 +317,6 @@ int main(int, char**)
         // 8 address + 12 data ; 12 bit data 11:9 (6 values) Course 8:1 fine value [0] 1p or 0n 
         // 64 biases
         
-        // Upload DAC states
-        if (DAC_upload){
-          
-            for(u_int8_t i=0; i<(MAX_DAC_CHANNEL); i++){
-                dac[i].data = (uint16_t) DACvalue[i];
-                P2TPkt p2t_pkt(dac[i]); 
-                write(serial_port, (void *) &p2t_pkt, sizeof(p2t_pkt));
-                int retval = read(serial_port, read_buf, sizeof(read_buf)); // in while loop? 
-               // catch_retval (retval, read_buf);
-            }
-            DAC_upload = false;
-        }
        
         // Rendering
         ImGui::Render();
