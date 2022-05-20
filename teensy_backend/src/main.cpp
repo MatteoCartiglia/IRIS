@@ -55,13 +55,12 @@ void transmitAnyAerEvents()
 }
 
 
-
 void SPI_events(int spi_number, int address, int value)
 {
   switch(spi_number)
   {
     case 0:
-        spi_controller(SPI, slaveSelectPin_SPI_BGEN, address, value);
+        bg_controller(SPI, slaveSelectPin_SPI_BGEN, address, value);
     case 1:
         spi_controller(SPI1, slaveSelectPin_SPI1_CRST,address, value);
     case 2:
@@ -72,6 +71,27 @@ void SPI_events(int spi_number, int address, int value)
   }
 
 }
+void bg_controller (SPIClass SPI, int cs, int address, int value)
+{
+    SPI.begin();
+    SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
+    digitalWrite(cs,LOW);
+    uint8_t add = (address  >> 8 ) & 0xFF ; 
+    uint8_t add2 = address  & 0xFF ; 
+    uint8_t val = (value  >> 8 ) & 0xFF ; 
+    uint8_t val2 = value  & 0xFF ; 
+
+    SPI.transfer(add);
+    SPI.transfer(add2);
+    SPI.transfer(val);
+    SPI.transfer(val2);
+
+    digitalWrite(cs,HIGH);
+    SPI.endTransaction();
+
+    
+}
+
 
 //cannot create an SPI class because it SPI.h doesn't have a constructur
 void spi_controller(SPIClass SPI, int cs, int address, int value)
@@ -160,7 +180,7 @@ void loop() {
                 Serial.print(BG.address);
                 Serial.print("\n");
                 int bg_val = ( BG.course_val <<9 & BG.fine_val << 1  & BG.transistor_type);
-                SPI_events(0,bg_val ,BG.address);
+                SPI_events(0,BG.address,bg_val );
                 Serial.print("Biasgen command done  \n");
 
               //  sendStatus(TeensyStatus::Success);

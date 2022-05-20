@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <cstddef>
 
-static constexpr std::size_t MAX_PKT_LEN = 5;
+static constexpr std::size_t MAX_PKT_LEN = 6;
 static constexpr unsigned int PKT_HDR_PKT_TYPE_SHIFT = 0;
 
 static constexpr std::size_t MAX_PKT_BODY_LEN = MAX_PKT_LEN - sizeof(std::uint8_t);
@@ -66,19 +66,19 @@ struct DAC_command
 
 struct SPI_command{
     SPI_command()  {};
-    SPI_command ( const P2TPkt& pkt) : spi_number(pkt.body[0]), address(pkt.body[1]),  value( pkt.body[2] << 8 | pkt.body[3] ) {};
+    SPI_command ( const P2TPkt& pkt) : spi_number(pkt.body[0]), address(pkt.body[1]),  value( pkt.body[2]  ) {};
 
     uint8_t spi_number;
     uint8_t address;
-    uint16_t value;
+    uint8_t value;
+    
 };
 
 struct BIASGEN_command{ 
     BIASGEN_command() {};
-    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0]), course_val(pkt.body[1]),  fine_val( pkt.body[2]),transistor_type(pkt.body[3]) {};
+    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0] << 8|pkt.body[1] ), course_val(pkt.body[2]),  fine_val( pkt.body[3]),transistor_type(pkt.body[4]) {};
 
-    uint8_t address;
-
+    uint16_t address;
     uint8_t course_val;
     uint8_t fine_val;
     uint8_t transistor_type;
