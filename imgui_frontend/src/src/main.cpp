@@ -36,10 +36,11 @@ uint8_t read_buf[1];
 //User defined inputs. 
 #define MAX_BG_CHANNELS 37
 #define MAX_DAC_CHANNEL 12
+
 #define DAC_COMMAND 3
 #define DAC_COMMAND_SHIFT 4
 
-#define NUMBER_CHANNELS 9
+#define NUMBER_CHANNELS 8
 
 
 char port_name[100] = "/dev/cu.usbmodem105661701";
@@ -56,14 +57,40 @@ bool show_aero =true;
 #define bias_fine  0x01FE
 #define bias_course 0x0E00
 
+#define FINE_BIAS_SHIFT 1
+#define COURSE_BIAS_SHIFT 9
+
+
 // Header of helper fuction. Definition at eof
 char port_opened[100] = "Serial port opened\n";
 std::vector<int> readbias_file(const std::string& path);
 static double course_current[6]= {60*pow(10, -6), 460*pow(10, -6), 3.8*pow(10, -3), 30*pow(10, -3), 240*pow(10, -3), 1.9*pow(10, 0)}; //uA
 static void glfw_error_callback(int error, const char* description);
 
-
-
+struct ScrollingBuffer {
+    int MaxSize;
+    int Offset;
+    ImVector<ImVec2> Data;
+    ScrollingBuffer(int max_size = 2000) {
+        MaxSize = max_size;
+        Offset  = 0;
+        Data.reserve(MaxSize);
+    }
+    void AddPoint(float x, float y) {
+        if (Data.size() < MaxSize)
+            Data.push_back(ImVec2(x,y));
+        else {
+            Data[Offset] = ImVec2(x,y);
+            Offset =  (Offset + 1) % MaxSize;
+        }
+    }
+    void Erase() {
+        if (Data.size() > 0) {
+            Data.shrink(0);
+            Offset  = 0;
+        }
+    }
+};
 
 
 int main(int, char**)
@@ -146,11 +173,11 @@ int main(int, char**)
         bg[i].transistor_type= (bias_type & biases[i]);
         bg_transistor_type[i] = (bias_type & biases[i]);
 
-        bg[i].fine_val= (bias_fine & biases[i]) >>1;
-        bg_fine_val[i] = (bias_fine & biases[i]) >>1;
+        bg[i].fine_val= (bias_fine & biases[i]) >>FINE_BIAS_SHIFT;
+        bg_fine_val[i] = (bias_fine & biases[i]) >>FINE_BIAS_SHIFT;
 
-        bg[i].course_val = (bias_course & biases[i]) >>9 ; 
-        bg_course_val[i] = (bias_course & biases[i]) >>9 ; 
+        bg[i].course_val = (bias_course & biases[i]) >>COURSE_BIAS_SHIFT ; 
+        bg_course_val[i] = (bias_course & biases[i]) >>COURSE_BIAS_SHIFT ; 
         }
         
 
@@ -190,6 +217,78 @@ int main(int, char**)
             ImGui::ShowDemoWindow(&show_demo_window);
             ImPlot::ShowDemoWindow(&show_demo_window);
 
+        
+       /* if (show_aero)
+        { 
+            ImGui::BulletText("Move your mouse to change the data!");
+            ImGui::BulletText("This example assumes 60 FPS. Higher FPS requires larger buffer size.");
+            static ScrollingBuffer sdata1, sdata2;
+            ImVec2 mouse = ImGui::GetMousePos();
+            static float t = 0;
+            t += ImGui::GetIO().DeltaTime;
+            sdata1.AddPoint(t, mouse.x * 0.0005f);
+            sdata2.AddPoint(t, mouse.y * 0.0005f);
+
+            static float history = 10.0f;
+            ImGui::SliderFloat("History",&history,1,30,"%.1f s");
+      
+
+            static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
+
+            if (
+
+                ImPlot::BeginPlot("##Scrolling", ImVec2(-1,150))) {
+               // for (int channel = 0;  channel <NUMBER_CHANNELS; channel++ ){
+
+                    ImPlot::SetupAxes(NULL, NULL, flags, flags);
+                    ImPlot::SetupAxisLimits(ImAxis_X1,t - history, t, ImGuiCond_Always);
+                    ImPlot::SetupAxisLimits(ImAxis_Y1,0,1);
+                    ImPlot::PlotShaded("Mouse X", &sdata1.Data[0].x, &sdata1.Data[0].y, sdata1.Data.size(), -INFINITY, sdata1.Offset, 2 * sizeof(float));
+                    ImPlot::PlotLine("Mouse Y", &sdata2.Data[0].x, &sdata2.Data[0].y, sdata2.Data.size(), sdata2.Offset, 2*sizeof(float));
+                    
+                    //}
+                    ImPlot::EndPlot();
+
+            }
+
+            
+                /* ImGui::BulletText("Live plotting of AER events");
+            static ScrollingBuffer sdata1, sdata2;
+            ImVec2 mouse = ImGui::GetMousePos();
+            static float t = 0;
+            t += ImGui::GetIO().DeltaTime;
+            sdata1.AddPoint(t, mouse.x * 0.0005f);
+            sdata2.AddPoint(t, mouse.y * 0.0005f);
+
+            static float history = 10.0f;
+            ImGui::SliderFloat("History",&history,1,30,"%.1f s");
+  
+            static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
+
+            if (ImGui::BeginTable(" Events Table", 2, flags, ImVec2(-1,0))) {
+                ImGui::TableSetupColumn(" Channel Id", ImGuiTableColumnFlags_WidthFixed, 75.0f);
+                ImGui::TableSetupColumn("Events");
+                ImGui::TableHeadersRow();
+                ImPlot::PushColormap(ImPlotColormap_Cool);
+                
+                for (int channel = 0; channel < NUMBER_CHANNELS; channel++) {
+
+                    ImGui::TableNextRow();
+
+                    srand(channel);
+                    ImGui::TableSetColumnIndex(0);
+                    ImGui::Text("Channel n %d", channel + 1);
+                    ImGui::TableSetColumnIndex(1);
+                    ImGui::PushID(channel);
+                    ImPlot::SetNextMarkerStyle(1, 2, ImVec4(0,0,0,0), 3);
+                    ImGui::PopID();
+                }
+                ImPlot::PopColormap();
+                ImGui::EndTable();
+            }
+            ImGui::End();*/
+            
+        }
 
 
         //Dac config window
@@ -203,16 +302,11 @@ int main(int, char**)
                 const char *label_c = label.c_str();       
                 std::string labelb =label +  "but";
                 const char *label_b = labelb.c_str(); 
-
                 ImGui::Text("Dac number %d", i);
                 ImGui::SameLine();
                 ImGui::SliderInt(label_c, &DACvalue[i],0,1800);
                 ImGui::SameLine();
                 *&DAC_upload[i] =  ImGui::Button(label_b);
-
-                //showSaveLoadBiases();
-
-
                 // Upload DAC statee
                 if (*&DAC_upload[i]){
                 
@@ -220,9 +314,6 @@ int main(int, char**)
                     P2TPkt p2t_pk(dac[i]); 
                     write(serial_port, (void *) &p2t_pk, sizeof(p2t_pk));
                     int retval = read(serial_port, &read_buf, sizeof(read_buf)); // in while loop? 
-                    //std::printf("\n read: %d, %d , %d ,%d \n", &read_buf, read_buf, *read_buf, retval);
-
-                    // catch_retval (retval, read_buf);
                     DAC_upload[i] = false;                
                 }
             }
@@ -261,7 +352,7 @@ int main(int, char**)
                 *&bg_upload[i] =  ImGui::Button(b_label);
                 if (*&bg_upload[i]){
                     //BIASGEN course 3bits - fine value 8bits - P or N type 1 Bit
-                    bg[i].address = (uint8_t)bg_address[i];
+                    bg[i].address = (uint16_t)bg_address[i];
                     bg[i].course_val = (uint8_t)bg_course_val[i];
                     bg[i].fine_val = (uint8_t)bg_fine_val[i];
                     bg[i].transistor_type = (uint8_t)bg_transistor_type[i];
@@ -291,7 +382,7 @@ int main(int, char**)
             ImGui::Text("SPI 1 for V SPI and 2 for C SPI ");  
             ImGui::SliderInt("SPI number: ",  &spi_number, 1,2);                 
             ImGui::SliderInt("SPI register: ", &spi_address,0,255);
-            ImGui::SliderInt("SPI value: ", &spi_value,0, 65535);
+            ImGui::SliderInt("SPI value: ", &spi_value,0, 255);
             ImGui::Checkbox("Upload", &SPI_upload);
 
             ImGui::Text("Last SPI values: %d, %d, %d ",  last_spi_command.spi_number,  last_spi_command.address, last_spi_command.value);
