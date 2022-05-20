@@ -13,10 +13,11 @@ P2TPkt::P2TPkt(const SPI_command& sp) : header((std::uint8_t)P2tPktType::P2tSetS
     body[2] = sp.value ; 
     };
 P2TPkt::P2TPkt(const BIASGEN_command& bg) : header((std::uint8_t)P2tPktType::P2tSetBiasGen) {
-    body[0] = bg.address; 
-    body[1] = bg.course_val; 
-    body[2] = bg.fine_val; 
-    body[3] = bg.transistor_type; 
+    body[0] = bg.address>> 8 ; 
+    body[1] = bg.address ; 
+    body[2] = bg.course_val; 
+    body[3] = bg.fine_val; 
+    body[4] = bg.transistor_type; 
     };
 
 P2TPkt::P2TPkt(const AER_out& aero) : header((std::uint8_t)P2tPktType::P2tRequestAerOutput) {

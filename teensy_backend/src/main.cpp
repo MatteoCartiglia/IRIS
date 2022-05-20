@@ -14,6 +14,8 @@ uint8_t msg_buf[1];
 
 
 void spi_controller(SPIClass SPI, int cs, int address, int value);
+void bg_controller(SPIClass SPI, int cs, int address, int value);
+
 void SPI_events(int spi_number, int address, int value);
 void spi_setup(int clk, int cs, int mosi );
 
@@ -71,7 +73,7 @@ void SPI_events(int spi_number, int address, int value)
   }
 
 }
-void bg_controller (SPIClass SPI, int cs, int address, int value)
+void bg_controller(SPIClass SPI, int cs, int address, int value)
 {
     SPI.begin();
     SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
@@ -175,12 +177,19 @@ void loop() {
             case P2tPktType::P2tSetBiasGen:{  // BiasGen
                 Serial.print("Biasgen command recieved \n");
                 BIASGEN_command BG (rx_buf);
-                Serial.print(BG.course_val);
-                Serial.print(BG.fine_val);
-                Serial.print(BG.address);
+
                 Serial.print("\n");
-                int bg_val = ( BG.course_val <<9 & BG.fine_val << 1  & BG.transistor_type);
+                Serial.print(BG.course_val,BIN);
+                Serial.print("\n");
+                Serial.print(BG.fine_val,BIN);
+                Serial.print("\n");
+                Serial.print(BG.transistor_type,BIN);
+                Serial.print("\n");
+                int bg_val = ( (BG.course_val << COURSE_BIAS_SHIFT )| (BG.fine_val << FINE_BIAS_SHIFT ) | BG.transistor_type );
                 SPI_events(0,BG.address,bg_val );
+
+                Serial.print(bg_val,BIN);
+                Serial.print("\n");
                 Serial.print("Biasgen command done  \n");
 
               //  sendStatus(TeensyStatus::Success);

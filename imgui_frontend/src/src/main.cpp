@@ -44,7 +44,8 @@ uint8_t read_buf[1];
 
 
 char port_name[100] = "/dev/cu.usbmodem105661701";
-//cu.usbmodem105661701
+//"cu.usbmodem105688601";
+//"/cu.usbmodem105661701"; ALIVE BOARD
 char biasgen_por_file[100] = "biasgen_por.csv";
 bool show_bg_spi_config =true;
 bool show_dac_config = true;
@@ -67,30 +68,7 @@ std::vector<int> readbias_file(const std::string& path);
 static double course_current[6]= {60*pow(10, -6), 460*pow(10, -6), 3.8*pow(10, -3), 30*pow(10, -3), 240*pow(10, -3), 1.9*pow(10, 0)}; //uA
 static void glfw_error_callback(int error, const char* description);
 
-struct ScrollingBuffer {
-    int MaxSize;
-    int Offset;
-    ImVector<ImVec2> Data;
-    ScrollingBuffer(int max_size = 2000) {
-        MaxSize = max_size;
-        Offset  = 0;
-        Data.reserve(MaxSize);
-    }
-    void AddPoint(float x, float y) {
-        if (Data.size() < MaxSize)
-            Data.push_back(ImVec2(x,y));
-        else {
-            Data[Offset] = ImVec2(x,y);
-            Offset =  (Offset + 1) % MaxSize;
-        }
-    }
-    void Erase() {
-        if (Data.size() > 0) {
-            Data.shrink(0);
-            Offset  = 0;
-        }
-    }
-};
+
 
 
 int main(int, char**)
@@ -286,9 +264,9 @@ int main(int, char**)
                 ImPlot::PopColormap();
                 ImGui::EndTable();
             }
-            ImGui::End();*/
+            ImGui::End();
             
-        }
+        }*/
 
 
         //Dac config window

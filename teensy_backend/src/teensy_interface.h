@@ -11,7 +11,8 @@ static constexpr unsigned int PKT_HDR_PKT_TYPE_SHIFT = 0;
 static constexpr std::size_t MAX_PKT_BODY_LEN = MAX_PKT_LEN - sizeof(std::uint8_t);
 
 
-
+#define FINE_BIAS_SHIFT 1
+#define COURSE_BIAS_SHIFT 9
 
 enum class P2tPktType { // keep Compatible with PLANE+COACH
     P2tReset              = 1U << PKT_HDR_PKT_TYPE_SHIFT,
@@ -71,7 +72,7 @@ struct SPI_command{
     uint8_t spi_number;
     uint8_t address;
     uint8_t value;
-    
+
 };
 
 struct BIASGEN_command{ 
