@@ -20,10 +20,10 @@ bool SPI1_ON= true;
 bool SPI2_ON= true;
 
 //SPI0
-const int slaveSelectPin_SPI_BGEN = 10;
-const int BGRST = 9;
+const int slaveSelectPin_SPI_BGEN = 9;
 const int BGMOSI = 11;
 const int BGSCK = 13;
+const int BG_enable = 10;
 
 //SPI1
 const int slaveSelectPin_SPI1_CRST = 0 ;
@@ -42,14 +42,14 @@ constexpr int srst = 8; //expander
 //AER PINS
 bool AER_ON = true;
 
-constexpr int aero_ack = 4;
-constexpr int aero_req = 5;
+//ALIVE REQ/ACK PINS
+constexpr int aero_ack = 30;
+constexpr int aero_req = 29;
 constexpr int aero_num_data_pins = 3;
-int aero_data[aero_num_data_pins] = {9, 8, 7};
+int aero_data[aero_num_data_pins] = {26,27,28};
 constexpr int aer_delays = 0; // Delay in microseconds after toggling aer handshake output pins
 
 // buffers
-
 constexpr int aero_buf_size = 1024;
 
 
