@@ -22,7 +22,7 @@ enum class P2tPktType { // keep Compatible with PLANE+COACH
     P2tSendEvents         = 14U << PKT_HDR_PKT_TYPE_SHIFT,
     P2tGetTeensySN        = 15U << PKT_HDR_PKT_TYPE_SHIFT,
     P2tSetBiasGen         = 16U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSetSPI             = 4U << PKT_HDR_PKT_TYPE_SHIFT,
+    P2tSetSPI             = 17U << PKT_HDR_PKT_TYPE_SHIFT,
 
 };
 
@@ -43,12 +43,16 @@ struct DAC_command;
 struct SPI_command;
 struct BIASGEN_command;
 struct AER_out;
+struct AER_in_ALIVE;
+
 
 struct P2TPkt {
     P2TPkt(const DAC_command& dc) ;
     P2TPkt(const SPI_command& sp);
     P2TPkt(const BIASGEN_command& bg);
     P2TPkt(const AER_out& aero);
+    P2TPkt(const AER_in_ALIVE& aeri);
+
     P2TPkt() {}
 
     std::uint8_t header; // Packet length encoded in header excludes size of header
@@ -96,12 +100,22 @@ struct AER_in_command{
 
 struct AER_out{
     AER_out() {};
-    AER_out (const P2TPkt& pkt) : address(pkt.body[0]), ts_1ms(pkt.body[1] <<pkt.body[2]) {};
+    AER_out (const P2TPkt& pkt) : address(pkt.body[0]), ts_1ms(pkt.body[1] <<8 | pkt.body[2]) {};
 
     uint8_t address;
     uint16_t ts_1ms;
 };
 
+struct AER_in_ALIVE{
+    AER_in_ALIVE() {};
+    AER_in_ALIVE (const P2TPkt& pkt) : core(pkt.body[0]), syn_type(pkt.body[1]), configs(pkt.body[2]) {};
+
+    uint8_t core;
+    uint8_t syn_type;
+    uint8_t configs;
+
+    
+};
 
 #endif 
 

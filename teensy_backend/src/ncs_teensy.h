@@ -16,8 +16,8 @@ const int a0 = 37;      // DAC address A0 on Teeensy pin 30
 
 //SPI configs
 bool BIAS_GEN = true;
-bool SPI1_ON= true;
-bool SPI2_ON= true;
+bool SPI1_ON= false;
+bool SPI2_ON= false;
 
 //SPI0
 const int slaveSelectPin_SPI_BGEN = 9;

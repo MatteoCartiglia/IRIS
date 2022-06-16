@@ -21,5 +21,15 @@ P2TPkt::P2TPkt(const BIASGEN_command& bg) : header((std::uint8_t)P2tPktType::P2t
     };
 
 P2TPkt::P2TPkt(const AER_out& aero) : header((std::uint8_t)P2tPktType::P2tRequestAerOutput) {
+    body[0] = aero.address ; 
+    body[1] = aero.ts_1ms <<8 ; 
+    body[2] = aero.ts_1ms; 
+
     };
 
+P2TPkt::P2TPkt(const AER_in_ALIVE& aero) : header((std::uint8_t)P2tPktType::P2tSendEvents) {
+    body[0] = aero.core ; 
+    body[1] = aero.syn_type; 
+    body[2] = aero.configs; 
+
+    };

@@ -31,6 +31,9 @@
 #include <list>
 #include <map>
 
+static P2TPkt rx_buf;
+static AER_out aero;
+
 
 uint8_t read_buf[1];
 //User defined inputs. 
@@ -43,14 +46,16 @@ uint8_t read_buf[1];
 #define NUMBER_CHANNELS 8
 
 
-char port_name[100] = "/dev/cu.usbmodem105661701";
-//"cu.usbmodem105688601";
+char port_name[100] = "/dev/cu.usbmodem105688601";
+//"cu.usbmodem105688601"; ALIVE non soldered board
 //"/cu.usbmodem105661701"; ALIVE BOARD
 char biasgen_por_file[100] = "biasgen_por.csv";
 bool show_bg_spi_config =true;
 bool show_dac_config = true;
 bool show_spi_config =true;
 bool show_aero =true;
+bool AER_init = false;
+bool show_ii = false;
 
 
 // Biasgen defined masks
@@ -130,7 +135,7 @@ int main(int, char**)
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Our state
-    bool show_demo_window = true;
+    bool show_demo_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Bias Gen controls
@@ -194,79 +199,42 @@ int main(int, char**)
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
             ImPlot::ShowDemoWindow(&show_demo_window);
+       // if (show_ii){
+       //     ImGui::Begin("Input Interface",&show_ii);   
 
+
+       // }
         
-       /* if (show_aero)
-        { 
-            ImGui::BulletText("Move your mouse to change the data!");
-            ImGui::BulletText("This example assumes 60 FPS. Higher FPS requires larger buffer size.");
-            static ScrollingBuffer sdata1, sdata2;
-            ImVec2 mouse = ImGui::GetMousePos();
-            static float t = 0;
-            t += ImGui::GetIO().DeltaTime;
-            sdata1.AddPoint(t, mouse.x * 0.0005f);
-            sdata2.AddPoint(t, mouse.y * 0.0005f);
-
-            static float history = 10.0f;
-            ImGui::SliderFloat("History",&history,1,30,"%.1f s");
-      
-
-            static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
-
-            if (
-
-                ImPlot::BeginPlot("##Scrolling", ImVec2(-1,150))) {
-               // for (int channel = 0;  channel <NUMBER_CHANNELS; channel++ ){
-
-                    ImPlot::SetupAxes(NULL, NULL, flags, flags);
-                    ImPlot::SetupAxisLimits(ImAxis_X1,t - history, t, ImGuiCond_Always);
-                    ImPlot::SetupAxisLimits(ImAxis_Y1,0,1);
-                    ImPlot::PlotShaded("Mouse X", &sdata1.Data[0].x, &sdata1.Data[0].y, sdata1.Data.size(), -INFINITY, sdata1.Offset, 2 * sizeof(float));
-                    ImPlot::PlotLine("Mouse Y", &sdata2.Data[0].x, &sdata2.Data[0].y, sdata2.Data.size(), sdata2.Offset, 2*sizeof(float));
-                    
-                    //}
-                    ImPlot::EndPlot();
-
+        if (show_aero){
+            ImGui::Begin("AER events",&show_aero);   
+            *&AER_init =  ImGui::Button("AER start logging");
+            if (*&AER_init){
+                P2TPkt p2t_pkt(aero); 
+                static P2TPkt rx_buf;
+                write(serial_port, (void *) &p2t_pkt, sizeof(p2t_pkt));
+                int retval = 0;
+                while( retval == 0)
+                    retval = read(serial_port, &rx_buf, sizeof(rx_buf)); // in while loop?
+                std::printf("\n retval: %d \n", retval) ;
+                std::printf("\n rx_buf head: %d \n", rx_buf.header) ;
+                std::printf("\n rx_buf body[0]: %d \n", rx_buf.body[0]);
+                std::printf("\n rx_buf body[1]: %d \n", rx_buf.body[1]);
+                std::printf("\n rx_buf body[2]: %d \n", rx_buf.body[2]);
+                std::printf("\n rx_buf body[3]: %d \n", rx_buf.body[3]);
+                std::printf("\n rx_buf body[4]: %d \n", rx_buf.body[4]);
+                std::printf("\n rx_buf body[5]: %d \n", rx_buf.body[5]);
             }
 
-            
-                /* ImGui::BulletText("Live plotting of AER events");
-            static ScrollingBuffer sdata1, sdata2;
-            ImVec2 mouse = ImGui::GetMousePos();
-            static float t = 0;
-            t += ImGui::GetIO().DeltaTime;
-            sdata1.AddPoint(t, mouse.x * 0.0005f);
-            sdata2.AddPoint(t, mouse.y * 0.0005f);
-
-            static float history = 10.0f;
-            ImGui::SliderFloat("History",&history,1,30,"%.1f s");
-  
-            static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
-
-            if (ImGui::BeginTable(" Events Table", 2, flags, ImVec2(-1,0))) {
-                ImGui::TableSetupColumn(" Channel Id", ImGuiTableColumnFlags_WidthFixed, 75.0f);
-                ImGui::TableSetupColumn("Events");
-                ImGui::TableHeadersRow();
-                ImPlot::PushColormap(ImPlotColormap_Cool);
-                
-                for (int channel = 0; channel < NUMBER_CHANNELS; channel++) {
-
-                    ImGui::TableNextRow();
-
-                    srand(channel);
-                    ImGui::TableSetColumnIndex(0);
-                    ImGui::Text("Channel n %d", channel + 1);
-                    ImGui::TableSetColumnIndex(1);
-                    ImGui::PushID(channel);
-                    ImPlot::SetNextMarkerStyle(1, 2, ImVec4(0,0,0,0), 3);
-                    ImGui::PopID();
-                }
-                ImPlot::PopColormap();
-                ImGui::EndTable();
+            if ((P2tPktType)rx_buf.header == P2tPktType::P2tRequestAerOutput){
+                std::printf("\n %d \n", (P2tPktType)rx_buf.header) ;
+                AER_out aero (rx_buf);
+                std::printf("\n Add: %d \n", aero.address) ;
+                std::printf("\n Ts:%d \n", aero.ts_1ms) ;
             }
+
             ImGui::End();
-            
-        }*/
+
+        }
 
 
         //Dac config window
@@ -291,7 +259,6 @@ int main(int, char**)
                     dac[i].data = (uint16_t) DACvalue[i];
                     P2TPkt p2t_pk(dac[i]); 
                     write(serial_port, (void *) &p2t_pk, sizeof(p2t_pk));
-                    int retval = read(serial_port, &read_buf, sizeof(read_buf)); // in while loop? 
                     DAC_upload[i] = false;                
                 }
             }
@@ -337,15 +304,7 @@ int main(int, char**)
 
                     P2TPkt p2t_pkt(bg[i]); 
                     write(serial_port,(void *) &p2t_pkt, sizeof(p2t_pkt));
-                    //printf(p2t_pkt.header)
 
-                    std::printf("BG header, body.addess: %d, %d \n", p2t_pkt.header, p2t_pkt.body[0]);
-                    //std::printf("course val, fine val: %d, %d\n", bg[i].course_val,bg[i].fine_val);
-            
-
-
-                 //   int retval = read(serial_port, read_buf, sizeof(read_buf));
-                 //   catch_retval (retval, read_buf);
                     bg_upload[i] = false;
                         }
             }   
@@ -378,8 +337,6 @@ int main(int, char**)
             write(serial_port, (void *) &p2t_pkt, sizeof(p2t_pkt));
             std::printf("header, body: %d, %d \n", p2t_pkt.header, p2t_pkt.body);
 
-          //  int retval = read(serial_port, read_buf, sizeof(read_buf));
-         //   catch_retval (retval, read_buf);
             SPI_upload = false;
             }
         

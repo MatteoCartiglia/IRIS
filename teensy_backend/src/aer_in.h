@@ -45,10 +45,12 @@ class AER_in {
 static inline AER_out makeAerO(unsigned int addr, unsigned int ts)
 {
   AER_out event;
+  event.address = 0;
   event.address =(uint8_t) addr;
   event.ts_1ms =(uint16_t) ts/1000;
-
-    return event;
+  Serial.print("\n makeAerO addr: ");
+  Serial.print(event.address,BIN);
+  return event;
 }
 
 #endif

@@ -29,8 +29,9 @@ void AER_in::ackWrite(bool val) {
 
 unsigned int AER_in::dataRead() { //works up to 32 data pins
   unsigned int x=0;
-  for (int i=0; i<_numDataPins; i++) {
-    x |= digitalReadFast(_dataPins[i]) << i;
+  for (int i=0; i<_numDataPins ; i++) {
+    x = (digitalReadFast(_dataPins[i]) << i) | x;
+
   }
   if (_activeLow) {
     return ~x;
@@ -57,6 +58,7 @@ unsigned int AER_in::record_event_handshake()
   unsigned int x = 0;
   if (reqRead()){
     x = record_event();
+
     ackWrite(1);
   }
   if (!reqRead()) {
@@ -67,8 +69,12 @@ unsigned int AER_in::record_event_handshake()
 
 unsigned int AER_in::record_event() {
   unsigned int address = dataRead();
+  Serial.print("\n address: ");
+  Serial.print(address,BIN);
   unsigned int timestamp = (micros() - _t0) >> _timestampShift;
+
   _buff[_index++] = makeAerO(address, timestamp);
+
   return address;
 }
 

@@ -212,7 +212,7 @@ void loop() {
                 break;
             }
             case  P2tPktType::P2tRequestAerOutput: { // aer
-                Serial.print("AER activated \n");
+               // Serial.print("AER activated \n");
                 aero.set_index(0);
                 aero.set_t0(micros());
                 since_blank_milli = 0;
@@ -221,14 +221,11 @@ void loop() {
                 delay(100);
                 AER_out tmp;
                 tmp.address = 10;
-                tmp.ts_1ms = 11111;
+                tmp.ts_1ms = 0b0000000011111111;
                 P2TPkt aero_pkt(tmp);
+               // Serial.print(aero_pkt.header);
                 usb_serial_write((const void*) &aero_pkt, sizeof(aero_pkt));
-                Serial.print("AER sent \n");
-                Serial.print(aero_pkt.header);
-                Serial.print("\n");
-                Serial.print(aero_pkt.body[0]);
-                Serial.print("\n");
+              //  Serial.print("\n");
 
                 break;
             }
