@@ -84,12 +84,6 @@ void loop() {
         usb_serial_read(&rx_buf, sizeof(rx_buf)); // in bytes. 1 byte is 8 bits.
 
         switch ((P2tPktType)rx_buf.header) {
-
-            case P2tPktType::P2tReset:{ // reset
-                Serial.print("Reset recieved");
-                // sendStatus(TeensyStatus::Success);
-                break;
-            }
                
             case P2tPktType::P2tSetBiasGen:{  // BiasGen
                 Serial.print("Biasgen command recieved \n");
@@ -136,10 +130,6 @@ void loop() {
 
                 break;
             }
-
-            case P2tPktType::P2tGetTeensySN:{  // SN
-                break;       
-            } 
 
             case P2tPktType::P2tSendEvents:{ // II     
                 break;     

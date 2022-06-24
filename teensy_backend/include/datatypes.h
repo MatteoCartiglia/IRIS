@@ -9,8 +9,6 @@
 #define DATATYPES_H
 
 #include <cstdint>
-#include <cstddef>
-
 #include "constants.h"
 
 static constexpr std::size_t MAX_PKT_BODY_LEN = MAX_PKT_LEN - sizeof(std::uint8_t);
@@ -25,21 +23,6 @@ struct AER_in_ALIVE;
 // ENUMERATED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-// Packed type
-
-enum class P2tPktType { // keep Compatible with PLANE+COACH
-    P2tReset              = 1U  << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tGetFirmwareVersion = 2U  << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSetDcVoltage       = 3U  << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tRequestAerOutput   = 11U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSendEvents         = 14U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tGetTeensySN        = 15U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSetBiasGen         = 16U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSetSPI             = 17U << PKT_HDR_PKT_TYPE_SHIFT,
-};
-
-// Readback message from Teensy
-
 enum class TeensyStatus {
     Success                     = 10,
     HardResetFailed             = 1,
@@ -50,6 +33,14 @@ enum class TeensyStatus {
     AerHandshakeFailed          = 6,
     HardResetImminent           = 7,  // Sent before hard reset sequence is started to give host a chance to disconnect
     HardResetNotSupported       = 8,
+};
+
+enum class P2tPktType { // keep Compatible with PLANE+COACH
+    P2tSetDcVoltage       = 3U  << PKT_HDR_PKT_TYPE_SHIFT,
+    P2tRequestAerOutput   = 11U << PKT_HDR_PKT_TYPE_SHIFT,
+    P2tSendEvents         = 14U << PKT_HDR_PKT_TYPE_SHIFT,
+    P2tSetBiasGen         = 16U << PKT_HDR_PKT_TYPE_SHIFT,
+    P2tSetSPI             = 17U << PKT_HDR_PKT_TYPE_SHIFT,
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------

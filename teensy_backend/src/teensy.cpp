@@ -5,6 +5,7 @@
 // Last updated: 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
+#include <cstdint>
 #include "datatypes.h"
 
 P2TPkt::P2TPkt(const DAC_command& dc) : header((std::uint8_t)P2tPktType::P2tSetDcVoltage) 
@@ -19,13 +20,13 @@ P2TPkt::P2TPkt(const SPI_command& sp) : header((std::uint8_t)P2tPktType::P2tSetS
 {
     body[0] = sp.spi_number; 
     body[1] = sp.address; 
-    body[2] = sp.value ; 
+    body[2] = sp.value; 
 };
 
 P2TPkt::P2TPkt(const BIASGEN_command& bg) : header((std::uint8_t)P2tPktType::P2tSetBiasGen) 
 {
     body[0] = bg.address>> 8 ; 
-    body[1] = bg.address ; 
+    body[1] = bg.address; 
     body[2] = bg.course_val; 
     body[3] = bg.fine_val; 
     body[4] = bg.transistor_type; 
@@ -33,8 +34,8 @@ P2TPkt::P2TPkt(const BIASGEN_command& bg) : header((std::uint8_t)P2tPktType::P2t
 
 P2TPkt::P2TPkt(const AER_out& aero) : header((std::uint8_t)P2tPktType::P2tRequestAerOutput) 
 {
-    body[0] = aero.address ; 
-    body[1] = aero.ts_1ms <<8 ; 
+    body[0] = aero.address; 
+    body[1] = aero.ts_1ms <<8; 
     body[2] = aero.ts_1ms; 
 };
 
