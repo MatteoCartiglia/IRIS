@@ -1,15 +1,24 @@
-#include <Arduino.h>
-#include <SPI.h>
-#include "ncs_teensy.h"
-#include "dac.h"
-#include "aer_in.h"
-#include "teensy_interface.h"
-#include <Wire.h>
+//---------------------------------------------------------------------------------------------------------------------------------------
+//
+//
+// Author: 
+// Last updated: 
+//---------------------------------------------------------------------------------------------------------------------------------------
 
+#include <Arduino.h>
+#include <Wire.h>
+#include <SPI.h>
+
+#include "datatypes.h"
+#include "constants.h"
+#include "aer_in.h"
+#include "dac.h"
+
+int AERO_DATA[AERO_NUM_DATA_PINS] = {26, 27, 28};
 
 static P2TPkt rx_buf;
 static bool aero_flag;
-AER_out aero_buf[aero_buf_size];
+AER_out aero_buf[AERO_BUFF_SIZE];
 uint8_t msg_buf[1];
 
 
@@ -19,21 +28,17 @@ void bg_controller(SPIClass SPI, int cs, int address, int value);
 void SPI_events(int spi_number, int address, int value);
 void spi_setup(int clk, int cs, int mosi );
 
-DAC dac{dac_rst,
-    a0, 
-    a1
-};
+DAC dac{DAC_RESET, 36, 37};
 
 
-AER_in aero(aero_req,
-            aero_ack,
-            aero_data,
-            aero_num_data_pins,
+AER_in aero(AERO_REQ,
+            AERO_ACK,
+            AERO_DATA,
+            AERO_NUM_DATA_PINS,
             aero_buf,
-            aer_delays,
+            AER_DELAYS,
             10,
             false);
-int aero_duration = 15; 
 
 elapsedMicros since_blank_micro;
 elapsedMillis since_blank_milli;
@@ -59,11 +64,11 @@ void SPI_events(int spi_number, int address, int value)
   switch(spi_number)
   {
     case 0:
-        bg_controller(SPI, slaveSelectPin_SPI_BGEN, address, value);
+        bg_controller(SPI, SLAVE_SPI0_BGEN, address, value);
     case 1:
-        spi_controller(SPI1, slaveSelectPin_SPI1_CRST,address, value);
+        spi_controller(SPI1, SLAVE_SPI1_CRST,address, value);
     case 2:
-        spi_controller(SPI2, slaveSelectPin_SPI2_VRST, address, value);
+        spi_controller(SPI2, SLAVE_SPI2_VRST, address, value);
     default:
     break;
   }
@@ -138,7 +143,7 @@ void spi_setup(int clk, int cs, int mosi ){
 static void aeroISR()
 {
     if (!aero.reqRead()) {
-        if (aero_flag  && (aero.get_index() < aero_buf_size) ) { 
+        if (aero_flag  && (aero.get_index() < AERO_BUFF_SIZE) ) { 
             aero.record_event();
         }
         aero.ackWrite(0);
@@ -158,12 +163,12 @@ void sendStatus(TeensyStatus msg) {
 
 void setup() {
 
-    if (BIAS_GEN) bg_setup(BGSCK , slaveSelectPin_SPI_BGEN , BGMOSI, BG_enable);
-    if (SPI1_ON) spi_setup(CSCK , slaveSelectPin_SPI1_CRST , CMOSI);
-    if (SPI2_ON) spi_setup(VSCK , slaveSelectPin_SPI2_VRST , VMOSI);
+    if (BIAS_GEN) bg_setup(BG_SCK , SLAVE_SPI0_BGEN , BG_MOSI, BG_ENABLE);
+    if (SPI1_ON) spi_setup(C_SCK , SLAVE_SPI1_CRST , C_MOSI);
+    if (SPI2_ON) spi_setup(V_SCK , SLAVE_SPI2_VRST , V_MOSI);
     
     aero_flag = false;
-    attachInterrupt(digitalPinToInterrupt(aero_req), aeroISR, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(AERO_REQ), aeroISR, CHANGE);
 
     dac.setup_dacs();
     dac.join_i2c_bus();

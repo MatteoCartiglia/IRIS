@@ -1,7 +1,7 @@
 //Matteo Cartiglia
 #include "teensy.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "../../backends/imgui_impl_glfw.h"
+#include "../../backends/imgui_impl_opengl3.h"
 #include "../../../teensy_backend/src/teensy_interface.h"
 
 #include "../../imgui/implot.h"

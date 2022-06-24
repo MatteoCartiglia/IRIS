@@ -1,8 +1,8 @@
 #ifndef aer_h
 #define aer_h
-#include "teensy_interface.h"
+
+#include "datatypes.h"
 #include "Arduino.h"
-#define AER_HANDSHAKE_TIMEOUT     10
 
 
 class AER_in {

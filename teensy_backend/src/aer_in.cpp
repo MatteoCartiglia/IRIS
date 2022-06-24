@@ -1,5 +1,4 @@
 #include "aer_in.h"
-#include "teensy_interface.h"
 
 AER_in::AER_in(const int reqPin, const int ackPin, int dataPins[], int numDataPins, AER_out buff[], int d, int timestampShift, bool activeLow) {
   _numDataPins = numDataPins;
