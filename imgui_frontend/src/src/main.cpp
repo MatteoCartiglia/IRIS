@@ -2,7 +2,7 @@
 #include "teensy.h"
 #include "../../backends/imgui_impl_glfw.h"
 #include "../../backends/imgui_impl_opengl3.h"
-#include "../../../teensy_backend/src/teensy_interface.h"
+#include "../../../teensy_backend/include/datatypes.h"
 
 #include "../../imgui/implot.h"
 #include "../../imgui/implot_internal.h"

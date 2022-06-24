@@ -2,19 +2,18 @@
 //
 //
 // Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 
+// Last updated: 24 JUN 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include <cstdint>
-#include <cstddef>
-
 // DAC CONFIGURATION FOR ALIVE
 #define DAC_RESET               33
-// #define A1                      36
-// #define A0                      37
+#define DAC_A1                  36
+#define DAC_A0                  37
+#define FULL_RANGE              65536
+#define DAC_REF                 2500
 
 // SPI CONFIGURATION
 #define BIAS_GEN                1
@@ -51,7 +50,6 @@
 #define AERO_NUM_DATA_PINS      3
 #define AERO_DURATION           15
 #define AERO_BUFF_SIZE          1024
-
 
 // BIAS GENERATION
 #define FINE_BIAS_SHIFT         1

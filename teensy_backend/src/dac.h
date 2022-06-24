@@ -1,28 +1,46 @@
+//---------------------------------------------------------------------------------------------------------------------------------------
+//
+//
+// Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
+// Last updated: 24 JUN 2022 (Ciara Giles-Doran)
+//---------------------------------------------------------------------------------------------------------------------------------------
+
 #ifndef dac_h
 #define dac_h
 
 #include "Arduino.h"
-#define FULL_RANGE 65536
-#define DAC_REF 2500
-
 
 class DAC {
+
+  /* Declaring class constructor and public methods */
+
   public:
-    DAC(   const int dac_rst,
-           const int a0,
-           const int a1
+
+    /* DAC constructor */
+    DAC(const int dac_rst,
+        const int a0,
+        const int a1
     );
-    void join_i2c_bus();
+
+    /* Setup the DAC */
     void setup_dacs();
-    bool reset_dacs();
+
+    /* Join the i2c bus */
+    void join_i2c_bus();
+
+    /* Write to the DAC */
     void write_dacs(uint8_t address, uint16_t value);
+
+    /* Turn off the internal reference voltage */
     void turn_reference_off();
 
+
+  /* Declaring private variables */
 
   private:
     int _dac_rst;
     int _a0;
     int _a1;
-
 };
+
 #endif

@@ -15,7 +15,6 @@
                 "-std=c++11",
                 "-I/imgui_frontend/imgui",
                 "-I/imgui_frontend/backends",
-                "-lglfw3",
                 "-I/usr/include/GLFW",
                 "--libs=lGL",
                 "--static",
