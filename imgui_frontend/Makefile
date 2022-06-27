@@ -25,6 +25,7 @@ LINUX_GL_LIBS = -lGL
 #---------------------------------------------------------------------
 
 SOURCES +=  $(SOURCE_DIR)/main.cpp \
+			$(SOURCE_DIR)/guiFunctions.cpp \
 			$(IMGUI_DIR)/imgui.cpp \
 			$(IMGUI_DIR)/imgui_demo.cpp \
 			$(IMGUI_DIR)/imgui_draw.cpp \
@@ -33,7 +34,7 @@ SOURCES +=  $(SOURCE_DIR)/main.cpp \
 			$(IMGUI_DIR)/implot.cpp \
 			$(IMGUI_DIR)/implot_items.cpp \
 			$(IMGUI_DIR)/implot_demo.cpp \
-			$(TEENSY_BACKEND_DIR)/teensy.cpp \
+			$(TEENSY_BACKEND_DIR)/datatypes.cpp \
 			$(BACKENDS_DIR)/imgui_impl_glfw.cpp \
 			$(BACKENDS_DIR)/imgui_impl_opengl3.cpp \
 			
@@ -105,4 +106,4 @@ $(EXE): $(OBJS)
 
 clean:
 	rm -f $(EXE) $(OBJS)
-	rm src/*ini
+	rm *.ini
