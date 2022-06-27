@@ -6,7 +6,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <cstdint>
-#include "datatypes.h"
+#include "../include/datatypes.h"
 
 P2TPkt::P2TPkt(const DAC_command& dc) : header((std::uint8_t)P2tPktType::P2tSetDcVoltage) 
 {

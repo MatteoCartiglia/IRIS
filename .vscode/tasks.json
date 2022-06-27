@@ -3,22 +3,16 @@
         {
             "type": "cppbuild",
             "label": "C/C++: g++ build active file",
-            "command": "/usr/bin/g++",
+            "command": "g++",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "$(pkg-config --cflags glfw3)",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "-Wall",
-                "-Wformat",
-                "-std=c++11",
-                "-I/imgui_frontend/imgui",
-                "-I/imgui_frontend/backends",
-                "-I/usr/include/GLFW",
-                "--libs=lGL",
-                "--static",
-                "--libs=glfw3",
+                "${file}",
+                "-lGL",
+                "$(pkg-config --static --libs glfw3)"
             ],
             "options": {
                 "cwd": "${fileDirname}"
