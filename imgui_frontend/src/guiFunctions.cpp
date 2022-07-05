@@ -1,10 +1,11 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 //
 //
-// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
+// Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
 // Last updated: 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
+#include <iostream>
 #include "../include/guiFunctions.h"
 #include "../include/constants.h"
 
@@ -105,36 +106,51 @@ void renderImGui(GLFWwindow* window)
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * setupDacWindow
 *----------------------------------------------------------------------------------------------------------------------------------------*/
-void setupDacWindow(bool show_dac_config, int DACvalue[], bool DAC_upload, DAC_command dac[], int serialPort)
+void setupDacWindow(bool show_dac_config, bool DAC_upload, DAC_command dac[], int serialPort)
 {
-    ImGui::Begin("DAC Configuration", &show_dac_config);      
-    ImGui::Text("DAC Configuration (mV)");      
+    ImGui::Begin("Test Structure Biases (mV) [DAC Values]", &show_dac_config);      
 
-    for(int i=0; i<MAX_DAC_CHANNEL; i++)
+    for(int i=0; i<DAC_CHANNELS_USED; i++)
     {
-        std::string label = "##_";
-        label += std::to_string(i);         
-        const char *label_c = label.c_str();       
-        std::string labelb =label +  "but";
-        const char *label_b = labelb.c_str(); 
+        // Using push/pop ID to create unique identifiers for widgets with the same label
+        ImGui::PushID(i);
 
-        ImGui::Text("DAC Number %d", i);
+        // Labelling the DAC input channel
+        std::string dacBiasName = adjustStringFormatting(dac[i].name);
+        ImGui::Text(dacBiasName.c_str());
+
+        // Setting an invisible label for the slider
+        std::string emptylabel = "##";
+        const char *sliderLabel = emptylabel.c_str(); 
+
+        // Adding a "minus" button for precise value selection
         ImGui::SameLine();
-        ImGui::SliderInt(label_c, &DACvalue[i], 0, 1800);
-        ImGui::SameLine();
-
-        *&DAC_upload[&i] =  ImGui::Button(label_b);
-
-        // Upload DAC state
-
-        if (*&DAC_upload[&i])
+        if (ImGui::Button("-"))
         {
-            dac[i].data = (uint16_t) DACvalue[i];
-            P2TPkt p2t_pk(dac[i]); 
-
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-            DAC_upload[&i] = false;                
+            dac[i].data = dac[i].data - 5;
         }
+        
+        // Adding a slider for coarse value selection
+        int sliderValue = dac[i].data;
+        ImGui::SameLine();
+        ImGui::SliderInt(sliderLabel, &sliderValue, 0, 1800);
+
+        // Adding a "plus" button for precise value selection
+        ImGui::SameLine();
+        if(ImGui::Button("+"))
+        {
+            dac[i].data = dac[i].data + 5;
+        }
+
+        // Adding a update button to write to serial port
+        ImGui::SameLine();
+        if(ImGui::Button("Update"))
+        {
+            P2TPkt p2t_pk(dac[i]); 
+            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        }
+        
+        ImGui::PopID();
     }
 
     ImGui::End();
@@ -172,7 +188,7 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
 
     if ((P2tPktType)rx_buf.header == P2tPktType::P2tRequestAerOutput)
     {
-        std::printf("\n %d \n", (P2tPktType)rx_buf.header) ;
+        std::printf("\n %d \n", (int)(P2tPktType)rx_buf.header) ;
         AER_out aero (rx_buf);
         std::printf("\n Add: %d \n", aero.address) ;
         std::printf("\n Ts:%d \n", aero.ts_1ms) ;
@@ -242,7 +258,7 @@ void setupbiasGenWindow(bool show_bg_config, bool bg_upload[], int bg_address[],
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * glfw_error_callback
 *----------------------------------------------------------------------------------------------------------------------------------------*/
-static void glfw_error_callback(int error, const char* description)
+void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW error %d: %s\n", error, description);
 }
@@ -254,4 +270,28 @@ static void glfw_error_callback(int error, const char* description)
 const char* getGlslVersion()
 {
     return glsl_version;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* adjustStringFormatting
+*----------------------------------------------------------------------------------------------------------------------------------------*/
+std::string adjustStringFormatting(std::string str)
+{
+    // if(str.length() < 11)
+    // {
+    //     return(str + "\t\t\t");
+    // }
+    // else 
+    if(str.length() < 15)
+    {
+        return(str + "\t\t");
+    }
+    else if(str.length() < 19)
+    {
+        return(str + "\t");
+    }
+    else
+    {
+        return str + "  ";
+    }
 }

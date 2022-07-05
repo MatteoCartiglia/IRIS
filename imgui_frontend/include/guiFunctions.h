@@ -18,14 +18,19 @@
 
 #include "../../teensy_backend/include/datatypes.h"
 
-// Defining function prototypes
+/****************** Defining function prototypes ************************/
+
+//
 GLFWwindow* setupWindow();
 void setupImGuiContext(GLFWwindow* window);
 void renderImGui(GLFWwindow* window);
 
-void setupDacWindow(bool show_dac_config, int DACvalue[], bool DAC_upload, DAC_command dac[], int serialPort);
+//
+void setupDacWindow(bool show_dac_config, bool DAC_upload, DAC_command dac[], int serialPort);
 void setupAerWindow(bool show_aero, bool AER_init, int serialPort);
 void setupbiasGenWindow(bool show_bg_config, bool bg_upload[], int bg_address[], int bg_transistor_type[], int bg_fine_val[], int bg_course_val[], double course_current[], BIASGEN_command bg[], int serialPort);
 
-static void glfw_error_callback(int error, const char* description);
+//
+std::string adjustStringFormatting(std::string str);
+void glfw_error_callback(int error, const char* description);
 const char* getGlslVersion();

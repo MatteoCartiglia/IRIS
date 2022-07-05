@@ -1,0 +1,82 @@
+biasName, value (mV), ALIVE_address
+DENM_GainE_P			20pA
+DENM_GainI_P			40pA
+DEAM_GainE_P			32pA
+DEAM_GainI_P			40pA
+DEGAb_GainE_P			20pA
+DEGAb_GainI_P			40pA
+DEGAa_GainE_P			20pA
+DEGAa_GainI_P			40pA
+DENM_TauE_P			5pA
+DENM_TauI_P			10pA
+DEAM_TauE_P			8pA
+DEAM_TauI_P			10pA
+DEGAb_TauE_P			5pA
+DEGAb_TauI_P			10pA
+DEGAa_TauE_P			5pA
+DEGAa_TauI_P			10pA
+DEAM_w_N			25nA
+DEGAa_w_N			8nA
+DEGAb_w_N			100pA
+DENM_Vthr_NMDA_N			100pA
+			
+NEURON BIASES			
+SOIF_SPKTHR_N			1nA
+SOIF_REFR_N			100pA
+SOIF_LEAK_P			5pA
+SOIF_GAIN_P			20pA
+SOAD_W_N			0A
+SOAD_GAIN_P			20pA
+SOAD_TAU_P			5pA
+SOAD_PWTAU_P			500nA
+STARVE_P			1nA
+			
+ANALOG SYNAPSE BIASES			
+SYNA_Bias_N			10pA
+SYNA_VW0_N			18nA
+SYNA_Theta1_N			1nA
+SYNA_Theta2_P			50nA
+SYNA_HalfVdd			900mV
+			
+LEARNING BLOCK BIASES			
+Bump_TailBias_P			100nA
+Bump_Vwell_V			1.8V
+			
+STOP LEARNING BLOCK BIASES			
+ST_Ca_ThrHigh_P			500pA
+ST_Ca_ThrLow_P			70pA
+ST_DPI_CaPWTAU_P			250nA
+ST_DPI_Catau_P			5pA
+ST_DPI_Caw_N			600nA
+ST_WTA_TailBiasHigh_N			500pA
+ST_WTA_TailBiasLow_N			20pA
+ST_DPI_Cagain_P			20pA
+			
+DIGITAL SYNAPSES BIASES			
+SYN_DACBIASGAb_N			800pA
+SYN_DACBIASNM_N			100nA
+SYN_RST_GAb			0V
+SYN_RST_NM			0V
+			
+LEARNING BLOCK BIASES			
+LFSR_rst			0V
+rst_val<17:0>			1.8V
+WTA_tailbias_VN			100nA
+abs_stopwidth_VP			10pA
+			
+STOP LEARNING BLOCK enable			
+ST_en			0V
+			
+SYNAPSES PULSE EXTENSION BIASES			
+SYN_PWEXT_P			12nA
+SYNA_PWEXT_P			12nA
+			
+C2F BIASES			
+CF_REF_H_P			1.262uA
+CF_REF_L_N  			21nA
+CF_BIAS_N			21nA
+CF_HYS_P			0A
+CF_PWLK_P			1.262uA
+			
+BUFFER BIAS			
+BUF_P			1uA

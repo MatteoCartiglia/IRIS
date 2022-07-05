@@ -8,7 +8,6 @@
 # Ignore created files
 src/.obj/
 honeyBadger
-*.ini
 
 # Ignore IDE files
 .vscode/

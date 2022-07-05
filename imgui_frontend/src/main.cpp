@@ -11,10 +11,10 @@
 #include <termios.h>        // POSIX terminal control definitions
 #include <fcntl.h>          // File control definitions
 #include <stdio.h>
-#include <string>
-#include <vector>
-#include <fstream>
-#include <sstream>
+#include <string>   //
+#include <vector>   //
+#include <fstream>  //
+#include <sstream>  //
 #include <cstddef>
 #include <iostream>
 
@@ -26,12 +26,13 @@
 
 #include "../include/constants.h"
 #include "../include/guiFunctions.h"
+#include "../include/dataFunctions.h"
 
 // Defining global variables 
 bool show_demo_window = false;
-bool show_bg_config = true;
+bool show_bg_config = false;
 bool show_dac_config = true;
-bool show_aero = true;
+bool show_aero = false;
 bool AER_init = false;
 
 // Declaration of function prototypes 
@@ -56,44 +57,40 @@ int main(int, char**)
     static double course_current[6]= {60*pow(10, -6), 460*pow(10, -6), 3.8*pow(10, -3), 30*pow(10, -3), 240*pow(10, -3), 1.9*pow(10, 0)}; //uA
 
     // Defining DAC variables
-    DAC_command dac[MAX_DAC_CHANNEL];
-    bool DAC_upload[MAX_DAC_CHANNEL];
-    int DACvalue[MAX_DAC_CHANNEL];
+    bool DAC_upload[DAC_CHANNELS_USED];
+        
+    DAC_command dac[DAC_CHANNELS_USED];
+    getDACvalues(dac);
 
 
     /* ----------------------------------- Initialising Command Variables ----------------------------------- */
 
     for (uint8_t i=0; i<MAX_BG_CHANNELS; i++) {
-        bg[i].address= i;
+        bg[i].address = i;
         bg_address[i] = i;
 
-        bg[i].transistor_type= (bias_type & biases[i]);
+        bg[i].transistor_type = (bias_type & biases[i]);
         bg_transistor_type[i] = (bias_type & biases[i]);
 
-        bg[i].fine_val= (bias_fine & biases[i]) >>FINE_BIAS_SHIFT;
+        bg[i].fine_val = (bias_fine & biases[i]) >>FINE_BIAS_SHIFT;
         bg_fine_val[i] = (bias_fine & biases[i]) >>FINE_BIAS_SHIFT;
 
         bg[i].course_val = (bias_course & biases[i]) >>COURSE_BIAS_SHIFT ; 
         bg_course_val[i] = (bias_course & biases[i]) >>COURSE_BIAS_SHIFT ; 
     }
-
-    for (int i=0; i<MAX_DAC_CHANNEL; i++) 
-    {
-        dac[i].dac_number = (uint8_t) 0;
-        dac[i].data = (uint16_t) 0;
-        DACvalue[i] = 500;
-        dac[i].command_address = DAC_COMMAND << DAC_COMMAND_SHIFT | i ;
-    }
+   
 
 
     /* ----------------------------------- Opening Serial Port ----------------------------------- */
     
     int serialPort = open(PORT_NAME, O_RDWR);
 
-    if (serialPort < 0) {
+    if (serialPort < 0) 
+    {
         printf("Error %i from open: %s\n", errno, strerror(errno));
     }
-    else {
+    else 
+    {
         char port_opened[100] = "Serial port opened successfully. \n";
         printf("Port opened successfuly");
         write(serialPort, port_opened, sizeof(port_opened));
@@ -115,8 +112,10 @@ int main(int, char**)
 
         // Setup demo window
         if (show_demo_window)
+        {
             ImGui::ShowDemoWindow(&show_demo_window);
             ImPlot::ShowDemoWindow(&show_demo_window);
+        }
         
         // Setup AER event logging window
         if (show_aero)
@@ -124,7 +123,7 @@ int main(int, char**)
 
         // Setup digital-to-analogue convertor configuration window
         if (show_dac_config)
-            setupDacWindow(show_dac_config, DACvalue, DAC_upload, dac, serialPort);
+            setupDacWindow(show_dac_config, DAC_upload, dac, serialPort);
 
         // Setup the bias generation configuration window 
         if (show_bg_config)
@@ -158,17 +157,23 @@ std::vector<int> readbias_file(const std::string& path)
 {
     std::stringstream ss;
     std::ifstream input_file(path);
-    if (!input_file.is_open()) {
-        std::cout << "Could not open the file - '"
-             << path << "'" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    ss << input_file.rdbuf();
     std::string value;
     std::vector<int> biases;
 
-    while(std::getline(ss,value,'\n')){
+    if (!input_file.is_open()) 
+    {
+        std::cout << "Could not open the file - '" << path << "'" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    ss << input_file.rdbuf();
+
+    while(std::getline(ss,value,'\n'))
+    {
         biases.push_back(stoi(value));
     }
+
     return biases;
 }
+
+
