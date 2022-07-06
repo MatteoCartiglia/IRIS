@@ -96,10 +96,10 @@ void loop() {
             }
 
             case P2tPktType::P2tSetDcVoltage :{  // DAC
-                DAC_command DAC( rx_buf);
+                DAC_command DAC(rx_buf);
                 dac.write_dacs(DAC.command_address, DAC.data); 
                 delay(100);
-                Serial.print("DAC command recived \n");
+                Serial.print("DAC command recieved \n");
                 sendStatus(TeensyStatus::Success);
                 break;   
             }

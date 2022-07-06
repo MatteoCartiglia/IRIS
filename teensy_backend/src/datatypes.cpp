@@ -10,10 +10,9 @@
 
 P2TPkt::P2TPkt(const DAC_command& dc) : header((std::uint8_t)P2tPktType::P2tSetDcVoltage) 
 {
-    body[0] = dc.dac_number; 
-    body[1] = dc.command_address; 
-    body[2] = dc.data >> 8;
-    body[3] = dc.data & 0xFF;
+    body[0] = dc.command_address; 
+    body[1] = dc.data >> 8;
+    body[2] = dc.data & 0xFF;
 };
 
 P2TPkt::P2TPkt(const SPI_command& sp) : header((std::uint8_t)P2tPktType::P2tSetSPI) 

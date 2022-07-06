@@ -17,9 +17,10 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
     std::ifstream input_file(path);
     std::string line;
     std::vector<std::vector<std::string>> parsedCSV;
+    int noFileLines = getFileLines(path);
 
     // Iterating over all lines in the csv file
-    for(int i = 0; i <= DAC_CHANNELS_USED; i++)
+    for(int i = 0; i <noFileLines; i++)
     {
         std::getline(input_file, line);
         std::stringstream lineStream(line);
@@ -42,6 +43,25 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
     return parsedCSV;
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getFileLines
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+int getFileLines(const std::string& path)
+{
+    int noRows = 0;
+    std::ifstream input_file(path);
+    std::string line;
+
+    while(std::getline(input_file, line))
+    {
+        noRows++;
+    }    
+
+    return noRows;
+}
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getDACvalues
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -52,7 +72,7 @@ void getDACvalues(DAC_command dac[])
 
     for (int i = 0; i < (int) parseCSVoutput.size(); i++)
     {
-        std::string dacBiasName = "                    ";
+        std::string dacBiasName = "                       ";
 
         for(int j = 0; j < (int) parseCSVoutput[i][0].length(); j++)
         {
@@ -61,6 +81,55 @@ void getDACvalues(DAC_command dac[])
 
         dac[i].name = dacBiasName;
         dac[i].data = (uint16_t) std::stoi(parseCSVoutput[i][1]);
-        dac[i].command_address = (DAC_COMMAND << DAC_COMMAND_SHIFT) | (int) std::stoi(parseCSVoutput[i][2]);
+        dac[i].command_address = DAC_COMMAND_WRITE_UPDATE | (int) std::stoi(parseCSVoutput[i][2]);
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getSPIvalues
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void getBiasGenValues(BIASGEN_command biasGen[])
+{
+    std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(BIASGEN_BIASFILE);
+
+    for (int i = 0; i < (int) parseCSVoutput.size(); i++)
+    {
+        std::string biasGen_BiasName = "                       ";
+
+        for(int j = 0; j < (int) parseCSVoutput[i][0].length(); j++)
+        {
+            biasGen_BiasName[j] = parseCSVoutput[i][0][j];
+        }
+        
+        biasGen[i].name = biasGen_BiasName;
+        // biasGen[i].course_val = 0;
+        // biasGen[i].fine_val = 0;
+        // biasGen[i].transistor_type = 0;
+        // biasGen[i].address = 0;
+    }
+}
+
+int decimalToBinary(int decimalVal)
+{
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getRelevantFileRows
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[], bool relevantFileRows[], int fileRows)
+{
+    for(int i = 0; i < fileRows; i++)
+    {
+        if (biasGen[i].name.find(substring) != std::string::npos) 
+        {
+            relevantFileRows[i] = 1;
+        }
+        else
+        {
+            relevantFileRows[i] = 0;
+        }
     }
 }

@@ -10,6 +10,7 @@
 #include <stdio.h>          // Standard input output
 #include <errno.h>          // Error number definitions
 #include <string>
+#include <vector>
 
 #include "../imgui/imgui_backend/imgui_impl_glfw.h"
 #include "../imgui/imgui_backend/imgui_impl_opengl3.h"
@@ -17,6 +18,7 @@
 #include "../imgui/imgui_src/implot_internal.h"
 
 #include "../../teensy_backend/include/datatypes.h"
+#include "../include/constants.h"
 
 /****************** Defining function prototypes ************************/
 
@@ -26,11 +28,14 @@ void setupImGuiContext(GLFWwindow* window);
 void renderImGui(GLFWwindow* window);
 
 //
-void setupDacWindow(bool show_dac_config, bool DAC_upload, DAC_command dac[], int serialPort);
+void setupDacWindow(bool show_dac_config, DAC_command dac[], int serialPort);
+void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS]);
 void setupAerWindow(bool show_aero, bool AER_init, int serialPort);
-void setupbiasGenWindow(bool show_bg_config, bool bg_upload[], int bg_address[], int bg_transistor_type[], int bg_fine_val[], int bg_course_val[], double course_current[], BIASGEN_command bg[], int serialPort);
 
 //
-std::string adjustStringFormatting(std::string str);
 void glfw_error_callback(int error, const char* description);
 const char* getGlslVersion();
+
+//
+int checkLimits(int value, int maxLimit);
+int checkLimits_Synapse(int value, int synapseType, int coreType);

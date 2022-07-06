@@ -9,6 +9,7 @@
 #define DATATYPES_H
 
 #include <cstdint>
+#include <string>
 #include "constants.h"
 
 static constexpr std::size_t MAX_PKT_BODY_LEN = MAX_PKT_LEN - sizeof(std::uint8_t);
@@ -64,9 +65,9 @@ struct P2TPkt
 struct DAC_command
 {
     DAC_command() {};
-    DAC_command (const P2TPkt& pkt) : dac_number(pkt.body[0]), command_address(pkt.body[1]), data( pkt.body[2] << 8 | pkt.body[3] ) {};
+    DAC_command (const P2TPkt& pkt) : command_address(pkt.body[0]), data( pkt.body[1] << 8 | pkt.body[2] ) {};
 
-    uint8_t dac_number;
+    std::string name;
     uint8_t command_address; 
     std::uint16_t data;
 };
@@ -82,8 +83,9 @@ struct SPI_command{
 
 struct BIASGEN_command{ 
     BIASGEN_command() {};
-    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0] << 8|pkt.body[1] ), course_val(pkt.body[2]),  fine_val( pkt.body[3]),transistor_type(pkt.body[4]) {};
+    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0] << 8|pkt.body[1] ), course_val(pkt.body[2]),  fine_val( pkt.body[3]), transistor_type(pkt.body[4]) {};
 
+    std::string name;
     uint16_t address;
     uint8_t course_val;
     uint8_t fine_val;
