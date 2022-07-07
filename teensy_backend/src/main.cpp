@@ -216,7 +216,7 @@ void SPI_events(int spi_number, int address, int value)
     case 2:
         spi_controller(SPI2, SLAVE_SPI2_VRST, address, value);
     default:
-    break;
+        break;
   }
 }
 

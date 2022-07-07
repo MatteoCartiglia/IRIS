@@ -45,24 +45,6 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getFileLines
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-int getFileLines(const std::string& path)
-{
-    int noRows = 0;
-    std::ifstream input_file(path);
-    std::string line;
-
-    while(std::getline(input_file, line))
-    {
-        noRows++;
-    }    
-
-    return noRows;
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------
 // getDACvalues
 //---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -104,6 +86,7 @@ void getBiasGenValues(BIASGEN_command biasGen[])
         
         biasGen[i].name = biasGen_BiasName;
         biasGen[i].currentValue_uV = std::stof(parseCSVoutput[i][1]);
+        biasGen[i].transistorType = std::stoi(parseCSVoutput[i][2]);
         // biasGen[i].course_val = 0;
         // biasGen[i].fine_val = 0;
         // biasGen[i].transistor_type = 0;
@@ -111,9 +94,22 @@ void getBiasGenValues(BIASGEN_command biasGen[])
     }
 }
 
-int decimalToBinary(int decimalVal)
-{
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getFileLines
+//---------------------------------------------------------------------------------------------------------------------------------------
 
+int getFileLines(const std::string& path)
+{
+    int noRows = 0;
+    std::ifstream input_file(path);
+    std::string line;
+
+    while(std::getline(input_file, line))
+    {
+        noRows++;
+    }    
+
+    return noRows;
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -138,4 +134,13 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
     }
 
     return counter;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// decimalToBinary
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+int decimalToBinary(int decimalVal)
+{
+
 }

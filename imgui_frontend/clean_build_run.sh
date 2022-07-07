@@ -1,3 +1,3 @@
 make clean
 make
-./honeyBadger
+./alive_interface

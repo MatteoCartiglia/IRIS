@@ -8,6 +8,17 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+//
+#define AER_DECODER_BIT_0_PIN       18
+#define AER_DECODER_BIT_1_PIN       19
+#define AER_DECODER_BIT_2_PIN       20
+#define AER_DECODER_BIT_3_PIN       21
+#define AER_DECODER_BIT_4_PIN       22
+#define AER_DECODER_BIT_5_PIN       23
+#define AER_DECODER_BIT_6_PIN       24
+#define AER_DECODER_BIT_7_PIN       25
+#define AER_DECODER_BIT_8_PIN       26
+
 // DAC CONFIGURATION FOR ALIVE
 #define DAC_RESET               33
 #define DAC_A1                  36

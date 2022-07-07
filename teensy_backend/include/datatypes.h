@@ -83,17 +83,17 @@ struct SPI_command{
 
 struct BIASGEN_command{ 
     BIASGEN_command() {};
-    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0] << 8|pkt.body[1] ), course_val(pkt.body[2]),  fine_val( pkt.body[3]), transistor_type(pkt.body[4]) {};
+    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0] << 8|pkt.body[1] ), course_val(pkt.body[2]),  fine_val( pkt.body[3]), transistorType(pkt.body[4]) {};
 
     std::string name;
     float currentValue_uV;
     uint16_t address;
     uint8_t course_val;
     uint8_t fine_val;
-    uint8_t transistor_type;
+    uint8_t transistorType;
 };
 
-struct AER_in_command{
+struct AER_in_command {
     AER_in_command() ;
     AER_in_command (const P2TPkt& pkt) : address(pkt.body[0] << 8 | pkt.body[1] ), isi_10us(pkt.body[2] << 8 | pkt.body[3]) {};
 

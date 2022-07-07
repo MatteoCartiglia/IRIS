@@ -15,7 +15,7 @@ SOURCE_DIR = src
 OBJ_DIR = src/.obj
 ODIR_PATH = src/.obj/
 TEENSY_BACKEND_DIR = ../teensy_backend/src
-EXE = honeyBadger
+EXE = alive_interface
 
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL

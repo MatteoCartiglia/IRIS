@@ -22,16 +22,6 @@
 #define AER_NO_AMPA_SYNAPSES_CC     6
 #define AER_NO_AMPA_SYNAPSES_NN     3       // 3 AMPA+ and 3 AMPA-
 
-#define AER_DECODER_BIT_0_PIN       18
-#define AER_DECODER_BIT_1_PIN       19
-#define AER_DECODER_BIT_2_PIN       20
-#define AER_DECODER_BIT_3_PIN       21
-#define AER_DECODER_BIT_4_PIN       22
-#define AER_DECODER_BIT_5_PIN       23
-#define AER_DECODER_BIT_6_PIN       24
-#define AER_DECODER_BIT_7_PIN       25
-#define AER_DECODER_BIT_8_PIN       26
-
 // DAC-related constants
 #define DAC_BIASFILE                "data/BiasValues_DAC.csv"
 #define DAC_CHANNELS_USED           11
@@ -43,24 +33,24 @@
 #define BIASGEN_CHANNELS            54
 #define BIASGEN_CATEGORIES          9
 #define BIASGEN_MAX_VOLTAGE         1    // mV
+#define BIASGEN_NO_TRANS_TYPES      2
+#define BIASGEN_NO_VALUE_CHANGES    2
 
 // GUI-related constants
 #define BUTTON_HEIGHT               20
 #define BUTTON_UPDATE_WIDTH         100
 #define BUTTON_AER_WIDTH            285
 #define WINDOW_HEIGHT               800
-#define WINDOW_WIDTH                1000
+#define WINDOW_WIDTH                1100
 #define CLEAR_COLOUR_X              0.45f
 #define CLEAR_COLOUR_Y              0.55f
 #define CLEAR_COLOUR_Z              0.60f
 #define CLEAR_COLOUR_W              1.00f
 
 
-
-#define NUMBER_CHANNELS     8
-
-#define bias_type           0x0001
-#define bias_fine           0x01FE
-#define bias_course         0x0E00
-#define FINE_BIAS_SHIFT     1
-#define COURSE_BIAS_SHIFT   9
+// #define NUMBER_CHANNELS     8
+// #define bias_type           0x0001
+// #define bias_fine           0x01FE
+// #define bias_course         0x0E00
+// #define FINE_BIAS_SHIFT     1
+// #define COURSE_BIAS_SHIFT   9

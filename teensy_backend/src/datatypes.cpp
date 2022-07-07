@@ -28,7 +28,7 @@ P2TPkt::P2TPkt(const BIASGEN_command& bg) : header((std::uint8_t)P2tPktType::P2t
     body[1] = bg.address; 
     body[2] = bg.course_val; 
     body[3] = bg.fine_val; 
-    body[4] = bg.transistor_type; 
+    body[4] = bg.transistorType; 
 };
 
 P2TPkt::P2TPkt(const AER_out& aero) : header((std::uint8_t)P2tPktType::P2tRequestAerOutput) 

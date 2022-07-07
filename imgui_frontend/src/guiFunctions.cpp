@@ -15,12 +15,14 @@ const char *options_chipCore[AER_NO_CORES] = {"Neural Network", "Cortical Circui
 const char *options_synapseType[AER_NO_SYNAPSE_TYPES] = {"NMDA", "GABAa", "GABAb", "AMPA"};
 const char *options_neuronNumber[AER_NO_NEURONS] = {"1", "2", "3", "4"};
 const char *options_neuronNumber_PlasticSynapses[1] = {"All Neurons"};
+const char *options_biasGenTransistorType[BIASGEN_NO_TRANS_TYPES] = {"nFET", "pFET"};
 const char *biasGenHeaderStr[BIASGEN_CATEGORIES] = {"Alpha DPI", "Neurons", "Analogue Synapses", "Digital Synapses", "Synapse Pulse Extension", "Learning Block", "Stop Learning Block", "Current To Frequency", "Buffer"};
 
 int selection_chipCore = 0;
 int selection_synapseType = 0;
 int selection_neuronNumber = 0;
 int value_synapseNumber = 0;
+int selection_transistorType = 0;
 
 bool selectionChange_chipCore = 0;
 bool selectionChange_synapseType  = 0;
@@ -173,15 +175,15 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
 {
     ImGui::Begin("AER Packet", &show_aero);  
 
-    std::string comboLabel_core_str = "   CORE";
+    std::string comboLabel_core_str = " CORE";
     const char *comboLabel_core = comboLabel_core_str.c_str();
     selection_chipCore, selectionChange_chipCore = ImGui::Combo(comboLabel_core, &selection_chipCore, options_chipCore, AER_NO_CORES);
 
-    std::string comboLabel_synapse_str = "   SYNAPSE TYPE";
+    std::string comboLabel_synapse_str = " SYNAPSE TYPE";
     const char *comboLabel_synapse = comboLabel_synapse_str.c_str();
     selection_synapseType, selectionChange_synapseType = ImGui::Combo(comboLabel_synapse, &selection_synapseType, options_synapseType, AER_NO_SYNAPSE_TYPES);
 
-    std::string comboLabel_neuronNumber_str = "   NEURON";
+    std::string comboLabel_neuronNumber_str = " NEURON";
     const char *comboLabel_neuronNumber = comboLabel_neuronNumber_str.c_str();
 
     // Plastic NMDA synapses for both cores
@@ -195,13 +197,20 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
         selection_neuronNumber, selectionChange_neuronNumber = ImGui::Combo(comboLabel_neuronNumber, &selection_neuronNumber, options_neuronNumber, AER_NO_NEURONS);
     }
 
-    std::string comboLabel_synapseNumber_str = "   SYNAPSE NO.";
+    std::string comboLabel_synapseNumber_str = " SYNAPSE NO.";
     const char *comboLabel_synapseNumber = comboLabel_synapseNumber_str.c_str();
     value_synapseNumber, selectionChange_synapseNumber = ImGui::InputInt(comboLabel_synapseNumber, &value_synapseNumber);
     value_synapseNumber = checkLimits_Synapse(value_synapseNumber, selection_synapseType, selection_chipCore);   
 
+
+
     // Adding a "Send" button to write to serial port
-    ImGui::Button("Send Packet to Teensy", ImVec2(BUTTON_AER_WIDTH, BUTTON_HEIGHT));
+    if(ImGui::Button("Send Packet to Teensy", ImVec2(BUTTON_AER_WIDTH, BUTTON_HEIGHT)))
+    {
+        // P2TPkt p2t_pk(); 
+        // write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+    }
+    
     ImGui::End();
 }
 
@@ -211,7 +220,7 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[])
+        std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[])
 {
     ImGui::Begin("Bias Generator Configuration", &show_biasGen_config);
 
@@ -231,17 +240,26 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
                     ImGui::SameLine();
 
                     // Setting an invisible label for the input field
-                    std::string emptylabel_str = "##";
-                    const char *emptylabel = emptylabel_str.c_str(); 
+                    std::string emptylabel0_str = "##0";
+                    const char *emptylabel0 = emptylabel0_str.c_str(); 
                     
                     // Adding an input field for changing bias value
                     ImGui::PushItemWidth(150);
-                    biasGen[j].currentValue_uV, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel, &biasGen[j].currentValue_uV, 0.000001, 0, "%.6f", 0);
+                    biasGen[j].currentValue_uV, selectionChange_BiasGen[i][noRelevantFileRows[i]][0] = ImGui::InputFloat(emptylabel0, &biasGen[j].currentValue_uV, 0.000001, 0, "%.6f", 0);
                     biasGen[j].currentValue_uV = checkLimits(biasGen[j].currentValue_uV, BIASGEN_MAX_VOLTAGE); 
                     ImGui::SameLine();
 
                     // Including units
                     ImGui::Text("uA");
+                    ImGui::SameLine();
+
+                    std::string emptylabel1_str = "##1";
+                    const char *emptylabel1 = emptylabel1_str.c_str(); 
+
+                    ImGui::PushItemWidth(100);
+                    selection_transistorType = biasGen[j].transistorType;
+                    selection_transistorType, selectionChange_BiasGen[i][noRelevantFileRows[i]][1] = ImGui::Combo(emptylabel1, &selection_transistorType, options_biasGenTransistorType, BIASGEN_NO_TRANS_TYPES);
+                    biasGen[j].transistorType = selection_transistorType;
                     ImGui::SameLine();
 
                     // Adding a update button to write to serial port
