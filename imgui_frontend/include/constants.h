@@ -42,9 +42,19 @@
 #define BIASGEN_BIASFILE            "data/BiasValues_BIASGEN.csv"
 #define BIASGEN_CHANNELS            54
 #define BIASGEN_CATEGORIES          9
+#define BIASGEN_MAX_VOLTAGE         1    // mV
 
 // GUI-related constants
 #define BUTTON_HEIGHT               20
+#define BUTTON_UPDATE_WIDTH         100
+#define BUTTON_AER_WIDTH            285
+#define WINDOW_HEIGHT               800
+#define WINDOW_WIDTH                1000
+#define CLEAR_COLOUR_X              0.45f
+#define CLEAR_COLOUR_Y              0.55f
+#define CLEAR_COLOUR_Z              0.60f
+#define CLEAR_COLOUR_W              1.00f
+
 
 
 #define NUMBER_CHANNELS     8

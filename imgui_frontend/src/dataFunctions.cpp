@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 //
 //
-// Author: 
+// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
 // Last updated: 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -103,6 +103,7 @@ void getBiasGenValues(BIASGEN_command biasGen[])
         }
         
         biasGen[i].name = biasGen_BiasName;
+        biasGen[i].currentValue_uV = std::stof(parseCSVoutput[i][1]);
         // biasGen[i].course_val = 0;
         // biasGen[i].fine_val = 0;
         // biasGen[i].transistor_type = 0;
@@ -119,17 +120,22 @@ int decimalToBinary(int decimalVal)
 // getRelevantFileRows
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[], bool relevantFileRows[], int fileRows)
+int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[], bool relevantFileRows[], int fileRows)
 {
+    int counter = 0;
+
     for(int i = 0; i < fileRows; i++)
     {
         if (biasGen[i].name.find(substring) != std::string::npos) 
         {
             relevantFileRows[i] = 1;
+            counter++;
         }
         else
         {
             relevantFileRows[i] = 0;
         }
     }
+
+    return counter;
 }

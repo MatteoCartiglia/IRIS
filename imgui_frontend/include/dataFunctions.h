@@ -20,6 +20,6 @@ int getFileLines(const std::string& path);
 void getDACvalues(DAC_command dac[]);
 
 void getBiasGenValues(BIASGEN_command biasGen[]);
-void getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[], bool relevantFileRows[], int fileRows);
+int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[], bool relevantFileRows[], int fileRows);
 
 int decimalToBinary(int decimalVal);

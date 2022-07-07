@@ -86,6 +86,7 @@ struct BIASGEN_command{
     BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0] << 8|pkt.body[1] ), course_val(pkt.body[2]),  fine_val( pkt.body[3]), transistor_type(pkt.body[4]) {};
 
     std::string name;
+    float currentValue_uV;
     uint16_t address;
     uint8_t course_val;
     uint8_t fine_val;

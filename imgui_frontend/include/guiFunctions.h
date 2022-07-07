@@ -24,18 +24,17 @@
 
 //
 GLFWwindow* setupWindow();
-void setupImGuiContext(GLFWwindow* window);
 void renderImGui(GLFWwindow* window);
 
 //
 void setupDacWindow(bool show_dac_config, DAC_command dac[], int serialPort);
-void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS]);
+void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+    std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[]);
 void setupAerWindow(bool show_aero, bool AER_init, int serialPort);
 
 //
 void glfw_error_callback(int error, const char* description);
-const char* getGlslVersion();
 
 //
-int checkLimits(int value, int maxLimit);
+float checkLimits(float value, int maxLimit);
 int checkLimits_Synapse(int value, int synapseType, int coreType);
