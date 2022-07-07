@@ -7,7 +7,7 @@
 
 # Ignore created files
 src/.obj/
-./alive_interface
+alive_interface
 
 # Ignore IDE files
 .vscode/
