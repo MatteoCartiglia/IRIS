@@ -8,6 +8,11 @@
 #include "../include/dataFunctions.h"
 #include "../include/constants.h"
 
+//----------------------------------------------- Defining global variables -------------------------------------------------------------
+
+float masterCurrent[BIASGEN_NO_MASTER_CURRENTS] = {0.00006, 0.00046, 0.0038, 0.03, 0.24, 1.9}; // uA
+
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // parseCSV 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -54,6 +59,7 @@ void getDACvalues(DAC_command dac[])
 
     for (int i = 0; i < (int) parseCSVoutput.size(); i++)
     {
+        // Defining an string of spaces for consistent sizing in GUI
         std::string dacBiasName = "                       ";
 
         for(int j = 0; j < (int) parseCSVoutput[i][0].length(); j++)
@@ -68,7 +74,7 @@ void getDACvalues(DAC_command dac[])
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getSPIvalues
+// getBiasGenValues
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void getBiasGenValues(BIASGEN_command biasGen[])
@@ -77,6 +83,7 @@ void getBiasGenValues(BIASGEN_command biasGen[])
 
     for (int i = 0; i < (int) parseCSVoutput.size(); i++)
     {
+        // Defining an string of spaces for consistent sizing in GUI
         std::string biasGen_BiasName = "                       ";
 
         for(int j = 0; j < (int) parseCSVoutput[i][0].length(); j++)
@@ -87,10 +94,10 @@ void getBiasGenValues(BIASGEN_command biasGen[])
         biasGen[i].name = biasGen_BiasName;
         biasGen[i].currentValue_uV = std::stof(parseCSVoutput[i][1]);
         biasGen[i].transistorType = std::stoi(parseCSVoutput[i][2]);
-        // biasGen[i].course_val = 0;
-        // biasGen[i].fine_val = 0;
-        // biasGen[i].transistor_type = 0;
-        // biasGen[i].address = 0;
+        biasGen[i].address = std::stoi(parseCSVoutput[i][3]);
+
+        //
+        getBiasGenPacket(biasGen[i].currentValue_uV, biasGen[i].transistorType, biasGen[i].currentValue_binary);
     }
 }
 
@@ -137,10 +144,82 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// decimalToBinary
+// getBiasGenPacket
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-int decimalToBinary(int decimalVal)
+void getBiasGenPacket(float decimalVal, int transistorType, int binaryVal)
 {
+    if(decimalVal > BIASGEN_MAX_CURRENT)
+    {
+        fprintf(stderr, "BiasGen cannot generate currents larger than %f uA.\n", BIASGEN_MAX_CURRENT);
+    }
+    else
+    {
+        int fineCurrent;
+        int coarseCurrent;
 
+        // Calculating the coarse current value
+        for(int i = 0; i < BIASGEN_NO_MASTER_CURRENTS; i++)
+        {
+            if(masterCurrent[i] > decimalVal)
+            {
+                coarseCurrent = i;
+                break;
+            }
+        }
+
+        // Calculating the fine current value: I_target = I_coarse*I_fine / 256
+        fineCurrent = BIASGEN_MULTIPL_FACTOR*decimalVal/masterCurrent[coarseCurrent];
+
+        // Create 12-bit binary packet
+        binaryVal = (coarseCurrent << BIASGEN_COURSE_BIAS_SHIFT) | (fineCurrent << BIASGEN_FINE_BIAS_SHIFT) | (transistorType);
+
+        // printf("Current: %.6f uA \t Decimal value: %d \t Binary: ", decimalVal, binaryVal);
+        // printBinaryValue(binaryVal, BIASGEN_PACKET_SIZE);
+    }
 }
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// printBinaryValue
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void printBinaryValue(int decimalVal, int size)
+{
+    bool binaryNum[size];
+    int valueToPrint = decimalVal;
+
+    // Defining the loop iterator
+    int i = 0;
+
+    if(valueToPrint > 0)
+    {
+        while (valueToPrint > 0) 
+        {
+            // Perform modulo operation and store remainder in binary array
+            binaryNum[i] = valueToPrint % 2;
+
+            // Divide value by 2 and increment counter
+            valueToPrint = valueToPrint / 2;
+            i++;
+        }
+    }
+    else
+    {
+        for(i = 0; i < size; i++)
+        {
+            binaryNum[i] = 0;
+        }
+    }
+
+
+    // Printing binary array in reverse order
+    for (int j = i - 1; j >= 0; j--)
+    {
+        std::cout << binaryNum[j];
+    }
+
+    std::cout << "\n";
+}
+
+

@@ -15,7 +15,6 @@ const char *options_chipCore[AER_NO_CORES] = {"Neural Network", "Cortical Circui
 const char *options_synapseType[AER_NO_SYNAPSE_TYPES] = {"NMDA", "GABAa", "GABAb", "AMPA"};
 const char *options_neuronNumber[AER_NO_NEURONS] = {"1", "2", "3", "4"};
 const char *options_neuronNumber_PlasticSynapses[1] = {"All Neurons"};
-const char *options_biasGenTransistorType[BIASGEN_NO_TRANS_TYPES] = {"nFET", "pFET"};
 const char *biasGenHeaderStr[BIASGEN_CATEGORIES] = {"Alpha DPI", "Neurons", "Analogue Synapses", "Digital Synapses", "Synapse Pulse Extension", "Learning Block", "Stop Learning Block", "Current To Frequency", "Buffer"};
 
 int selection_chipCore = 0;
@@ -157,8 +156,8 @@ void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort)
         // Adding a update button to write to serial port
         if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
         {
-            P2TPkt p2t_pk(dac[i]); 
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            // P2TPkt p2t_pk(dac[i]); 
+            // write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         }
         
         ImGui::PopID();
@@ -202,7 +201,7 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
     value_synapseNumber, selectionChange_synapseNumber = ImGui::InputInt(comboLabel_synapseNumber, &value_synapseNumber);
     value_synapseNumber = checkLimits_Synapse(value_synapseNumber, selection_synapseType, selection_chipCore);   
 
-
+    
 
     // Adding a "Send" button to write to serial port
     if(ImGui::Button("Send Packet to Teensy", ImVec2(BUTTON_AER_WIDTH, BUTTON_HEIGHT)))
@@ -220,7 +219,7 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-        std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[])
+        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[])
 {
     ImGui::Begin("Bias Generator Configuration", &show_biasGen_config);
 
@@ -245,8 +244,8 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
                     
                     // Adding an input field for changing bias value
                     ImGui::PushItemWidth(150);
-                    biasGen[j].currentValue_uV, selectionChange_BiasGen[i][noRelevantFileRows[i]][0] = ImGui::InputFloat(emptylabel0, &biasGen[j].currentValue_uV, 0.000001, 0, "%.6f", 0);
-                    biasGen[j].currentValue_uV = checkLimits(biasGen[j].currentValue_uV, BIASGEN_MAX_VOLTAGE); 
+                    biasGen[j].currentValue_uV, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &biasGen[j].currentValue_uV, 0.000001, 0, "%.6f", 0);
+                    biasGen[j].currentValue_uV = checkLimits(biasGen[j].currentValue_uV, BIASGEN_MAX_CURRENT); 
                     ImGui::SameLine();
 
                     // Including units
@@ -255,12 +254,6 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
 
                     std::string emptylabel1_str = "##1";
                     const char *emptylabel1 = emptylabel1_str.c_str(); 
-
-                    ImGui::PushItemWidth(100);
-                    selection_transistorType = biasGen[j].transistorType;
-                    selection_transistorType, selectionChange_BiasGen[i][noRelevantFileRows[i]][1] = ImGui::Combo(emptylabel1, &selection_transistorType, options_biasGenTransistorType, BIASGEN_NO_TRANS_TYPES);
-                    biasGen[j].transistorType = selection_transistorType;
-                    ImGui::SameLine();
 
                     // Adding a update button to write to serial port
                     if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
@@ -291,15 +284,25 @@ void glfw_error_callback(int error, const char* description)
 // checkLimits
 //----------------------------------------------------------------------------------------------------------------------------------------
 
-float checkLimits(float value, int maxLimit)
+float checkLimits(float value, int maxLimit, int minValue)
 {
     if(value > maxLimit)
     {
         value = maxLimit;
     }
-    else if (value < 0)
+    else if(minValue == 0)
     {
-        value = 0;
+        if(value < minValue)
+        {
+            value = minValue;
+        }
+    }
+    else
+    {
+        if((value < minValue) && (value != 0))
+        {
+            value = 0;
+        }
     }
 
     return value;

@@ -6,30 +6,24 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <Arduino.h>
-#include <Wire.h>
-#include <SPI.h>
 
 #include "constants.h"
 #include "datatypes.h"
-#include "aer_in.h"
+#include "biasGen.h"
 #include "dac.h"
+#include "aer.h"
+
 
 // Declaring function prototypes in order of definition
 
-void bg_setup(int clk, int cs, int mosi , int enable);
-void spi_setup(int clk, int cs, int mosi);
+
 static void aeroISR();
-void SPI_events(int spi_number, int address, int value);
-void bg_controller(SPIClass SPI, int cs, int address, int value);
-void spi_controller(SPIClass SPI, int cs, int address, int value);
 void sendStatus(TeensyStatus msg);
 void transmitAnyAerEvents();
 
 // Defining global variables
 
-static P2TPkt rx_buf;
 uint8_t msg_buf[1];
-static bool aero_flag;
 
 elapsedMicros since_blank_micro;
 elapsedMillis since_blank_milli;
@@ -45,46 +39,49 @@ AER_in aero(AERO_REQ,
             10,
             false);
 
-DAC dac{
-    DAC_RESET,
-    DAC_A0, 
-    DAC_A1
-};
+//------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
+
+static bool aerOUT;
+static P2TPkt inputBuffer;
+
+DAC dac{DAC_RESET, DAC_A0, DAC_A1};
+BiasGen biasGen{BIASGEN_SCK_PIN , BIASGEN_SLAVE_SPI0 , BIASGEN_MOSI_PIN, BIASGEN_ENABLE_PIN};
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // "setup" function: 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void setup() {
+void setup() 
+{
+    biasGen.setupBiasGen();
 
-    delay(2000);
-
-    if (BIAS_GEN) bg_setup(BG_SCK , SLAVE_SPI0_BGEN , BG_MOSI, BG_ENABLE);
-    if (SPI1_ON) spi_setup(C_SCK , SLAVE_SPI1_CRST , C_MOSI);
-    if (SPI2_ON) spi_setup(V_SCK , SLAVE_SPI2_VRST , V_MOSI);
-    
-    aero_flag = false;
+    aerOUT = false;
     attachInterrupt(digitalPinToInterrupt(AERO_REQ), aeroISR, CHANGE);
 
     dac.setup_dacs();
     dac.join_i2c_bus();
     dac.turn_reference_off();
-    Serial.print("SETUP COMPLETE!");
+
+    Serial.print("********************* Setup complete *********************\n");
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // "main" function: reads in serial communication and 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void loop() {    
+void loop() 
+{    
+   if (usb_serial_available()) 
+   {
+        // Read the data in the input buffer
+        usb_serial_read(&inputBuffer, sizeof(inputBuffer));
 
-
-   if (usb_serial_available()) {
-
-        usb_serial_read(&rx_buf, sizeof(rx_buf)); // in bytes. 1 byte is 8 bits.
-
-        switch ((P2tPktType)rx_buf.header) {
+        // Interpret the input data
+        switch ((P2tPktType)inputBuffer.header) 
+        {
                
+
+
             case P2tPktType::P2tSetBiasGen:{  // BiasGen
                 Serial.print("Biasgen command recieved \n");
                 BIASGEN_command BG (rx_buf);
@@ -144,44 +141,6 @@ void loop() {
 } ;
 
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// bg_setup 
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-void bg_setup(int clk, int cs, int mosi , int enable){ 
-
-    pinMode(enable, OUTPUT);
-    pinMode(clk, OUTPUT);
-    pinMode(cs, OUTPUT);
-    pinMode(mosi, OUTPUT);
-
-    digitalWrite(clk, LOW);
-    delay(1);
-    digitalWrite(cs, HIGH);
-    delay(1);
-    digitalWrite(mosi, LOW);
-    delay(1);
-    digitalWrite(enable, HIGH);
-    delay(1);
-}   
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// spi_setup 
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-void spi_setup(int clk, int cs, int mosi ){ 
-    
-    pinMode(clk, OUTPUT);
-    pinMode(cs, OUTPUT);
-    pinMode(mosi, OUTPUT);
-
-    digitalWrite(clk, LOW);
-    delay(1);
-    digitalWrite(cs, HIGH);
-    delay(1);
-    digitalWrite(mosi, LOW);
-    delay(1);
-}   
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // aeroISR  
@@ -200,76 +159,6 @@ static void aeroISR()
     }
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// SPI = Serial Peripheral Interface
-// SPI_events passes events to the relevant controller method 
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-void SPI_events(int spi_number, int address, int value)
-{
-  switch(spi_number)
-  {
-    case 0:
-        bg_controller(SPI, SLAVE_SPI0_BGEN, address, value);
-    case 1:
-        spi_controller(SPI1, SLAVE_SPI1_CRST,address, value);
-    case 2:
-        spi_controller(SPI2, SLAVE_SPI2_VRST, address, value);
-    default:
-        break;
-  }
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// bg_controller
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-void bg_controller(SPIClass SPI, int pin, int address, int value)
-{
-    SPI.begin();
-    SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
-
-    uint8_t add = (address  >> 8 ) & 0xFF ; 
-    uint8_t add2 = address & 0xFF ; 
-    uint8_t val = (value  >> 8 ) & 0xFF ; 
-    uint8_t val2 = value  & 0xFF ; 
-
-    digitalWrite(pin, LOW);
-    delay(100);
-    digitalWrite(pin, HIGH);
-    delay(100); 
-    digitalWrite(pin, LOW);
-    delay(100);
-
-    SPI.transfer(add);
-    SPI.transfer(add2);
-    SPI.transfer(val);
-    SPI.transfer(val2);
-    SPI.endTransaction();
-}
-
-//cannot create an SPI class because it SPI.h doesn't have a constructur
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// spi_controller 
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-void spi_controller(SPIClass SPI, int cs, int address, int value)
-{
-    SPI.begin();
-    SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
-
-    digitalWrite(cs,LOW);
-    delay(100);
-    digitalWrite(cs,HIGH);
-    delay(100); 
-    digitalWrite(cs,LOW);
-    delay(100);
-
-    SPI.transfer(address);
-    SPI.transfer(value);
-    SPI.endTransaction();
-}
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // sendStatus  

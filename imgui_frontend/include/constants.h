@@ -32,9 +32,12 @@
 #define BIASGEN_BIASFILE            "data/BiasValues_BIASGEN.csv"
 #define BIASGEN_CHANNELS            54
 #define BIASGEN_CATEGORIES          9
-#define BIASGEN_MAX_VOLTAGE         1    // mV
-#define BIASGEN_NO_TRANS_TYPES      2
-#define BIASGEN_NO_VALUE_CHANGES    2
+#define BIASGEN_MAX_CURRENT         1.9     // uA
+#define BIASGEN_NO_MASTER_CURRENTS  6
+#define BIASGEN_MULTIPL_FACTOR      256
+#define BIASGEN_COURSE_BIAS_SHIFT   9
+#define BIASGEN_FINE_BIAS_SHIFT     1
+#define BIASGEN_PACKET_SIZE         12
 
 // GUI-related constants
 #define BUTTON_HEIGHT               20
@@ -46,11 +49,3 @@
 #define CLEAR_COLOUR_Y              0.55f
 #define CLEAR_COLOUR_Z              0.60f
 #define CLEAR_COLOUR_W              1.00f
-
-
-// #define NUMBER_CHANNELS     8
-// #define bias_type           0x0001
-// #define bias_fine           0x01FE
-// #define bias_course         0x0E00
-// #define FINE_BIAS_SHIFT     1
-// #define COURSE_BIAS_SHIFT   9

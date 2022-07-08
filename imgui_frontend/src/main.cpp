@@ -26,8 +26,7 @@
 #include "../include/guiFunctions.h"
 #include "../include/dataFunctions.h"
 
-
-// Defining global variables 
+//------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
 bool show_BiasGen_Config = true;
 bool show_DAC_Config = true;
 bool show_AER_Config = true;
@@ -41,7 +40,7 @@ bool AER_init = true;
 
 int main(int, char**)
 {
-    //----------------------------------- Defining & Initialising Variables ----------------------------------- 
+    //-------------------------------------------------- Defining & Initialising Variables ---------------------------------------------- 
 
     BIASGEN_command biasGen[BIASGEN_CHANNELS];
     DAC_command dac[DAC_CHANNELS_USED];
@@ -49,7 +48,7 @@ int main(int, char**)
     std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
     bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
     int noRelevantFileRows[BIASGEN_CATEGORIES];
-    std::vector<std::vector<std::vector<int>>> valueChange_BiasGen;
+    std::vector<std::vector<int>> valueChange_BiasGen;
 
     getDACvalues(dac);
     getBiasGenValues(biasGen);
@@ -57,29 +56,22 @@ int main(int, char**)
     // Creating a vector of boolean vectors to hold the bias value change variables for each bias per category
     for(int i = 0; i < BIASGEN_CATEGORIES; i++)
     {
-        std::vector<int> valueChange_currentTransistorType;
-        // Resizing the vector to prevent malloc errors
-        valueChange_currentTransistorType.resize(BIASGEN_NO_VALUE_CHANGES);
-
+        std::vector<int> valueChange_BiasGen_Category;
         noRelevantFileRows[i] = getRelevantFileRows_BiasGen(substring[i], biasGen, relevantFileRows[i], BIASGEN_CHANNELS);
-        std::vector<std::vector<int>> valueChange_BiasGen_Category;
+        
+        // Resizing the vector to prevent malloc errors
         valueChange_BiasGen_Category.resize(noRelevantFileRows[i]);
 
         for(int j = 0; j <= noRelevantFileRows[i]; j++)
         {
-            for(int k = 0; k < BIASGEN_NO_VALUE_CHANGES; k++)
-            {
-                valueChange_currentTransistorType.push_back(0);
-            }
-
-            valueChange_BiasGen_Category.push_back(valueChange_currentTransistorType);
+            valueChange_BiasGen_Category.push_back(0);
         }
         
         valueChange_BiasGen.push_back(valueChange_BiasGen_Category);
     }
  
 
-    //----------------------------------- Opening Serial Port ----------------------------------- 
+    //------------------------------------------------------ Opening Serial Port ------------------------------------------------------
     
     int serialPort = open(PORT_NAME, O_RDWR);
 
@@ -94,7 +86,7 @@ int main(int, char**)
         write(serialPort, port_opened, sizeof(port_opened));
     }
 
-    //----------------------------------- Setup GUI Window -----------------------------------
+    //------------------------------------------------------- Setup GUI Window ------------------------------------------------------- 
         
     GLFWwindow* window = setupWindow();
 
@@ -137,7 +129,7 @@ int main(int, char**)
         renderImGui(window);
     }
 
-    //----------------------------------- Graceful Shutdown -----------------------------------
+    //-----------------------------------------------------  Graceful Shutdown ----------------------------------------------------- 
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

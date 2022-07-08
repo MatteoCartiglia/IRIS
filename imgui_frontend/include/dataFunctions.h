@@ -10,9 +10,10 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <errno.h>          // Error number definitions
+#include <cstddef>          // Includes byte data type
 
 #include "../../teensy_backend/include/datatypes.h"
-#include "../include/constants.h"
 
 //
 std::vector<std::vector<std::string>> parseCSV(const std::string& path);
@@ -27,4 +28,8 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
 
 //
 void getAERpacket();
-int decimalToBinary(int decimalVal);
+void getBiasGenPacket(float decimalVal, int transistorType, int binaryVal);
+void getDACpacket();
+
+//
+void printBinaryValue(int decimalVal, int size);
