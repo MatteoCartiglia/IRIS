@@ -15,34 +15,28 @@
 static constexpr std::size_t MAX_PKT_BODY_LEN = MAX_PKT_LEN - sizeof(std::uint8_t);
 
 struct DAC_command;
-struct SPI_command;
 struct BIASGEN_command;
-struct AER_out;
-struct AER_in_ALIVE;
+struct AER_DECODER_OUTPUT_command;
+struct AER_ENCODER_INPUT_command;
+struct AER_C2F_INPUT_command;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-enum class TeensyStatus {
-    HardResetFailed             = 1,
-    IncorrectCurrentSwitchRange = 2,
-    CurrentCannotBeSet          = 3,
-    CurrentOutsideSearchRange   = 4,
-    UnknownCommand              = 5,
-    AerHandshakeFailed          = 6,
-    HardResetImminent           = 7,  // Sent before hard reset sequence is started to give host a chance to disconnect
-    HardResetNotSupported       = 8,
-    Success                     = 10,
+enum class TeensyStatus 
+{
+    UnknownCommand                  = -1,
+    Success                         = 0,
 };
 
-enum class P2tPktType { // keep Compatible with PLANE+COACH
-
-    P2tSetDcVoltage       = 3U  << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tRequestAerOutput   = 11U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSendEvents         = 14U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSetBiasGen         = 16U << PKT_HDR_PKT_TYPE_SHIFT,
-    P2tSetSPI             = 17U << PKT_HDR_PKT_TYPE_SHIFT,
+enum class P2tPktType 
+{
+    P2t_SetDACvoltage               = 0U,
+    P2t_SetBiasGen                  = 1U,
+    P2t_RequestAerDecoder_Output    = 2U,
+    P2t_AckAerEncoder_Input         = 3U,
+    P2t_AckAerC2f_Input             = 4U
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -51,10 +45,11 @@ enum class P2tPktType { // keep Compatible with PLANE+COACH
 
 struct P2TPkt 
 {
-    P2TPkt(const DAC_command& dc) ;
-    P2TPkt(const BIASGEN_command& bg);
-    P2TPkt(const AER_in_ALIVE_command& aliveIN);
-    P2TPkt(const AER_out_ALIVE_command& aliveOUT);
+    P2TPkt(const DAC_command& dac) ;
+    P2TPkt(const BIASGEN_command& biasGen);
+    P2TPkt(const AER_DECODER_OUTPUT_command& aerOutputDecoder);
+    P2TPkt(const AER_ENCODER_INPUT_command& aerInputEncoder);
+    P2TPkt(const AER_C2F_INPUT_command& aerInputC2F);
     P2TPkt() {}
 
     std::uint8_t header; // Packet length encoded in header excludes size of header
@@ -65,7 +60,7 @@ struct P2TPkt
 struct DAC_command
 {
     DAC_command() {};
-    DAC_command (const P2TPkt& pkt) : command_address(pkt.body[0]), data( pkt.body[1] << 8 | pkt.body[2]) {};
+    DAC_command (const P2TPkt& pkt) : command_address(pkt.body[0]), data((pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]) {};
 
     std::string name;
     std::uint8_t command_address; 
@@ -75,19 +70,19 @@ struct DAC_command
 struct BIASGEN_command
 { 
     BIASGEN_command() {};
-    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0]), currentValue_binary( pkt.body[1] << 8 | pkt.body[2]) {};
+    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0]), currentValue_binary(( pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]) {};
 
+    std::uint8_t address;
+    std::uint16_t currentValue_binary;
     std::string name;
     float currentValue_uV;
-    std::uint16_t currentValue_binary;
-    std::uint8_t address;
     std::uint8_t transistorType;
 };
 
-struct AER_in_ALIVE_command
+struct AER_DECODER_OUTPUT_command
 {
-    AER_in_ALIVE_command() {};
-    AER_in_ALIVE_command (const P2TPkt& pkt) : core(pkt.body[0]), syn_type(pkt.body[1]), configs(pkt.body[2]) {};
+    AER_DECODER_OUTPUT_command() {};
+    AER_DECODER_OUTPUT_command (const P2TPkt& pkt) : core(pkt.body[0]), syn_type(pkt.body[1]), configs(pkt.body[2]) {};
 
     std::uint8_t core;
     std::uint8_t syn_type;
@@ -95,13 +90,18 @@ struct AER_in_ALIVE_command
     std::uint16_t isi_10us;
 };
 
-struct AER_out_ALIVE_command
+struct AER_ENCODER_INPUT_command
 {
-    AER_out_ALIVE_command() {};
-    AER_out_ALIVE_command (const P2TPkt& pkt) : address(pkt.body[0]), ts_1ms(pkt.body[1] <<8 | pkt.body[2]) {};
+    AER_ENCODER_INPUT_command() {};
+    AER_ENCODER_INPUT_command (const P2TPkt& pkt) : address(pkt.body[0]), ts_1ms(pkt.body[1]) {};
 
     std::uint8_t address;
     std::uint8_t ts_1ms;
 };
 
-#endif 
+struct AER_C2F_INPUT_command
+{
+    AER_C2F_INPUT_command() {};
+};
+
+#endif
