@@ -19,8 +19,16 @@
 #define AER_NO_NMDA_SYNAPSES        40
 #define AER_NO_GABAa_SYNAPSES       2
 #define AER_NO_GABAb_SYNAPSES       16
-#define AER_NO_AMPA_SYNAPSES_CC     6
+#define AER_NO_AMPA_SYNAPSES        6
 #define AER_NO_AMPA_SYNAPSES_NN     3       // 3 AMPA+ and 3 AMPA-
+
+#define AER_CORE_SHIFT              8
+#define AER_SYNAPSE_TYPE_SHIFT      6
+#define AER_NEURON_SHIFT            4
+#define AER_NN_GABAb_BITS_4_5       1
+#define AER_GABAa_BITS_1_2_3        7
+#define AER_AMPA_SHIFT              3
+#define AER_PACKET_SIZE             9
 
 // DAC-related constants
 #define DAC_BIASFILE                "data/BiasValues_DAC.csv"

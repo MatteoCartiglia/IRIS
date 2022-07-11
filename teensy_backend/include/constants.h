@@ -8,8 +8,13 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-// SERIAL COMMS
-#define SERIAL_MAX_PKT_LEN              6
+// UNIVERSAL CONSTANTS
+#define BINARY_8_BIT_SHIFT              8
+#define BINARY_255                      0xFF
+
+// PC <-> TEENSY SERIAL COMMUNICATION
+#define SERIAL_COMMS_SHIFT              8
+#define SERIAL_COMMS_MAX_PKT_LEN        6       // Clarify
 
 // BIASGEN COMMS
 #define BIASGEN_PACKET_LENGTH           12
@@ -17,6 +22,11 @@
 #define BIASGEN_MOSI_PIN                11
 #define BIASGEN_SCK_PIN                 13
 #define BIASGEN_ENABLE_PIN              10
+#define BIASGEN_RESET_PIN               41
+
+#define BIASGEN_MASTER_CURRENTS_NO      6
+#define BIASGEN_SHIFT_COURSE            9
+#define BIASGEN_MULTIPL                 256
 
 // AER COMMUNICATION
 #define AER_WRITE_HANDSHAKE_TIMEOUT     10      // microseconds
@@ -66,24 +76,15 @@
 #define SYN_RST_GABGA_PIN               17   
 #define SYN_RST_NMDA_PIN                18
 
+// LEARNING BLOCK LFSR PINS 
+#define LB_LFSR_RST                     31
+#define LB_LFSR_CLK                     32
+
 // DAC CONFIGURATION FOR ALIVE
 #define DAC_RESET                       33    
 #define DAC_A1                          36    
 #define DAC_A0                          37    
-#define FULL_RANGE                      65536   // Clarify
-#define DAC_REF                         2500    // Clarify
-
-// PC -> TEENSY SERIAL COMMUNICATION
-#define SERIAL_COMMS_SHIFT              8
-#define MAX_PKT_LEN                     6       // Clarify
-
-
-
-
-#define AERO_INPUT_DURATION           15
-#define AER_ON                  1
-
-
-
+#define DAC_BINARY_RANGE                65536
+#define DAC_REFERENCE                   2500
 
 #endif 

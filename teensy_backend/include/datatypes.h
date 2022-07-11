@@ -12,13 +12,12 @@
 #include <string>
 #include "constants.h"
 
-static constexpr std::size_t MAX_PKT_BODY_LEN = MAX_PKT_LEN - sizeof(std::uint8_t);
+static constexpr std::size_t MAX_PKT_BODY_LEN = SERIAL_COMMS_MAX_PKT_LEN - sizeof(std::uint8_t);
 
 struct DAC_command;
 struct BIASGEN_command;
 struct AER_DECODER_OUTPUT_command;
 struct AER_ENCODER_INPUT_command;
-struct AER_C2F_INPUT_command;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
@@ -26,17 +25,17 @@ struct AER_C2F_INPUT_command;
 
 enum class TeensyStatus 
 {
-    UnknownCommand                  = -1,
-    Success                         = 0,
+    UnknownCommand                  = 0,
+    Success                         = 1,
 };
 
 enum class P2tPktType 
 {
-    P2t_SetDACvoltage               = 0U,
-    P2t_SetBiasGen                  = 1U,
-    P2t_RequestAerDecoder_Output    = 2U,
-    P2t_AckAerEncoder_Input         = 3U,
-    P2t_AckAerC2f_Input             = 4U
+    P2t_emptyBuffer                 = 0U,
+    P2t_setDACvoltage               = 1U,
+    P2t_setBiasGen                  = 2U,
+    P2t_aerDecoder_reqOutput        = 3U,
+    P2t_aerEncoder_ackInput         = 4U
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -45,14 +44,13 @@ enum class P2tPktType
 
 struct P2TPkt 
 {
-    P2TPkt(const DAC_command& dac) ;
+    P2TPkt();
+    P2TPkt(const DAC_command& dac);    
     P2TPkt(const BIASGEN_command& biasGen);
     P2TPkt(const AER_DECODER_OUTPUT_command& aerOutputDecoder);
     P2TPkt(const AER_ENCODER_INPUT_command& aerInputEncoder);
-    P2TPkt(const AER_C2F_INPUT_command& aerInputC2F);
-    P2TPkt() {}
 
-    std::uint8_t header; // Packet length encoded in header excludes size of header
+    std::uint8_t header;                          // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
 
 }__attribute__ ((packed));
@@ -76,18 +74,15 @@ struct BIASGEN_command
     std::uint16_t currentValue_binary;
     std::string name;
     float currentValue_uV;
-    std::uint8_t transistorType;
+    bool transistorType;
 };
 
 struct AER_DECODER_OUTPUT_command
 {
     AER_DECODER_OUTPUT_command() {};
-    AER_DECODER_OUTPUT_command (const P2TPkt& pkt) : core(pkt.body[0]), syn_type(pkt.body[1]), configs(pkt.body[2]) {};
+    AER_DECODER_OUTPUT_command (const P2TPkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]) {};
 
-    std::uint8_t core;
-    std::uint8_t syn_type;
-    std::uint8_t configs;  
-    std::uint16_t isi_10us;
+    std::uint16_t data;
 };
 
 struct AER_ENCODER_INPUT_command
@@ -97,11 +92,6 @@ struct AER_ENCODER_INPUT_command
 
     std::uint8_t address;
     std::uint8_t ts_1ms;
-};
-
-struct AER_C2F_INPUT_command
-{
-    AER_C2F_INPUT_command() {};
 };
 
 #endif

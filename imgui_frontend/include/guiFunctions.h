@@ -27,14 +27,15 @@ GLFWwindow* setupWindow();
 void renderImGui(GLFWwindow* window);
 
 //
-void setupDacWindow(bool show_dac_config, DAC_command dac[], int serialPort);
-void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-    std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[]);
+void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
 void setupAerWindow(bool show_aero, bool AER_init, int serialPort);
+void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+    std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
+
+//
+int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber);
+float checkLimits(float value, int maxLimit, int minValue = 0);
+int checkLimits_Synapse(int value, int synapseType, int coreType);
 
 //
 void glfw_error_callback(int error, const char* description);
-
-//
-float checkLimits(float value, int maxLimit, int minValue = 0);
-int checkLimits_Synapse(int value, int synapseType, int coreType);

@@ -27,9 +27,8 @@ int getFileLines(const std::string& path);
 int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[], bool relevantFileRows[], int fileRows);
 
 //
-void getAERpacket();
-void getBiasGenPacket(float decimalVal, int transistorType, int binaryVal);
-void getDACpacket();
+int getBiasGenPacket(float decimalVal, bool transistorType);
+int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber);
 
 //
 void printBinaryValue(int decimalVal, int size);

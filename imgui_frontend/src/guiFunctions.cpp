@@ -8,11 +8,12 @@
 #include <iostream>
 #include "../include/guiFunctions.h"
 #include "../include/constants.h"
+#include "../include/dataFunctions.h"
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
 
-const char *options_chipCore[AER_NO_CORES] = {"Neural Network", "Cortical Circuit"};
-const char *options_synapseType[AER_NO_SYNAPSE_TYPES] = {"NMDA", "GABAa", "GABAb", "AMPA"};
+const char *options_chipCore[AER_NO_CORES] = {"Cortical Circuit", "Neural Network"};
+const char *options_synapseType[AER_NO_SYNAPSE_TYPES] = {"AMPA", "GABAa", "GABAb", "NMDA"};
 const char *options_neuronNumber[AER_NO_NEURONS] = {"1", "2", "3", "4"};
 const char *options_neuronNumber_PlasticSynapses[1] = {"All Neurons"};
 const char *biasGenHeaderStr[BIASGEN_CATEGORIES] = {"Alpha DPI", "Neurons", "Analogue Synapses", "Digital Synapses", "Synapse Pulse Extension", "Learning Block", "Stop Learning Block", "Current To Frequency", "Buffer"};
@@ -125,7 +126,7 @@ void renderImGui(GLFWwindow* window)
 // setupDacWindow
 //----------------------------------------------------------------------------------------------------------------------------------------
 
-void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort)
+void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset)
 {
     ImGui::Begin("Test Structure Biases [DAC Values]", &show_DAC_config);      
 
@@ -144,9 +145,9 @@ void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort)
         
         // Adding an input field for changing bias value
         ImGui::PushItemWidth(120);
-        int inputField_BiasValue = dac[i].data;
-        dac[i].data, valueChange_DACbias[i] = ImGui::InputInt(emptylabel, &inputField_BiasValue);
-        dac[i].data = checkLimits(dac[i].data, DAC_MAX_VOLTAGE); 
+        int inputField_BiasValue = static_cast <int>(dac[i].data);
+        inputField_BiasValue, valueChange_DACbias[i] = ImGui::InputInt(emptylabel, &inputField_BiasValue);
+        dac[i].data = static_cast <std::uint16_t>(checkLimits(inputField_BiasValue, DAC_MAX_VOLTAGE)); 
         ImGui::SameLine();
 
         // Including units
@@ -154,10 +155,10 @@ void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort)
         ImGui::SameLine();
 
         // Adding a update button to write to serial port
-        if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
+        if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) || powerOnReset)
         {
-            // P2TPkt p2t_pk(dac[i]); 
-            // write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            P2TPkt p2t_pk(dac[i]); 
+            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         }
         
         ImGui::PopID();
@@ -185,8 +186,8 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
     std::string comboLabel_neuronNumber_str = " NEURON";
     const char *comboLabel_neuronNumber = comboLabel_neuronNumber_str.c_str();
 
-    // Plastic NMDA synapses for both cores
-    if((selection_synapseType == 0) || (selection_synapseType == 2))
+    // Plastic synapses (NMDA and GABAb) for both cores
+    if((selection_synapseType == 3) || (selection_synapseType == 2))
     {
         selection_neuronNumber, selectionChange_neuronNumber = ImGui::Combo(comboLabel_neuronNumber, &selection_neuronNumber, options_neuronNumber_PlasticSynapses, 1);
     }
@@ -196,18 +197,41 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
         selection_neuronNumber, selectionChange_neuronNumber = ImGui::Combo(comboLabel_neuronNumber, &selection_neuronNumber, options_neuronNumber, AER_NO_NEURONS);
     }
 
-    std::string comboLabel_synapseNumber_str = " SYNAPSE NO.";
+    // Creating different labels for the synapse number to make it clear for the user if AMPA+ or AMPA- synapses have been selected in the NN core
+    std::string comboLabel_synapseNumber_str;
+
+    if((selection_chipCore == 1) && (selection_synapseType == 0))
+    {
+        if(value_synapseNumber < AER_NO_AMPA_SYNAPSES_NN)
+        {
+            comboLabel_synapseNumber_str = " AMPA+ SYNAPSE NO.";
+        }
+        else
+        {
+            comboLabel_synapseNumber_str = " AMPA- SYNAPSE NO.";
+        }
+    }
+    else
+    {
+        comboLabel_synapseNumber_str = " SYNAPSE NO.";
+    }
+
     const char *comboLabel_synapseNumber = comboLabel_synapseNumber_str.c_str();
     value_synapseNumber, selectionChange_synapseNumber = ImGui::InputInt(comboLabel_synapseNumber, &value_synapseNumber);
     value_synapseNumber = checkLimits_Synapse(value_synapseNumber, selection_synapseType, selection_chipCore);   
 
-    
-
     // Adding a "Send" button to write to serial port
     if(ImGui::Button("Send Packet to Teensy", ImVec2(BUTTON_AER_WIDTH, BUTTON_HEIGHT)))
     {
-        // P2TPkt p2t_pk(); 
-        // write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        // Creating the AER packet
+        AER_DECODER_OUTPUT_command decoderOutput;
+        decoderOutput.data = getAERpacket(selection_chipCore, selection_synapseType, selection_neuronNumber, value_synapseNumber);
+
+        // std::cout << "AER packet: ";
+        // printBinaryValue(decoderOutput.data, AER_PACKET_SIZE);
+
+        P2TPkt p2t_pk(decoderOutput); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
     }
     
     ImGui::End();
@@ -219,7 +243,7 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[])
+        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
 {
     ImGui::Begin("Bias Generator Configuration", &show_biasGen_config);
 
@@ -252,9 +276,6 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
                     ImGui::Text("uA");
                     ImGui::SameLine();
 
-                    std::string emptylabel1_str = "##1";
-                    const char *emptylabel1 = emptylabel1_str.c_str(); 
-
                     // Adding a update button to write to serial port
                     if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
                     {
@@ -266,11 +287,23 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
                 }
             }
         }
+
+        // Initialising values at POR
+        if(powerOnReset)
+        {
+            for(int j=0; j<BIASGEN_CHANNELS; j++)
+            {
+                if(relevantFileRows[i][j] == 1)
+                {
+                    P2TPkt p2t_pk(biasGen[j]); 
+                    write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+                }
+            }
+        }
     }
 
     ImGui::End();
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // glfw_error_callback
@@ -316,7 +349,7 @@ int checkLimits_Synapse(int value, int synapseType, int coreType)
 {
     // Call checkLimits with correct maxLimit parameter
 
-    if(selection_synapseType == 0)
+    if(selection_synapseType == 3)
     {
         value = checkLimits(value, AER_NO_NMDA_SYNAPSES);
     }
@@ -328,13 +361,9 @@ int checkLimits_Synapse(int value, int synapseType, int coreType)
     {
         value = checkLimits(value, AER_NO_GABAb_SYNAPSES);
     }
-    else if ((selection_synapseType == 3) && (coreType == 0))
+    else if (selection_synapseType == 0)
     {
-        value = checkLimits(value, AER_NO_AMPA_SYNAPSES_CC);
-    }
-    else if ((selection_synapseType == 3) && (coreType == 1))
-    {
-        value = checkLimits(value, AER_NO_AMPA_SYNAPSES_NN);
+        value = checkLimits(value, AER_NO_AMPA_SYNAPSES);
     }
 
     return value;

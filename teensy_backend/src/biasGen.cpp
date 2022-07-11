@@ -12,12 +12,14 @@
 // BiasGen constructor: initialises the BiasGen object
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-BiasGen::BiasGen(const int clk, const int cs, const int mosi , const int enable)
+BiasGen::BiasGen(const int clk, const int reset, const int mosi , const int enable)
 {
     _clk = clk;
-    _cs = cs;
+    _reset = reset;
     _mosi = mosi;
     _enable = enable;
+
+    setupBiasGen();
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -28,16 +30,21 @@ void BiasGen::setupBiasGen()
 {
     pinMode(_enable, OUTPUT);
     pinMode(_clk, OUTPUT);
-    pinMode(_cs, OUTPUT);
+    pinMode(_reset, OUTPUT);
     pinMode(_mosi, OUTPUT);
+    delay(5);
 
-    digitalWrite(_clk, LOW);
-    delay(1);
-    digitalWrite(_cs, HIGH);
+    digitalWrite(_reset, LOW);          // Clarify reset pattern
     delay(1);
     digitalWrite(_mosi, LOW);
     delay(1);
+    digitalWrite(_clk, LOW);
+    delay(1);
+    digitalWrite(_reset, HIGH);
+    delay(1);
     digitalWrite(_enable, HIGH);
+    delay(1);
+    digitalWrite(_reset, LOW);
     delay(1);
 }
 
@@ -45,7 +52,7 @@ void BiasGen::setupBiasGen()
 // Write to the bias generator 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void BiasGen::writeBiasGen(SPIClass SPI, int pin, int address, int value)
+void BiasGen::writeBiasGen(int address, int value)
 {
     SPI.begin();
     SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
@@ -55,11 +62,11 @@ void BiasGen::writeBiasGen(SPIClass SPI, int pin, int address, int value)
     uint8_t val = (value  >> 8 ) & 0xFF ; 
     uint8_t val2 = value  & 0xFF ; 
 
-    digitalWrite(pin, LOW);
+    digitalWrite(BIASGEN_SLAVE_SPI0, LOW);
     delay(100);
-    digitalWrite(pin, HIGH);
+    digitalWrite(BIASGEN_SLAVE_SPI0, HIGH);
     delay(100); 
-    digitalWrite(pin, LOW);
+    digitalWrite(BIASGEN_SLAVE_SPI0, LOW);
     delay(100);
 
     SPI.transfer(add);
@@ -67,4 +74,27 @@ void BiasGen::writeBiasGen(SPIClass SPI, int pin, int address, int value)
     SPI.transfer(val);
     SPI.transfer(val2);
     SPI.endTransaction();
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getBiasGenDecimal
+//---------------------------------------------------------------------------------------------------------------------------------------
+float BiasGen::getBiasGenDecimal(int binaryValue)
+{
+    // Shifting value to right by 1 to remove transistor type value (not relevant for decimal calculation)
+    int binaryValShifted = binaryValue >> 1;
+    int binaryCoarseVal = binaryValue >> (BIASGEN_SHIFT_COURSE);
+    int binaryFineVal = binaryValShifted - binaryCoarseVal;
+
+    // Serial.print("\t");
+    // Serial.print(binaryValue);
+    // Serial.print("\t");
+    // Serial.print(binaryCoarseVal);
+    // Serial.print("\t");
+    // Serial.print(binaryFineVal);
+    // Serial.print("\t");
+
+    float fineCurrent = (binaryFineVal*_masterCurrent[binaryCoarseVal])/BIASGEN_MULTIPL;
+
+    return fineCurrent;
 }

@@ -43,13 +43,74 @@ AER::AER(const int outputReqPin, const int outputAckPin, int outputDataPins[], i
   _outputDelay = outputDelay;
   _outputActiveLow = outputActiveLow;
 
-  pinMode(outputReqPin, OUTPUT);
+  setupDecoderComms();
+}
 
-  reqWrite(0);
 
-  for(int i = 0; i < outputNumDataPins; i++){
-    pinMode(outputDataPins[i], OUTPUT);
+//---------------------------------------------------------------------------------------------------------------------------------------
+// 
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void AER::setupDecoderComms()
+{
+  for(int i = 0; i < _outputNumDataPins; i++)
+  {
+    pinMode(_outputDataPins[i], OUTPUT);
   }
+
+  pinMode(SYN_RST_NMDA_PIN, OUTPUT);
+  pinMode(SYN_RST_GABGA_PIN, OUTPUT);
+  pinMode(_outputReqPin, OUTPUT);
+  pinMode(_outputAckPin, INPUT);
+  delay(5);
+
+  digitalWrite(SYN_RST_NMDA_PIN, HIGH);
+  delay(1);
+  digitalWrite(SYN_RST_GABGA_PIN, HIGH);
+  delay(1);
+  digitalWrite(SYN_RST_NMDA_PIN, LOW);
+  delay(1);
+  digitalWrite(SYN_RST_GABGA_PIN, LOW);
+  delay(1);
+
+  reqWrite(LOW);
+  delay(1);
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// 
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void AER::setupEncoderComms()
+{
+  for(int i = 0; i < _inputNumDataPins; i++)
+  {
+    pinMode(_inputDataPins[i], INPUT);
+  }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// 
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void AER::setupC2FComms()
+{
+  pinMode(_inputAckPin, OUTPUT);
+  pinMode(_inputReqPin, INPUT);
+  pinMode(P_RST_PIN, OUTPUT);
+  pinMode(S_RST_PIN, OUTPUT);
+  delay(5);
+
+  digitalWrite(P_RST_PIN, LOW);
+  delay(1);
+  digitalWrite(S_RST_PIN, LOW);
+  delay(1);
+  digitalWrite(P_RST_PIN, HIGH);
+  delay(1);
+  digitalWrite(S_RST_PIN, HIGH);
+  delay(1);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------

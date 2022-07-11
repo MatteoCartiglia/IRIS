@@ -30,8 +30,8 @@
 bool show_BiasGen_Config = true;
 bool show_DAC_Config = true;
 bool show_AER_Config = true;
+bool powerOnReset = true;
 
-bool show_demo_window = false;
 bool AER_init = true;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -81,9 +81,7 @@ int main(int, char**)
     }
     else 
     {
-        char port_opened[100] = "Serial port opened successfully. \n";
-        printf("Port opened successfuly");
-        write(serialPort, port_opened, sizeof(port_opened));
+        printf("Serial port opened successfully. \n");
     }
 
     //------------------------------------------------------- Setup GUI Window ------------------------------------------------------- 
@@ -99,14 +97,7 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-        // Setup demo window
-        if (show_demo_window)
-        {
-            ImGui::ShowDemoWindow(&show_demo_window);
-            ImPlot::ShowDemoWindow(&show_demo_window);
-        }
-        
+       
         // Setup AER event logging window
         if (show_AER_Config)
         {
@@ -116,17 +107,18 @@ int main(int, char**)
         // Setup digital-to-analogue convertor configuration window
         if (show_DAC_Config)
         {
-            setupDacWindow(show_DAC_Config, dac, serialPort);
+            setupDacWindow(show_DAC_Config, dac, serialPort, powerOnReset);
         }
 
         // Setup the bias generation configuration window 
         if (show_BiasGen_Config)
         {
-            setupBiasGenWindow(show_BiasGen_Config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows);
+            setupBiasGenWindow(show_BiasGen_Config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, powerOnReset);
         }
 
         // Render the window       
         renderImGui(window);
+        powerOnReset = false;
     }
 
     //-----------------------------------------------------  Graceful Shutdown ----------------------------------------------------- 

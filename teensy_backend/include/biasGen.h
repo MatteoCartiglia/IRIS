@@ -10,6 +10,7 @@
 
 #include <Arduino.h>
 #include <SPI.h>
+#include "constants.h"
 
 class BiasGen {
 
@@ -18,22 +19,26 @@ class BiasGen {
   public:
 
     // BiasGen constructor
-    BiasGen(const int clk, const int cs, const int mosi , const int enable);
+    BiasGen(const int clk, const int reset, const int mosi , const int enable);
 
     // Setup the bias generator
     void setupBiasGen();
 
     // Write to the bias generator
-    void writeBiasGen(SPIClass SPI, int pin, int address, int value);
+    void writeBiasGen(int address, int value);
+
+    // Get decimal equivalent value of binary packet
+    float getBiasGenDecimal(int binaryValue);
 
 
   // --------------------------------------------------- Declaring private variables -------------------------------------------------
 
   private:
     int _clk;
-    int _cs;
+    int _reset;
     int _mosi;
     int _enable;
+    float _masterCurrent[BIASGEN_MASTER_CURRENTS_NO] = {0.00006, 0.00046, 0.0038, 0.03, 0.24, 1.9}; // uA
 };
 
 #endif

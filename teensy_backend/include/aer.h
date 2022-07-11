@@ -20,6 +20,18 @@ class AER
 
     AER(const int outputReqPin, const int outputAckPin, int outputDataPins[], int outputNumDataPins, int outputDelay = 0, bool outputActiveLow = true);
 
+    
+    // -------------------------------------------------- Declaring "setting up" methods ----------------------------------------------
+
+    //
+    void setupDecoderComms();
+
+    //
+    void setupEncoderComms();
+
+    //
+    void setupC2FComms();
+
 
     // ------------------------------------------------ Declaring AER read public methods ---------------------------------------------
 
@@ -36,7 +48,7 @@ class AER
     bool dataRead_handshake();
 
 
-    // --------------------------------------------------- Declaring AER write public methods -------------------------------------------
+    // --------------------------------------------------- Declaring AER write public methods ----------------------------------------
 
     //
     void reqWrite(bool val);

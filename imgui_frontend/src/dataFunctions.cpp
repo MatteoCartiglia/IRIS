@@ -95,9 +95,10 @@ void getBiasGenValues(BIASGEN_command biasGen[])
         biasGen[i].currentValue_uV = std::stof(parseCSVoutput[i][1]);
         biasGen[i].transistorType = std::stoi(parseCSVoutput[i][2]);
         biasGen[i].address = std::stoi(parseCSVoutput[i][3]);
+        biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uV, biasGen[i].transistorType);
 
-        //
-        getBiasGenPacket(biasGen[i].currentValue_uV, biasGen[i].transistorType, biasGen[i].currentValue_binary);
+        // printf("%s : ", biasGen_BiasName.c_str());
+        // printBinaryValue(biasGen[i].currentValue_binary, BIASGEN_PACKET_SIZE);
     }
 }
 
@@ -147,11 +148,12 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
 // getBiasGenPacket
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void getBiasGenPacket(float decimalVal, int transistorType, int binaryVal)
+int getBiasGenPacket(float decimalVal, bool transistorType)
 {
     if(decimalVal > BIASGEN_MAX_CURRENT)
     {
         fprintf(stderr, "BiasGen cannot generate currents larger than %f uA.\n", BIASGEN_MAX_CURRENT);
+        return 0;
     }
     else
     {
@@ -172,13 +174,60 @@ void getBiasGenPacket(float decimalVal, int transistorType, int binaryVal)
         fineCurrent = BIASGEN_MULTIPL_FACTOR*decimalVal/masterCurrent[coarseCurrent];
 
         // Create 12-bit binary packet
-        binaryVal = (coarseCurrent << BIASGEN_COURSE_BIAS_SHIFT) | (fineCurrent << BIASGEN_FINE_BIAS_SHIFT) | (transistorType);
+        int binaryVal = (coarseCurrent << BIASGEN_COURSE_BIAS_SHIFT) | (fineCurrent << BIASGEN_FINE_BIAS_SHIFT) | (transistorType);
 
         // printf("Current: %.6f uA \t Decimal value: %d \t Binary: ", decimalVal, binaryVal);
         // printBinaryValue(binaryVal, BIASGEN_PACKET_SIZE);
+
+        return binaryVal;
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getAERpacket
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber)
+{
+    int chipCore = selection_chipCore << AER_CORE_SHIFT;
+    int synapseType = selection_synapseType << AER_SYNAPSE_TYPE_SHIFT;
+
+    // For AMPA synapses, the neuron number is selected and bit 3 is tied to 1
+    if(selection_synapseType == 0)
+    {
+        int neuronNumber = selection_neuronNumber << AER_NEURON_SHIFT;
+        int synapseLimit = 1 << AER_AMPA_SHIFT;
+        return chipCore | synapseType | neuronNumber | synapseLimit | value_synapseNumber;
+    }
+
+    // For GABAa synapses (CC and NN), the neuron number is selected and bits 1-3 are tied to 1
+    else if(selection_synapseType == 1)
+    {
+        int neuronNumber = selection_neuronNumber << AER_NEURON_SHIFT;
+        int synapseLimit = AER_GABAa_BITS_1_2_3 << 1;
+        return chipCore | synapseType | neuronNumber | synapseLimit | value_synapseNumber;
+    }
+
+    // For NN GABAb, bits 4 and 5 of the AER packet are tied to 1 as there are only 16 columns
+    else if((selection_synapseType == 2) && (selection_chipCore == 1))
+    {
+        int neuronNumber = AER_NN_GABAb_BITS_4_5 << AER_NEURON_SHIFT;
+        return chipCore | synapseType | neuronNumber | value_synapseNumber;
+    }
+
+    // For NMDA synapses (CC and NN) and CC GABGb, all neurons are selected 
+    else if((selection_synapseType == 3) || ((selection_synapseType == 2) && (selection_chipCore == 0)))
+    {
+        return chipCore | synapseType | value_synapseNumber;
+    }
+
+    // If the conditions above have not been met, there is an error
+    else
+    {
+        printf("AER packet error. Core: %d\t Synapse Type: %d\n", chipCore, synapseType);
+        return 0;
+    }
+}
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // printBinaryValue
@@ -189,8 +238,14 @@ void printBinaryValue(int decimalVal, int size)
     bool binaryNum[size];
     int valueToPrint = decimalVal;
 
+    // Initialising the array
+    for(int j = 0; j < size; j++)
+    {
+        binaryNum[j] = 0;
+    }
+
     // Defining the loop iterator
-    int i = 0;
+    int i = size - 1;
 
     if(valueToPrint > 0)
     {
@@ -201,22 +256,14 @@ void printBinaryValue(int decimalVal, int size)
 
             // Divide value by 2 and increment counter
             valueToPrint = valueToPrint / 2;
-            i++;
-        }
-    }
-    else
-    {
-        for(i = 0; i < size; i++)
-        {
-            binaryNum[i] = 0;
+            i--;
         }
     }
 
-
-    // Printing binary array in reverse order
-    for (int j = i - 1; j >= 0; j--)
+    // Printing binary array
+    for (int k = 0; k < size; k++)
     {
-        std::cout << binaryNum[j];
+        std::cout << binaryNum[k];
     }
 
     std::cout << "\n";
