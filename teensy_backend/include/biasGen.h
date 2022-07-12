@@ -38,7 +38,8 @@ class BiasGen {
     int _reset;
     int _mosi;
     int _enable;
-    float _masterCurrent[BIASGEN_MASTER_CURRENTS_NO] = {0.00006, 0.00046, 0.0038, 0.03, 0.24, 1.9}; // uA
+    double _masterCurrent[BIASGEN_NO_MASTER_CURRENTS] = {BIASGEN_MASTER_CURRENT_0, BIASGEN_MASTER_CURRENT_1, BIASGEN_MASTER_CURRENT_2,
+                                                          BIASGEN_MASTER_CURRENT_3, BIASGEN_MASTER_CURRENT_4, BIASGEN_MASTER_CURRENT_5}; // uA
 };
 
 #endif

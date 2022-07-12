@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include "../include/guiFunctions.h"
-#include "../include/constants.h"
 #include "../include/dataFunctions.h"
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
@@ -227,8 +226,8 @@ void setupAerWindow(bool show_aero, bool AER_init, int serialPort)
         AER_DECODER_OUTPUT_command decoderOutput;
         decoderOutput.data = getAERpacket(selection_chipCore, selection_synapseType, selection_neuronNumber, value_synapseNumber);
 
-        // std::cout << "AER packet: ";
-        // printBinaryValue(decoderOutput.data, AER_PACKET_SIZE);
+        std::cout << "AER packet: ";
+        printBinaryValue(decoderOutput.data, AER_PACKET_SIZE);
 
         P2TPkt p2t_pk(decoderOutput); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
@@ -268,8 +267,9 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
                     
                     // Adding an input field for changing bias value
                     ImGui::PushItemWidth(150);
-                    biasGen[j].currentValue_uV, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &biasGen[j].currentValue_uV, 0.000001, 0, "%.6f", 0);
-                    biasGen[j].currentValue_uV = checkLimits(biasGen[j].currentValue_uV, BIASGEN_MAX_CURRENT); 
+                    float inputField_BiasGenValue = biasGen[j].currentValue_uV;
+                    inputField_BiasGenValue, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &inputField_BiasGenValue, 0.000001, 0, "%.6f", 0);
+                    biasGen[j].currentValue_uV = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT); 
                     ImGui::SameLine();
 
                     // Including units
@@ -317,25 +317,15 @@ void glfw_error_callback(int error, const char* description)
 // checkLimits
 //----------------------------------------------------------------------------------------------------------------------------------------
 
-float checkLimits(float value, int maxLimit, int minValue)
+float checkLimits(float value, float maxLimit, float minValue)
 {
     if(value > maxLimit)
     {
         value = maxLimit;
     }
-    else if(minValue == 0)
+    else if(value < minValue)
     {
-        if(value < minValue)
-        {
-            value = minValue;
-        }
-    }
-    else
-    {
-        if((value < minValue) && (value != 0))
-        {
-            value = 0;
-        }
+        value = minValue;
     }
 
     return value;

@@ -14,6 +14,7 @@
 #include <cstddef>          // Includes byte data type
 
 #include "../../teensy_backend/include/datatypes.h"
+#include "../../teensy_backend/include/constants.h"
 
 //
 std::vector<std::vector<std::string>> parseCSV(const std::string& path);

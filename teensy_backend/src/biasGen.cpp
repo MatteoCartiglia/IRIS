@@ -81,20 +81,12 @@ void BiasGen::writeBiasGen(int address, int value)
 //---------------------------------------------------------------------------------------------------------------------------------------
 float BiasGen::getBiasGenDecimal(int binaryValue)
 {
+    int binaryCoarseVal = binaryValue >> (BIASGEN_COURSE_SHIFT);
+
     // Shifting value to right by 1 to remove transistor type value (not relevant for decimal calculation)
     int binaryValShifted = binaryValue >> 1;
-    int binaryCoarseVal = binaryValue >> (BIASGEN_SHIFT_COURSE);
-    int binaryFineVal = binaryValShifted - binaryCoarseVal;
-
-    // Serial.print("\t");
-    // Serial.print(binaryValue);
-    // Serial.print("\t");
-    // Serial.print(binaryCoarseVal);
-    // Serial.print("\t");
-    // Serial.print(binaryFineVal);
-    // Serial.print("\t");
-
-    float fineCurrent = (binaryFineVal*_masterCurrent[binaryCoarseVal])/BIASGEN_MULTIPL;
+    int binaryFineVal = binaryValShifted - (binaryCoarseVal << (BIASGEN_COURSE_SHIFT - 1));
+    float fineCurrent = (binaryFineVal*_masterCurrent[binaryCoarseVal])/BIASGEN_SCALING_FACTOR;
 
     return fineCurrent;
 }

@@ -18,7 +18,7 @@
 #include "../imgui/imgui_src/implot_internal.h"
 
 #include "../../teensy_backend/include/datatypes.h"
-#include "../include/constants.h"
+#include "../../teensy_backend/include/constants.h"
 
 /****************** Defining function prototypes ************************/
 
@@ -34,7 +34,7 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
 
 //
 int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber);
-float checkLimits(float value, int maxLimit, int minValue = 0);
+float checkLimits(float value, float maxLimit, float minValue = 0);
 int checkLimits_Synapse(int value, int synapseType, int coreType);
 
 //

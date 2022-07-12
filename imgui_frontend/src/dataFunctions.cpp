@@ -6,11 +6,11 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include "../include/dataFunctions.h"
-#include "../include/constants.h"
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
 
-float masterCurrent[BIASGEN_NO_MASTER_CURRENTS] = {0.00006, 0.00046, 0.0038, 0.03, 0.24, 1.9}; // uA
+double masterCurrent[BIASGEN_NO_MASTER_CURRENTS] = {BIASGEN_MASTER_CURRENT_0, BIASGEN_MASTER_CURRENT_1, BIASGEN_MASTER_CURRENT_2,
+                                                    BIASGEN_MASTER_CURRENT_3, BIASGEN_MASTER_CURRENT_4, BIASGEN_MASTER_CURRENT_5};
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -171,10 +171,10 @@ int getBiasGenPacket(float decimalVal, bool transistorType)
         }
 
         // Calculating the fine current value: I_target = I_coarse*I_fine / 256
-        fineCurrent = BIASGEN_MULTIPL_FACTOR*decimalVal/masterCurrent[coarseCurrent];
+        fineCurrent = BIASGEN_SCALING_FACTOR*decimalVal/masterCurrent[coarseCurrent];
 
         // Create 12-bit binary packet
-        int binaryVal = (coarseCurrent << BIASGEN_COURSE_BIAS_SHIFT) | (fineCurrent << BIASGEN_FINE_BIAS_SHIFT) | (transistorType);
+        int binaryVal = (coarseCurrent << BIASGEN_COURSE_SHIFT) | (fineCurrent << BIASGEN_FINE_SHIFT) | (transistorType);
 
         // printf("Current: %.6f uA \t Decimal value: %d \t Binary: ", decimalVal, binaryVal);
         // printBinaryValue(binaryVal, BIASGEN_PACKET_SIZE);

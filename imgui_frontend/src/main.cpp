@@ -22,9 +22,9 @@
 #include "../imgui/imgui_src/implot.h"
 #include "../imgui/imgui_src/implot_internal.h"
 
-#include "../include/constants.h"
 #include "../include/guiFunctions.h"
 #include "../include/dataFunctions.h"
+#include "../../teensy_backend/include/constants.h"
 
 //------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
 bool show_BiasGen_Config = true;

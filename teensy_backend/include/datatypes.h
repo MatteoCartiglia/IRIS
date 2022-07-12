@@ -73,7 +73,7 @@ struct BIASGEN_command
     std::uint8_t address;
     std::uint16_t currentValue_binary;
     std::string name;
-    float currentValue_uV;
+    double currentValue_uV;
     bool transistorType;
 };
 

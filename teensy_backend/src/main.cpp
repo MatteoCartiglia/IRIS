@@ -86,7 +86,7 @@ void loop()
                 Serial.print("BiasGen command received. Pin ");
                 // Serial.print((biasGenCommand.name).c_str());
                 Serial.print(biasGenCommand.address);
-                Serial.print(" set to ");
+                Serial.print(" set to approx. ");
                 Serial.print(biasGen.getBiasGenDecimal(biasGenCommand.currentValue_binary), 6);
                 Serial.print(" uA.\n");
 
@@ -116,6 +116,11 @@ void loop()
             {
                 AER_DECODER_OUTPUT_command aerDecoder(inputBuffer);
                 aerOutputDecoder.dataWrite(aerDecoder.data);            // Ask about handshake & req/ack
+
+                Serial.print("AER command received. Binary value: ");
+                Serial.print(aerDecoder.data, BIN);
+                Serial.print("\n");
+
                 break;
             }
 
