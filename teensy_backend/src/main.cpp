@@ -34,7 +34,6 @@ int aerOutputDecoder_dataPins[DECODER_OUTPUT_NO_PIN] = {DECODER_OUTPUT_BIT_0_PIN
 
 TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, aerInputEncoder_dataPins, ENCODER_INPUT_NO_PIN, TEENSY_INPUT_ENCODER);
 TeensyIn inputC2F(C2F_REQ, C2F_ACK, aerInputC2F_dataPins, C2F_INPUT_NO_PIN, TEENSY_INPUT_C2F);
-
 TeensyOut outputDecoder(DECODER_REQ, DECODER_ACK, aerOutputDecoder_dataPins, DECODER_OUTPUT_NO_PIN);
 
 DAC dac{DAC_RESET, DAC_A0, DAC_A1};
@@ -80,13 +79,12 @@ void loop()
                 delay(100);
                 sendTeensyStatus(TeensyStatus::Success);
 
-                Serial.print("BiasGen command received. Bias ");
-                // Serial.print((biasGenCommand.name).c_str());
+                Serial.print("BIASGEN command received. Bias ");
+                Serial.print((biasGenCommand.name).c_str());
                 Serial.print(biasGenCommand.biasNo);
                 Serial.print(" set to approx. ");
                 Serial.print(biasGen.getBiasGenDecimal(biasGenCommand.currentValue_binary), 6);
-                Serial.print(" uA.\n");
-
+                Serial.print(" uA.");
                 break;
             }
 
@@ -103,8 +101,7 @@ void loop()
                 Serial.print(DAC.command_address);
                 Serial.print(" set to ");
                 Serial.print(DAC.data);
-                Serial.print(" mV.\n");
-
+                Serial.print(" mV.");
                 break;   
             }
 
@@ -116,14 +113,14 @@ void loop()
 
                 Serial.print("AER command received. Binary value: ");
                 Serial.print(decoder.data, BIN);
-                Serial.print("\n");
-
                 break;
             }
 
             default: 
+            {
                 sendTeensyStatus(TeensyStatus::UnknownCommand);
                 break;  
+            }
         } 
    }
 
@@ -191,6 +188,6 @@ static void aerInputC2F_ISR()
 static void sendTeensyStatus(TeensyStatus status)
 {
     std::uint8_t teensyStatusBuffer[1] = {(uint8_t) status};
-    usb_serial_write(teensyStatusBuffer, sizeof(teensyStatusBuffer));
+    // usb_serial_write(teensyStatusBuffer, sizeof(teensyStatusBuffer));
 }
 

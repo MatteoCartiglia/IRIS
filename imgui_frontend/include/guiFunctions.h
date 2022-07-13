@@ -30,15 +30,15 @@ GLFWwindow* setupWindow();
 void renderImGui(GLFWwindow* window);
 
 //
-void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
-void setupAerWindow(bool show_AER_config, int serialPort);
-bool setupSerialOutputWindow(bool show_Serial_output, bool logEntry = false, const char* logString = nullptr);
+int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
+int setupAerWindow(bool show_AER_config, int serialPort);
+bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry = false, const char* logString = nullptr);
 
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
-void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
 #else
-void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
 #endif
 

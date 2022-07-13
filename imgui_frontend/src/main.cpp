@@ -26,6 +26,10 @@
 #include "../include/dataFunctions.h"
 #include "../../teensy_backend/include/constants.h"
 
+//----------------------------------------------------- Defining Function Prototypes ----------------------------------------------------- 
+void getSerialData(int serialPort, int expectedResponses, int bufferSize);
+
+
 //------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
 bool show_BiasGen_config = true;
 bool show_DAC_config = true;
@@ -45,8 +49,8 @@ int main(int, char**)
     bool logEntry = false;
 
     int serialPort;
-    int  serialReadBytes = 0;                           // Number of bytes read by the read() system call 
-    char serialReadBuffer[SERIAL_BUFFER_SIZE];          // Buffer to store the data received              
+    char serialPortOpenStr[SERIAL_BUFFER_SIZE_PORT_OPEN] = {"Serial port opened successfully.\n"};
+    int expectedResponses = 0;
     struct termios SerialPortSettings;
 
     BIASGEN_command biasGen[BIASGEN_CHANNELS];
@@ -115,8 +119,6 @@ int main(int, char**)
     cfsetispeed(&SerialPortSettings,B19200);            // Set Read  Speed as 19200                     
     cfsetospeed(&SerialPortSettings,B19200);            // Set Write Speed as 19200
 
-    SerialPortSettings.c_cc[VMIN] = 0;                  // 
-    SerialPortSettings.c_cc[VTIME] = 1;                 // 
 
     if (serialPort < 0) 
     {
@@ -124,7 +126,7 @@ int main(int, char**)
     }
     else 
     {
-        logString = "Serial port opened successfully.\n";
+        logString = serialPortOpenStr;
         logEntry = true;
     }
 
@@ -132,64 +134,69 @@ int main(int, char**)
         
     GLFWwindow* window = setupWindow();
 
-    // Flush serial input buffer
-    tcflush(serialPort, TCIFLUSH);
-
     // Keep window open until the 'X' button is pressed
     while (!glfwWindowShouldClose(window))
     {
+        // Flush serial input buffer
+        tcflush(serialPort, TCIFLUSH);
+
         glfwPollEvents();
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        // Setup the window to show ALIVE output values
+        if(show_Serial_output)
+        {
+            logEntry = updateSerialOutputWindow(show_Serial_output, logEntry, logString);      
+        }
        
         // Setup AER event logging window
         if (show_AER_config)
         {
-            setupAerWindow(show_AER_config, serialPort);
+            expectedResponses = setupAerWindow(show_AER_config, serialPort);
+
+            if((expectedResponses > 0) && (show_Serial_output))
+            {
+                getSerialData(serialPort, expectedResponses, SERIAL_BUFFER_SIZE_AER);
+                expectedResponses = 0;
+            }
         }
 
         // Setup digital-to-analogue convertor configuration window
         if (show_DAC_config)
         {
-            setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset);
+            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset);
+
+            if((expectedResponses > 0) && (show_Serial_output))
+            {
+                getSerialData(serialPort, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
+                expectedResponses = 0;
+            }
         }
 
         // Setup the bias generation configuration window 
         if (show_BiasGen_config)
         {
-            setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, powerOnReset);
-        }
+            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, powerOnReset);
 
-        // Setup the window to show ALIVE output values
-        if(show_Serial_output)
-        {   
-            if(logEntry)
+            if((expectedResponses > 0) && (show_Serial_output))
             {
-                logEntry = setupSerialOutputWindow(show_Serial_output, logEntry, logString);
+                getSerialData(serialPort, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
             }
-            else
-            {
-                logEntry = setupSerialOutputWindow(show_Serial_output);
-            }            
         }
-
-        // serialReadBytes = read(serialPort, &serialReadBuffer, SERIAL_BUFFER_SIZE);
-
-        // if((serialReadBytes != 0) && (serialReadBytes != -1))
-        // {
-        //     logString = serialReadBuffer;
-        //     logEntry = true;  
-        //     tcflush(serialPort, TCIFLUSH);                                      
-        // }
-
-        // tcflush(serialPort, TCIFLUSH);  
 
         // Render the window       
         renderImGui(window);
-        powerOnReset = false;
+
+        //
+        powerOnReset = false;     
+
+        //
+        sleep(0.25);  
     }
 
     //-----------------------------------------------------  Graceful Shutdown ----------------------------------------------------- 
@@ -205,3 +212,34 @@ int main(int, char**)
 
     return 0;
 } 
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getSerialData
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void getSerialData(int serialPort, int expectedResponses, int bufferSize)
+{
+    int serialReadBytes = 0;
+
+    while(expectedResponses > 0)
+    {
+        char serialReadBuffer[bufferSize];
+        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
+
+        serialReadBytes = read(serialPort, &serialReadBuffer, bufferSize);
+        
+        if((serialReadBytes != 0) && (serialReadBytes != -1))
+        {
+            updateSerialOutputWindow(show_Serial_output, true, serialReadBuffer);
+        }
+        else
+        {
+            printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+        }
+
+        expectedResponses--;
+    }
+    
+    tcflush(serialPort, TCIFLUSH);
+}

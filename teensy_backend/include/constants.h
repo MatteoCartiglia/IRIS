@@ -9,7 +9,7 @@
 #define CONSTANTS_H
 
 // ENVIRONMENT CONDITIONS - UNCOMMENT TO ENABLE
-#define BIASGEN_SEND_POR                1
+// #define BIASGEN_SEND_POR                1
 // #define BIASGEN_SET_TRANSISTOR_TYPE     1
 
 // GUI CONSTANTS
@@ -31,7 +31,11 @@
 #define SERIAL_COMMS_SHIFT              8
 #define SERIAL_COMMS_MAX_PKT_LEN        6           // Clarify
 #define SERIAl_PORT_NAME                "/dev/ttyACM0"
-#define SERIAL_BUFFER_SIZE              62
+#define SERIAL_BUFFER_SIZE_BIAS         62
+#define SERIAL_BUFFER_SIZE_DAC          44
+#define SERIAL_BUFFER_SIZE_PORT_OPEN    34
+#define SERIAL_BUFFER_SIZE_AER          44
+#define SERIAL_ASCII_SPACE              32
 
 // ALIVE <-> TEENSY COMMUNICATION
 #define TEENSY_INPUT_C2F                0

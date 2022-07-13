@@ -128,9 +128,10 @@ void renderImGui(GLFWwindow* window)
 // setupDacWindow
 //----------------------------------------------------------------------------------------------------------------------------------------
 
-void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset)
+int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset)
 {
-    ImGui::Begin("Test Structure Biases [DAC Values]", &show_DAC_config);      
+    int serialDataSent = 0;      
+    ImGui::Begin("Test Structure Biases [DAC Values]", &show_DAC_config);
 
     for(int i=0; i<DAC_CHANNELS_USED; i++)
     {
@@ -161,20 +162,23 @@ void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, boo
         {
             P2TPkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            serialDataSent++;
         }
         
         ImGui::PopID();
     }
 
     ImGui::End();
+    return serialDataSent;
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void setupAerWindow(bool show_AER_config, int serialPort)
+int setupAerWindow(bool show_AER_config, int serialPort)
 {
+    int serialDataSent = 0;      
     ImGui::Begin("AER Packet", &show_AER_config);  
 
     std::string comboLabel_core_str = " CORE";
@@ -234,16 +238,18 @@ void setupAerWindow(bool show_AER_config, int serialPort)
 
         P2TPkt p2t_pk(decoderOutput); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        serialDataSent++;
     }
     
     ImGui::End();
+    return serialDataSent;
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAliveOutputWindow
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-bool setupSerialOutputWindow(bool show_Serial_output, bool logEntry, const char* logString)
+bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char* logString)
 {
     static Log log;
     bool logEntryUpdate = logEntry;
@@ -257,7 +263,7 @@ bool setupSerialOutputWindow(bool show_Serial_output, bool logEntry, const char*
 
     if(logEntry)
     {
-        log.AddLog("[%s] %s", timeBuffer, logString);
+        log.AddLog("[%s] %s\n", timeBuffer, logString);
         logEntryUpdate = false;
     }
     
@@ -272,13 +278,14 @@ bool setupSerialOutputWindow(bool show_Serial_output, bool logEntry, const char*
 // setupbiasGenWindow
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
-void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
 #else
-void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
 #endif
 {
+    int serialDataSent = 0;      
     ImGui::Begin("Bias Generator Configuration", &show_biasGen_config);
 
     for(int i = 0; i < BIASGEN_CATEGORIES; i++)
@@ -333,32 +340,31 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
                     {
                         P2TPkt p2t_pk(biasGen[j]); 
                         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+                        serialDataSent++;
                     }
                     
                     ImGui::PopID();
                 }
             }
         }
+    }
 
 #ifdef BIASGEN_SEND_POR
 
-        // Initialising values at POR
-        if(powerOnReset)
+    // Initialising values at POR
+    if(powerOnReset)
+    {
+        for(int k=0; k<BIASGEN_CHANNELS; k++)
         {
-            for(int j=0; j<BIASGEN_CHANNELS; j++)
-            {
-                if(relevantFileRows[i][j] == 1)
-                {
-                    P2TPkt p2t_pk(biasGen[j]); 
-                    write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-                }
-            }
+            P2TPkt p2t_pk(biasGen[k]); 
+            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            serialDataSent++;
         }
+    }
 #endif
 
-    }
-
     ImGui::End();
+    return serialDataSent;
 }
 
 
