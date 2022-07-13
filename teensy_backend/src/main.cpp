@@ -80,7 +80,7 @@ void loop()
                 delay(100);
                 sendTeensyStatus(TeensyStatus::Success);
 
-                Serial.print("BiasGen command received. Pin ");
+                Serial.print("BiasGen command received. Bias ");
                 // Serial.print((biasGenCommand.name).c_str());
                 Serial.print(biasGenCommand.biasNo);
                 Serial.print(" set to approx. ");

@@ -9,7 +9,7 @@
 #define CONSTANTS_H
 
 // ENVIRONMENT CONDITIONS - UNCOMMENT TO ENABLE
-// #define BIASGEN_SEND_POR                1
+#define BIASGEN_SEND_POR                1
 // #define BIASGEN_SET_TRANSISTOR_TYPE     1
 
 // GUI CONSTANTS

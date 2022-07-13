@@ -69,11 +69,11 @@ void DAC::write_dacs(uint8_t command_addess, uint16_t value)
     int commandAddess = command_addess; 
 
     // Scaling decimal value to DAC binary value 
-    int dacData = (value * DAC_BINARY_RANGE) / DAC_REFERENCE -1 ; 
+    uint16_t dacData = (value * DAC_BINARY_RANGE) / DAC_REFERENCE - 1 ; 
 
     // Const
-    int dacDataHighByte = (dacData >> BINARY_8_BIT_SHIFT) & BINARY_255; 
     int dacDataLowByte = dacData & BINARY_255;
+    int dacDataHighByte = (dacData >> BINARY_8_BIT_SHIFT) & BINARY_255; 
 
     Wire2.beginTransmission(12);
     Wire2.write(commandAddess);
