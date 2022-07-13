@@ -34,15 +34,16 @@ void BiasGen::setupBiasGen()
     pinMode(_mosi, OUTPUT);
     delay(5);
 
-    digitalWrite(_reset, LOW);          // Clarify reset pattern
-    delay(1);
     digitalWrite(_mosi, LOW);
     delay(1);
     digitalWrite(_clk, LOW);
     delay(1);
-    digitalWrite(_reset, HIGH);
-    delay(1);
     digitalWrite(_enable, HIGH);
+    delay(1);
+
+    digitalWrite(_reset, LOW);          // Clarify reset pattern
+    delay(1);
+    digitalWrite(_reset, HIGH);
     delay(1);
     digitalWrite(_reset, LOW);
     delay(1);

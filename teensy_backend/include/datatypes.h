@@ -31,11 +31,9 @@ enum class TeensyStatus
 
 enum class P2tPktType 
 {
-    P2t_emptyBuffer                 = 0U,
     P2t_setDACvoltage               = 1U,
     P2t_setBiasGen                  = 2U,
-    P2t_aerDecoder_reqOutput        = 3U,
-    P2t_aerEncoder_ackInput         = 4U
+    P2t_aerDecoder_reqOutput        = 3U
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -44,11 +42,10 @@ enum class P2tPktType
 
 struct P2TPkt 
 {
-    P2TPkt();
+    P2TPkt(){};
     P2TPkt(const DAC_command& dac);    
     P2TPkt(const BIASGEN_command& biasGen);
     P2TPkt(const AER_DECODER_OUTPUT_command& aerOutputDecoder);
-    P2TPkt(const AER_ENCODER_INPUT_command& aerInputEncoder);
 
     std::uint8_t header;                          // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
@@ -68,9 +65,9 @@ struct DAC_command
 struct BIASGEN_command
 { 
     BIASGEN_command() {};
-    BIASGEN_command ( const P2TPkt& pkt) : address(pkt.body[0]), currentValue_binary(( pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]) {};
+    BIASGEN_command ( const P2TPkt& pkt) : biasNo(pkt.body[0]), currentValue_binary(( pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]) {};
 
-    std::uint8_t address;
+    std::uint8_t biasNo;
     std::uint16_t currentValue_binary;
     std::string name;
     double currentValue_uV;
@@ -83,15 +80,6 @@ struct AER_DECODER_OUTPUT_command
     AER_DECODER_OUTPUT_command (const P2TPkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]) {};
 
     std::uint16_t data;
-};
-
-struct AER_ENCODER_INPUT_command
-{
-    AER_ENCODER_INPUT_command() {};
-    AER_ENCODER_INPUT_command (const P2TPkt& pkt) : address(pkt.body[0]), ts_1ms(pkt.body[1]) {};
-
-    std::uint8_t address;
-    std::uint8_t ts_1ms;
 };
 
 #endif

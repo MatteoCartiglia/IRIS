@@ -10,8 +10,8 @@
 
 #include "Arduino.h"
 
-class DAC {
-
+class DAC 
+{
   // ------------------------------------------ Declaring class constructor and public methods -----------------------------------------
 
   public:

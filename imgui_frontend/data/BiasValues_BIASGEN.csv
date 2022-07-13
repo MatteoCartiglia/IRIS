@@ -1,4 +1,4 @@
-biasName, value_uA, transistorType, address
+biasName, value_uA, transistorType, biasNo
 SYN_D_DAC_BIAS_GABAb_N, 0.000800, 1, 0
 SYN_D_DAC_BIAS_NMDA_N, 0.100, 1, 1
 SYN_A_BIAS_N, 0.000010, 1, 2

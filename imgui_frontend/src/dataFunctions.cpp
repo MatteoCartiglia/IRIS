@@ -94,7 +94,7 @@ void getBiasGenValues(BIASGEN_command biasGen[])
         biasGen[i].name = biasGen_BiasName;
         biasGen[i].currentValue_uV = std::stof(parseCSVoutput[i][1]);
         biasGen[i].transistorType = std::stoi(parseCSVoutput[i][2]);
-        biasGen[i].address = std::stoi(parseCSVoutput[i][3]);
+        biasGen[i].biasNo = std::stoi(parseCSVoutput[i][3]);
         biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uV, biasGen[i].transistorType);
 
         // printf("%s : ", biasGen_BiasName.c_str());
@@ -189,29 +189,29 @@ int getBiasGenPacket(float decimalVal, bool transistorType)
 
 int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber)
 {
-    int chipCore = selection_chipCore << AER_CORE_SHIFT;
-    int synapseType = selection_synapseType << AER_SYNAPSE_TYPE_SHIFT;
+    int chipCore = selection_chipCore << ALIVE_CORE_SHIFT;
+    int synapseType = selection_synapseType << ALIVE_SYNAPSE_TYPE_SHIFT;
 
     // For AMPA synapses, the neuron number is selected and bit 3 is tied to 1
     if(selection_synapseType == 0)
     {
-        int neuronNumber = selection_neuronNumber << AER_NEURON_SHIFT;
-        int synapseLimit = 1 << AER_AMPA_SHIFT;
+        int neuronNumber = selection_neuronNumber << ALIVE_NEURON_SHIFT;
+        int synapseLimit = 1 << ALIVE_AMPA_SHIFT;
         return chipCore | synapseType | neuronNumber | synapseLimit | value_synapseNumber;
     }
 
     // For GABAa synapses (CC and NN), the neuron number is selected and bits 1-3 are tied to 1
     else if(selection_synapseType == 1)
     {
-        int neuronNumber = selection_neuronNumber << AER_NEURON_SHIFT;
-        int synapseLimit = AER_GABAa_BITS_1_2_3 << 1;
+        int neuronNumber = selection_neuronNumber << ALIVE_NEURON_SHIFT;
+        int synapseLimit = ALIVE_GABAa_BITS_1_2_3 << 1;
         return chipCore | synapseType | neuronNumber | synapseLimit | value_synapseNumber;
     }
 
     // For NN GABAb, bits 4 and 5 of the AER packet are tied to 1 as there are only 16 columns
     else if((selection_synapseType == 2) && (selection_chipCore == 1))
     {
-        int neuronNumber = AER_NN_GABAb_BITS_4_5 << AER_NEURON_SHIFT;
+        int neuronNumber = ALIVE_NN_GABAb_BITS_4_5 << ALIVE_NEURON_SHIFT;
         return chipCore | synapseType | neuronNumber | value_synapseNumber;
     }
 
