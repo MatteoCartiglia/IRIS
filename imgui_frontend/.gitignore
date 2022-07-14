@@ -8,6 +8,7 @@
 # Ignore created files
 src/.obj/
 alive_interface
+data/output*
 
 # Ignore IDE files
 .vscode/

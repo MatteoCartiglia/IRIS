@@ -50,7 +50,7 @@
 #define BIASGEN_ENABLE_PIN              10
 #define BIASGEN_RESET_PIN               41
 
-#define BIASGEN_BIASFILE                "data/BiasValues_BIASGEN.csv"
+#define BIASGEN_BIASFILE                "data/biasValues_BIASGEN.csv"
 #define BIASGEN_CHANNELS                54
 #define BIASGEN_CATEGORIES              9
 #define BIASGEN_MAX_CURRENT             1.9         // uA
@@ -94,6 +94,8 @@
 #define C2F_INPUT_BIT_3_PIN             22
 #define C2F_INPUT_BIT_4_PIN             23
 #define C2F_INPUT_RANGE                 32
+#define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/outputC2F.csv"
+#define C2F_INPUT_SAVE_FILENAME         "../imgui_frontend/data/outputC2F"
 
 // ENCODER COMMUNICATION
 #define ENCODER_ACK                     30
@@ -102,6 +104,9 @@
 #define ENCODER_INPUT_BIT_0_PIN         26
 #define ENCODER_INPUT_BIT_1_PIN         27
 #define ENCODER_INPUT_BIT_2_PIN         28
+#define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/outputEncoder.csv"
+#define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/outputEncoder"
+
 
 // DECODER COMMUNICATION
 #define DECODER_ACK                     34
@@ -134,7 +139,7 @@
 #define DAC_BINARY_RANGE                65536
 #define DAC_REFERENCE                   2500
 
-#define DAC_BIASFILE                    "data/BiasValues_DAC.csv"
+#define DAC_BIASFILE                    "data/biasValues_DAC.csv"
 #define DAC_CHANNELS_USED               11
 #define DAC_COMMAND_WRITE_UPDATE        48      // 0011 0000
 #define DAC_MAX_VOLTAGE                 1800    // mV

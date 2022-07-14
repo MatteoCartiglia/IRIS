@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <fstream>
+#include <fstream>          // Includes functions to write to file type
 #include <iostream>
 #include <errno.h>          // Error number definitions
 #include <cstddef>          // Includes byte data type
@@ -33,3 +33,4 @@ int getAERpacket(int selection_chipCore, int selection_synapseType, int selectio
 
 //
 void printBinaryValue(int decimalVal, int size);
+void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename);

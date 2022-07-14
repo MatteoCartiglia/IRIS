@@ -44,7 +44,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 
 //
 bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry = false, const char* logString = nullptr);
-void updatePlotWindow(bool updatePlot, double timeStamp, double value, int inputType);
+void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputType);
 
 //
 int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber);

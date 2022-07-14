@@ -269,4 +269,28 @@ void printBinaryValue(int decimalVal, int size)
     std::cout << "\n";
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// saveToCsv
+//---------------------------------------------------------------------------------------------------------------------------------------
 
+void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename)
+{
+    std::ofstream file(filename, std::ios::out | std::ios::app);
+
+    for(int i = 0; i < arraySize; i++)
+    {
+        // printf("%f\n", valuesToSave[i]);
+        file << valuesToSave[i];
+
+        if(i != arraySize - 1)
+        {
+            file << ",";
+        }
+        if(i == arraySize - 1)
+        {
+            file << "\n";
+        }
+    }
+    
+    file.close();
+}

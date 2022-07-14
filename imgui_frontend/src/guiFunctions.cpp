@@ -378,19 +378,22 @@ bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char
 //---------------------------------------------------------------------------------------------------------------------------------------
 // updatePlotWindow
 //---------------------------------------------------------------------------------------------------------------------------------------
-void updatePlotWindow(bool updatePlot, double timeStamp, double value, int inputType)
+void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputType)
 {
+    long valuesToSave[2] = {timeStamp, long(value)};
+    double timeStamp_s = timeStamp/1000;
+
     ImGui::Begin("ALIVE Output", &updatePlot);  
 
     // Updating the data vectors
     if(inputType == TEENSY_INPUT_ENCODER)
     {
-        inputEncoder_xValues.push_back(timeStamp);
+        inputEncoder_xValues.push_back(timeStamp_s);
         inputEncoder_yValues.push_back(value);
     }
     else if(inputType == TEENSY_INPUT_C2F)
     {
-        inputC2F_xValues.push_back(timeStamp);
+        inputC2F_xValues.push_back(timeStamp_s);
         inputC2F_yValues.push_back(value);
     }
 
@@ -398,31 +401,36 @@ void updatePlotWindow(bool updatePlot, double timeStamp, double value, int input
     double yArray[inputEncoder_yValues.size()];
     double xArray[inputEncoder_xValues.size()];
 
-    for(int i = 0; i < inputEncoder_xValues.size(); i++)
+    for(int i = 0; i < int(inputEncoder_xValues.size()); i++)
     {
         xArray[i] = inputEncoder_xValues[i];
         yArray[i] = inputEncoder_yValues[i];
     }
 
     //
-    if(ImPlot::BeginPlot("Encoder Output: Firing Neuron Number"))
+    if((inputType == TEENSY_INPUT_ENCODER) && (ImPlot::BeginPlot("Encoder Output: Firing Neuron Number")))
     {
+        ImPlot::GetStyle().UseLocalTime;
+        ImPlot::GetStyle().Use24HourClock;
+
         ImPlot::SetupAxis(ImAxis_X1, "Time", ImPlotAxisFlags_Time);
         ImPlot::SetupAxis(ImAxis_Y1, "Firing Neuron Number");
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0, ALIVE_NO_NEURONS + 1, 1);
-        ImPlot::SetupAxisLimits(ImAxis_X1, timeStamp - 25, timeStamp + 5, 1);
+        ImPlot::SetupAxisLimits(ImAxis_X1, timeStamp_s - 25, timeStamp_s + 5, 1);
         ImPlot::PlotScatter("###", xArray, yArray, inputEncoder_yValues.size());
         ImPlot::EndPlot();
+        saveToCSV(valuesToSave, 2, ENCODER_INPUT_SAVE_FILENAME_CSV);
     }
 
-    if(ImPlot::BeginPlot("C2F Output: Current Number"))
+    if((inputType == TEENSY_INPUT_C2F) && (ImPlot::BeginPlot("C2F Output: Current Number")))
     {
         ImPlot::SetupAxis(ImAxis_X1, "Time", ImPlotAxisFlags_Time);
         ImPlot::SetupAxis(ImAxis_Y1, "Current Number");
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0, C2F_INPUT_RANGE, 1);
-        ImPlot::SetupAxisLimits(ImAxis_X1, timeStamp - 25, timeStamp + 5, 1);
+        ImPlot::SetupAxisLimits(ImAxis_X1, timeStamp_s - 25, timeStamp_s + 5, 1);
         ImPlot::PlotScatter("###", xArray, yArray, inputEncoder_yValues.size());
         ImPlot::EndPlot();
+        saveToCSV(valuesToSave, 2, C2F_INPUT_SAVE_FILENAME_CSV);
     }
 
     ImGui::End();

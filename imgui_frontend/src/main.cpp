@@ -10,11 +10,13 @@
 #include <errno.h>          // Error number definitions
 #include <termios.h>        // POSIX terminal control definitions
 #include <fcntl.h>          // File control definitions
+#include <filesystem>
 #include <stdio.h>
 #include <string>   
 #include <vector>   
 #include <cstddef>
 #include <iostream>
+#include <chrono>
 
 #include "../imgui/imgui_backend/imgui_impl_opengl3.h"
 #include "../imgui/imgui_backend/imgui_impl_glfw.h"
@@ -45,6 +47,12 @@ bool powerOnReset = true;
 int main(int, char**)
 {
     //-------------------------------------------------- Defining & Initialising Variables ---------------------------------------------- 
+
+    auto time = std::time(nullptr);
+    auto time_tm = *std::localtime(&time);
+    std::ostringstream outputTimeString;
+    outputTimeString << std::put_time(&time_tm, "_%d_%m_%H_%M");
+    auto timeString = outputTimeString.str();
 
     const char* logString;
     bool logEntry = false;
@@ -194,7 +202,7 @@ int main(int, char**)
         if(show_PlotData)
         {
             getSerialData_Plots(serialPort, TEENSY_INPUT_ENCODER);
-            // getSerialData_Plots(serialPort, TEENSY_INPUT_C2F);
+            getSerialData_Plots(serialPort, TEENSY_INPUT_C2F);
         }
 
         // Render the window       
@@ -215,6 +223,19 @@ int main(int, char**)
 
     glfwDestroyWindow(window);
     glfwTerminate();
+
+    //--------------------------------------------------  Saving Files Correctly --------------------------------------------------- 
+    if(std::filesystem::exists(C2F_INPUT_SAVE_FILENAME_CSV))
+    {
+        std::string newName = C2F_INPUT_SAVE_FILENAME + timeString + ".csv";
+        rename(C2F_INPUT_SAVE_FILENAME_CSV, newName.c_str());
+    }
+
+    if(std::filesystem::exists(ENCODER_INPUT_SAVE_FILENAME_CSV))
+    {
+        std::string newName = ENCODER_INPUT_SAVE_FILENAME + timeString + ".csv";;
+        rename(ENCODER_INPUT_SAVE_FILENAME_CSV, newName.c_str());
+    }
 
     return 0;
 } 
@@ -255,22 +276,22 @@ void getSerialData(int serialPort, int expectedResponses, int bufferSize)
 //---------------------------------------------------------------------------------------------------------------------------------------
 void getSerialData_Plots(int serialPort, int inputType)
 {
-    double now = (double)time(0);
+    long time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     int serialReadBytes = 0;
 
-    // Read C2F output
-    if(inputType == TEENSY_INPUT_C2F)
+    // Read encoder output
+    if(inputType == TEENSY_INPUT_ENCODER)
     {
         ENCODER_INPUT_command inputEncoder;
         P2TPkt p2t_pkEncoder(inputEncoder); 
         write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
 
-        double outputC2F;
-        serialReadBytes = read(serialPort, &outputC2F, 1);
+        double outputEncoder;
+        serialReadBytes = read(serialPort, &outputEncoder, 1);
         
         if((serialReadBytes != 0) && (serialReadBytes != -1))
         {
-            updatePlotWindow(show_PlotData, now, outputC2F, TEENSY_INPUT_C2F);
+            updatePlotWindow(show_PlotData, time_ms, outputEncoder, TEENSY_INPUT_ENCODER);
         }
         else
         {
@@ -278,19 +299,19 @@ void getSerialData_Plots(int serialPort, int inputType)
         }
     }
 
-    // Read encoder output
-    else if(inputType == TEENSY_INPUT_ENCODER)
+    // Read C2F output
+    else if(inputType == TEENSY_INPUT_C2F)
     {
         C2F_INPUT_command inputC2F;
         P2TPkt p2t_pkC2F(inputC2F); 
         write(serialPort, (void *) &p2t_pkC2F, sizeof(p2t_pkC2F));
 
-        double outputEncoder;
-        serialReadBytes = read(serialPort, &outputEncoder, 1);
+        double outputC2F;
+        serialReadBytes = read(serialPort, &outputC2F, 1);
 
         if((serialReadBytes != 0) && (serialReadBytes != -1))
         {
-            updatePlotWindow(show_PlotData, now, outputEncoder, TEENSY_INPUT_ENCODER);
+            updatePlotWindow(show_PlotData, time_ms, outputC2F, TEENSY_INPUT_C2F);
         }
         else
         {
