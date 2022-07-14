@@ -18,6 +18,8 @@ struct DAC_command;
 struct BIASGEN_command;
 struct AER_DECODER_OUTPUT_command;
 struct AER_ENCODER_INPUT_command;
+struct ENCODER_INPUT_command;
+struct C2F_INPUT_command;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
@@ -33,7 +35,9 @@ enum class P2tPktType
 {
     P2t_setDACvoltage               = 1U,
     P2t_setBiasGen                  = 2U,
-    P2t_aerDecoder_reqOutput        = 3U
+    P2t_reqOutputDecoder            = 3U,
+    P2t_reqInputEncoder             = 4U,
+    P2t_reqInputC2F                 = 5U
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -45,7 +49,9 @@ struct P2TPkt
     P2TPkt(){};
     P2TPkt(const DAC_command& dac);    
     P2TPkt(const BIASGEN_command& biasGen);
-    P2TPkt(const AER_DECODER_OUTPUT_command& aerOutputDecoder);
+    P2TPkt(const AER_DECODER_OUTPUT_command& outputDecoder);
+    P2TPkt(const ENCODER_INPUT_command& inputEncoder);
+    P2TPkt(const C2F_INPUT_command& inputC2F);
 
     std::uint8_t header;                          // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
@@ -81,5 +87,16 @@ struct AER_DECODER_OUTPUT_command
 
     std::uint16_t data;
 };
+
+struct ENCODER_INPUT_command
+{
+    ENCODER_INPUT_command() {};
+};
+
+struct C2F_INPUT_command
+{
+    C2F_INPUT_command() {};
+};
+
 
 #endif

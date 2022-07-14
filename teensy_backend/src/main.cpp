@@ -24,17 +24,17 @@ static void sendTeensyStatus(TeensyStatus status);
 //------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
 
 static P2TPkt inputBuffer;
-bool aerInputEncoder_bufferActive = false;
-bool aerInputC2F_bufferActive = false;
+std::int8_t inputBinC2F;
+std::int8_t inputBinEncoder;
 
-int aerInputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
-int aerInputC2F_dataPins[C2F_INPUT_NO_PIN] = {C2F_INPUT_BIT_0_PIN, C2F_INPUT_BIT_1_PIN, C2F_INPUT_BIT_2_PIN, C2F_INPUT_BIT_3_PIN, C2F_INPUT_BIT_4_PIN};
-int aerOutputDecoder_dataPins[DECODER_OUTPUT_NO_PIN] = {DECODER_OUTPUT_BIT_0_PIN, DECODER_OUTPUT_BIT_1_PIN, DECODER_OUTPUT_BIT_2_PIN, DECODER_OUTPUT_BIT_3_PIN,
+int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
+int inputC2F_dataPins[C2F_INPUT_NO_PIN] = {C2F_INPUT_BIT_0_PIN, C2F_INPUT_BIT_1_PIN, C2F_INPUT_BIT_2_PIN, C2F_INPUT_BIT_3_PIN, C2F_INPUT_BIT_4_PIN};
+int outputDecoder_dataPins[DECODER_OUTPUT_NO_PIN] = {DECODER_OUTPUT_BIT_0_PIN, DECODER_OUTPUT_BIT_1_PIN, DECODER_OUTPUT_BIT_2_PIN, DECODER_OUTPUT_BIT_3_PIN,
                             DECODER_OUTPUT_BIT_4_PIN, DECODER_OUTPUT_BIT_5_PIN, DECODER_OUTPUT_BIT_6_PIN, DECODER_OUTPUT_BIT_7_PIN, DECODER_OUTPUT_BIT_8_PIN};
 
-TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, aerInputEncoder_dataPins, ENCODER_INPUT_NO_PIN, TEENSY_INPUT_ENCODER);
-TeensyIn inputC2F(C2F_REQ, C2F_ACK, aerInputC2F_dataPins, C2F_INPUT_NO_PIN, TEENSY_INPUT_C2F);
-TeensyOut outputDecoder(DECODER_REQ, DECODER_ACK, aerOutputDecoder_dataPins, DECODER_OUTPUT_NO_PIN);
+TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, TEENSY_INPUT_ENCODER);
+TeensyIn inputC2F(C2F_REQ, C2F_ACK, inputC2F_dataPins, C2F_INPUT_NO_PIN, TEENSY_INPUT_C2F);
+TeensyOut outputDecoder(DECODER_REQ, DECODER_ACK, outputDecoder_dataPins, DECODER_OUTPUT_NO_PIN);
 
 DAC dac{DAC_RESET, DAC_A0, DAC_A1};
 BiasGen biasGen{BIASGEN_SCK_PIN , BIASGEN_RESET_PIN , BIASGEN_MOSI_PIN, BIASGEN_ENABLE_PIN};
@@ -80,7 +80,6 @@ void loop()
                 sendTeensyStatus(TeensyStatus::Success);
 
                 Serial.print("BIASGEN command received. Bias ");
-                Serial.print((biasGenCommand.name).c_str());
                 Serial.print(biasGenCommand.biasNo);
                 Serial.print(" set to approx. ");
                 Serial.print(biasGen.getBiasGenDecimal(biasGenCommand.currentValue_binary), 6);
@@ -106,7 +105,7 @@ void loop()
             }
 
             // Request decoder output
-            case P2tPktType::P2t_aerDecoder_reqOutput:
+            case P2tPktType::P2t_reqOutputDecoder:
             {
                 AER_DECODER_OUTPUT_command decoder(inputBuffer);
                 outputDecoder.dataWrite(decoder.data);            
@@ -116,6 +115,20 @@ void loop()
                 break;
             }
 
+            // Get encoder input value
+            case P2tPktType::P2t_reqInputEncoder:
+            {
+                inputBinEncoder = inputEncoder.dataRead();
+                Serial.print(inputBinEncoder);
+            }
+                
+            // Get C2F input value
+            case P2tPktType::P2t_reqInputC2F:
+            {
+                inputBinC2F = inputC2F.dataRead();
+                Serial.print(inputBinC2F);
+            }
+
             default: 
             {
                 sendTeensyStatus(TeensyStatus::UnknownCommand);
@@ -123,9 +136,6 @@ void loop()
             }
         } 
    }
-
-   // Check C2F and Encoder inputs
-
 };
 
 

@@ -28,13 +28,14 @@
 
 //----------------------------------------------------- Defining Function Prototypes ----------------------------------------------------- 
 void getSerialData(int serialPort, int expectedResponses, int bufferSize);
-
+void getSerialData_Plots(int serialPort, int inputType);
 
 //------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
 bool show_BiasGen_config = true;
 bool show_DAC_config = true;
 bool show_AER_config = true;
 bool show_Serial_output = true;
+bool show_PlotData = true;
 bool powerOnReset = true;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -189,13 +190,18 @@ int main(int, char**)
             }
         }
 
+        // Plot C2F and Encoder outputs
+        if(show_PlotData)
+        {
+            getSerialData_Plots(serialPort, TEENSY_INPUT_ENCODER);
+            // getSerialData_Plots(serialPort, TEENSY_INPUT_C2F);
+        }
+
         // Render the window       
         renderImGui(window);
 
         //
-        powerOnReset = false;     
-
-        //
+        powerOnReset = false;    
         sleep(0.25);  
     }
 
@@ -241,5 +247,61 @@ void getSerialData(int serialPort, int expectedResponses, int bufferSize)
         expectedResponses--;
     }
     
+    tcflush(serialPort, TCIFLUSH);
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getSerialData_Plots
+//---------------------------------------------------------------------------------------------------------------------------------------
+void getSerialData_Plots(int serialPort, int inputType)
+{
+    double now = (double)time(0);
+    int serialReadBytes = 0;
+
+    // Read C2F output
+    if(inputType == TEENSY_INPUT_C2F)
+    {
+        ENCODER_INPUT_command inputEncoder;
+        P2TPkt p2t_pkEncoder(inputEncoder); 
+        write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
+
+        double outputC2F;
+        serialReadBytes = read(serialPort, &outputC2F, 1);
+        
+        if((serialReadBytes != 0) && (serialReadBytes != -1))
+        {
+            updatePlotWindow(show_PlotData, now, outputC2F, TEENSY_INPUT_C2F);
+        }
+        else
+        {
+            printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+        }
+    }
+
+    // Read encoder output
+    else if(inputType == TEENSY_INPUT_ENCODER)
+    {
+        C2F_INPUT_command inputC2F;
+        P2TPkt p2t_pkC2F(inputC2F); 
+        write(serialPort, (void *) &p2t_pkC2F, sizeof(p2t_pkC2F));
+
+        double outputEncoder;
+        serialReadBytes = read(serialPort, &outputEncoder, 1);
+
+        if((serialReadBytes != 0) && (serialReadBytes != -1))
+        {
+            updatePlotWindow(show_PlotData, now, outputEncoder, TEENSY_INPUT_ENCODER);
+        }
+        else
+        {
+            printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+        }
+    }
+
+    else
+    {
+        printf("Error: Input type not recognised.\n");
+    }
+   
     tcflush(serialPort, TCIFLUSH);
 }

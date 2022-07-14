@@ -33,6 +33,12 @@ bool selectionChange_neuronNumber = 0;
 bool selectionChange_synapseNumber = 0;
 bool valueChange_DACbias[DAC_CHANNELS_USED] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+std::vector<double> inputEncoder_xValues;
+std::vector<int> inputEncoder_yValues;
+
+std::vector<double> inputC2F_xValues;
+std::vector<int> inputC2F_yValues;
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupGLFW 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -245,34 +251,6 @@ int setupAerWindow(bool show_AER_config, int serialPort)
     return serialDataSent;
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// setupAliveOutputWindow
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char* logString)
-{
-    static Log log;
-    bool logEntryUpdate = logEntry;
-
-    std::time_t myTime = time(NULL);
-    char timeBuffer[20];
-    strftime(timeBuffer, 20, "%F %R", localtime(&myTime)); 
-
-    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Log", &show_Serial_output);
-
-    if(logEntry)
-    {
-        log.AddLog("[%s] %s\n", timeBuffer, logString);
-        logEntryUpdate = false;
-    }
-    
-    // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
-    log.Draw("Log", &show_Serial_output);
-    ImGui::End();
-
-    return logEntryUpdate;
-}
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupbiasGenWindow
@@ -367,6 +345,88 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
     return serialDataSent;
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// updateSerialOutputWindow
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char* logString)
+{
+    static Log log;
+    bool logEntryUpdate = logEntry;
+
+    std::time_t myTime = time(NULL);
+    char timeBuffer[20];
+    strftime(timeBuffer, 20, "%F %R", localtime(&myTime)); 
+
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+    ImGui::Begin("Log", &show_Serial_output);
+
+    if(logEntry)
+    {
+        log.AddLog("[%s] %s\n", timeBuffer, logString);
+        logEntryUpdate = false;
+    }
+    
+    // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
+    log.Draw("Log", &show_Serial_output);
+    ImGui::End();
+
+    return logEntryUpdate;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// updatePlotWindow
+//---------------------------------------------------------------------------------------------------------------------------------------
+void updatePlotWindow(bool updatePlot, double timeStamp, double value, int inputType)
+{
+    ImGui::Begin("ALIVE Output", &updatePlot);  
+
+    // Updating the data vectors
+    if(inputType == TEENSY_INPUT_ENCODER)
+    {
+        inputEncoder_xValues.push_back(timeStamp);
+        inputEncoder_yValues.push_back(value);
+    }
+    else if(inputType == TEENSY_INPUT_C2F)
+    {
+        inputC2F_xValues.push_back(timeStamp);
+        inputC2F_yValues.push_back(value);
+    }
+
+    // Converting the data vectors to arrays
+    double yArray[inputEncoder_yValues.size()];
+    double xArray[inputEncoder_xValues.size()];
+
+    for(int i = 0; i < inputEncoder_xValues.size(); i++)
+    {
+        xArray[i] = inputEncoder_xValues[i];
+        yArray[i] = inputEncoder_yValues[i];
+    }
+
+    //
+    if(ImPlot::BeginPlot("Encoder Output: Firing Neuron Number"))
+    {
+        ImPlot::SetupAxis(ImAxis_X1, "Time", ImPlotAxisFlags_Time);
+        ImPlot::SetupAxis(ImAxis_Y1, "Firing Neuron Number");
+        ImPlot::SetupAxisLimits(ImAxis_Y1, 0, ALIVE_NO_NEURONS + 1, 1);
+        ImPlot::SetupAxisLimits(ImAxis_X1, timeStamp - 25, timeStamp + 5, 1);
+        ImPlot::PlotScatter("###", xArray, yArray, inputEncoder_yValues.size());
+        ImPlot::EndPlot();
+    }
+
+    if(ImPlot::BeginPlot("C2F Output: Current Number"))
+    {
+        ImPlot::SetupAxis(ImAxis_X1, "Time", ImPlotAxisFlags_Time);
+        ImPlot::SetupAxis(ImAxis_Y1, "Current Number");
+        ImPlot::SetupAxisLimits(ImAxis_Y1, 0, C2F_INPUT_RANGE, 1);
+        ImPlot::SetupAxisLimits(ImAxis_X1, timeStamp - 25, timeStamp + 5, 1);
+        ImPlot::PlotScatter("###", xArray, yArray, inputEncoder_yValues.size());
+        ImPlot::EndPlot();
+    }
+
+    ImGui::End();
+}
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // glfw_error_callback

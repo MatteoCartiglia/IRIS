@@ -32,8 +32,8 @@ void renderImGui(GLFWwindow* window);
 //
 int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
 int setupAerWindow(bool show_AER_config, int serialPort);
-bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry = false, const char* logString = nullptr);
 
+//
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
@@ -41,6 +41,10 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
 #endif
+
+//
+bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry = false, const char* logString = nullptr);
+void updatePlotWindow(bool updatePlot, double timeStamp, double value, int inputType);
 
 //
 int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber);
@@ -52,7 +56,7 @@ void glfw_error_callback(int error, const char* description);
 
 
 //-----------------------------------------------------------------------------
-// Log struct directly copiedfrom imgui_demo.cpp
+// Log struct directly copied from imgui_demo.cpp - CLEANUP NEEDED
 //-----------------------------------------------------------------------------
 
 struct Log
