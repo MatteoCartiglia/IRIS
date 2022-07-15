@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
-//
+// Header file for functions related to graphical user interface (GUI)
 //
 // Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 
+// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <GLFW/glfw3.h>     // Will drag system OpenGL headers
@@ -23,17 +23,31 @@
 #include "../../teensy_backend/include/constants.h"
 
 
-//------------------ Defining function prototypes -----------------------------
-
-//
+//---------------------------------------------------------------------------------------------------------------------------------------
+// setupWindow: Defines platform-specific variables, creates GUI window, initialises ImGui and ImPlot contexts and sets up 
+//              platform/renderer backends
+//---------------------------------------------------------------------------------------------------------------------------------------
 GLFWwindow* setupWindow();
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// renderImGui: Completes rendering operations for ImGui and GLFW
+//---------------------------------------------------------------------------------------------------------------------------------------
 void renderImGui(GLFWwindow* window);
 
-//
+//---------------------------------------------------------------------------------------------------------------------------------------
+// setupDacWindow: Initialises and updates GUI window displaying DAC values to send
+//---------------------------------------------------------------------------------------------------------------------------------------
 int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// setupAerWindow: Initialises and updates GUI window displaying AER values to send
+//---------------------------------------------------------------------------------------------------------------------------------------
 int setupAerWindow(bool show_AER_config, int serialPort);
 
-//
+//---------------------------------------------------------------------------------------------------------------------------------------
+// setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 
+//                     #ifdef condition used to define different definition if transistor type option to be displayed and handled
+//---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
@@ -42,16 +56,30 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
 #endif
 
-//
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// updateSerialOutputWindow: Writes serial input to Log window in GUI
+//---------------------------------------------------------------------------------------------------------------------------------------
 bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry = false, const char* logString = nullptr);
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// updatePlotWindow: Initialises and updates GUI window displaying live output from ALIVE
+//---------------------------------------------------------------------------------------------------------------------------------------
 void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputType);
 
-//
-int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber);
+//---------------------------------------------------------------------------------------------------------------------------------------
+// checkLimits: Checks the user input values do not go out of range and updates the value accordingly
+//---------------------------------------------------------------------------------------------------------------------------------------
 float checkLimits(float value, float maxLimit, float minValue = 0);
-int checkLimits_Synapse(int value, int synapseType, int coreType);
 
-//
+//---------------------------------------------------------------------------------------------------------------------------------------
+// checkLimits_Synapse: Calls the checkLimits function using the predefined limits for each type of synapse
+//---------------------------------------------------------------------------------------------------------------------------------------
+int checkLimits_Synapse(int value, int synapseType);
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// glfw_error_callback: Prints GLFW callback error to terminal
+//---------------------------------------------------------------------------------------------------------------------------------------
 void glfw_error_callback(int error, const char* description);
 
 

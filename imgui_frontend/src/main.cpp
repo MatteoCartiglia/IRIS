@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
+// main.cpp file containing main function and serial port reading operations
 //
-//
-// Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
-// Last updated: 
+// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
+// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <GLFW/glfw3.h>     // Will drag system OpenGL headers
@@ -28,25 +28,25 @@
 #include "../include/dataFunctions.h"
 #include "../../teensy_backend/include/constants.h"
 
-//----------------------------------------------------- Defining Function Prototypes ----------------------------------------------------- 
-void getSerialData(int serialPort, int expectedResponses, int bufferSize);
-void getSerialData_Plots(int serialPort, int inputType);
+//----------------------------------------------------- Defining Function Prototypes ---------------------------------------------------- 
 
-//------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
-bool show_BiasGen_config = true;
-bool show_DAC_config = true;
-bool show_AER_config = true;
-bool show_Serial_output = true;
-bool show_PlotData = true;
-bool powerOnReset = true;
+void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize);
+void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// main
+// main: program execution starts here
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 int main(int, char**)
 {
     //-------------------------------------------------- Defining & Initialising Variables ---------------------------------------------- 
+
+    bool show_BiasGen_config = true;
+    bool show_DAC_config = true;
+    bool show_AER_config = true;
+    bool show_Serial_output = true;
+    bool show_PlotData = true;
+    bool powerOnReset = true;
 
     auto time = std::time(nullptr);
     auto time_tm = *std::localtime(&time);
@@ -121,11 +121,11 @@ int main(int, char**)
     }
  #endif
 
-    //------------------------------------------------------ Opening Serial Port ------------------------------------------------------
+    //--------------------------------------------------------- Opening Serial Port ------------------------------------------------------
     
     serialPort = open(SERIAl_PORT_NAME, O_RDWR);
-    tcgetattr(serialPort, &SerialPortSettings);         // Get the current attributes of the Serial port */
-    cfsetispeed(&SerialPortSettings,B19200);            // Set Read  Speed as 19200                     
+    tcgetattr(serialPort, &SerialPortSettings);         // Get the current attributes of the Serial port 
+    cfsetispeed(&SerialPortSettings,B19200);            // Set Read Speed as 19200                     
     cfsetospeed(&SerialPortSettings,B19200);            // Set Write Speed as 19200
 
 
@@ -139,7 +139,7 @@ int main(int, char**)
         logEntry = true;
     }
 
-    //------------------------------------------------------- Setup GUI Window ------------------------------------------------------- 
+    //----------------------------------------------------------- Setup GUI Window ------------------------------------------------------- 
         
     GLFWwindow* window = setupWindow();
 
@@ -169,7 +169,7 @@ int main(int, char**)
 
             if((expectedResponses > 0) && (show_Serial_output))
             {
-                getSerialData(serialPort, expectedResponses, SERIAL_BUFFER_SIZE_AER);
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_AER);
                 expectedResponses = 0;
             }
         }
@@ -181,7 +181,7 @@ int main(int, char**)
 
             if((expectedResponses > 0) && (show_Serial_output))
             {
-                getSerialData(serialPort, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
                 expectedResponses = 0;
             }
         }
@@ -193,7 +193,7 @@ int main(int, char**)
 
             if((expectedResponses > 0) && (show_Serial_output))
             {
-                getSerialData(serialPort, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
                 expectedResponses = 0;
             }
         }
@@ -201,19 +201,17 @@ int main(int, char**)
         // Plot C2F and Encoder outputs
         if(show_PlotData)
         {
-            getSerialData_Plots(serialPort, TEENSY_INPUT_ENCODER);
-            getSerialData_Plots(serialPort, TEENSY_INPUT_C2F);
+            getSerialData_Plots(serialPort, show_PlotData, TEENSY_INPUT_ENCODER);
+            getSerialData_Plots(serialPort, show_PlotData, TEENSY_INPUT_C2F);
         }
 
         // Render the window       
         renderImGui(window);
-
-        //
         powerOnReset = false;    
         sleep(0.25);  
     }
 
-    //-----------------------------------------------------  Graceful Shutdown ----------------------------------------------------- 
+    //---------------------------------------------------------- Graceful Shutdown ------------------------------------------------------- 
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -224,7 +222,8 @@ int main(int, char**)
     glfwDestroyWindow(window);
     glfwTerminate();
 
-    //--------------------------------------------------  Saving Files Correctly --------------------------------------------------- 
+    //-------------------------------------------------------- Saving Files Correctly ---------------------------------------------------- 
+
     if(std::filesystem::exists(C2F_INPUT_SAVE_FILENAME_CSV))
     {
         std::string newName = C2F_INPUT_SAVE_FILENAME + timeString + ".csv";
@@ -242,10 +241,10 @@ int main(int, char**)
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData
+// getSerialData: Reads data in serial port and writes entry to Log window
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void getSerialData(int serialPort, int expectedResponses, int bufferSize)
+void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize)
 {
     int serialReadBytes = 0;
 
@@ -272,9 +271,9 @@ void getSerialData(int serialPort, int expectedResponses, int bufferSize)
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData_Plots
+// getSerialData_Plots: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getSerialData_Plots(int serialPort, int inputType)
+void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
 {
     long time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     int serialReadBytes = 0;

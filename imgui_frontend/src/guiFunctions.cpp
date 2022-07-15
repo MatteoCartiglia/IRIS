@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
-//
+// Source file for functions related to graphical user interface (GUI)
 //
 // Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 
+// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <iostream>
@@ -39,8 +39,10 @@ std::vector<int> inputEncoder_yValues;
 std::vector<double> inputC2F_xValues;
 std::vector<int> inputC2F_yValues;
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// setupGLFW 
+// setupWindow: Defines platform-specific variables, creates GUI window, initialises ImGui and ImPlot contexts and sets up 
+//              platform/renderer backends
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 GLFWwindow* setupWindow()
@@ -108,16 +110,16 @@ GLFWwindow* setupWindow()
     return window;
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// renderImGui
-//----------------------------------------------------------------------------------------------------------------------------------------
+// renderImGui: Completes rendering operations for ImGui and GLFW
+//---------------------------------------------------------------------------------------------------------------------------------------
 void renderImGui(GLFWwindow* window)
 {
     int display_w;
     int display_h;
     ImVec4 clear_color = ImVec4(CLEAR_COLOUR_X, CLEAR_COLOUR_Y, CLEAR_COLOUR_Z, CLEAR_COLOUR_W);
 
-    // Rendering
     ImGui::Render();
 
     glfwGetFramebufferSize(window, &display_w, &display_h);
@@ -130,9 +132,10 @@ void renderImGui(GLFWwindow* window)
     glfwSwapBuffers(window);
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// setupDacWindow
-//----------------------------------------------------------------------------------------------------------------------------------------
+// setupDacWindow: Initialises and updates GUI window displaying DAC values to send
+//---------------------------------------------------------------------------------------------------------------------------------------
 
 int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset)
 {
@@ -178,8 +181,9 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
     return serialDataSent;
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// setupAerWindow
+// setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 int setupAerWindow(bool show_AER_config, int serialPort)
@@ -230,7 +234,7 @@ int setupAerWindow(bool show_AER_config, int serialPort)
 
     const char *comboLabel_synapseNumber = comboLabel_synapseNumber_str.c_str();
     value_synapseNumber, selectionChange_synapseNumber = ImGui::InputInt(comboLabel_synapseNumber, &value_synapseNumber);
-    value_synapseNumber = checkLimits_Synapse(value_synapseNumber, selection_synapseType, selection_chipCore);   
+    value_synapseNumber = checkLimits_Synapse(value_synapseNumber, selection_synapseType);   
 
     // Adding a "Send" button to write to serial port
     if(ImGui::Button("Send Packet to Teensy", ImVec2(BUTTON_AER_WIDTH, BUTTON_HEIGHT)))
@@ -253,8 +257,10 @@ int setupAerWindow(bool show_AER_config, int serialPort)
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// setupbiasGenWindow
+// setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 
+//                     #ifdef condition used to define different definition if transistor type option to be displayed and handled
 //---------------------------------------------------------------------------------------------------------------------------------------
+
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
@@ -347,7 +353,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// updateSerialOutputWindow
+// updateSerialOutputWindow: Writes serial input to Log window in GUI
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char* logString)
@@ -368,16 +374,18 @@ bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char
         logEntryUpdate = false;
     }
     
-    // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
+    // Call in the regular Log helper (which will Begin() into the same window)
     log.Draw("Log", &show_Serial_output);
     ImGui::End();
 
     return logEntryUpdate;
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// updatePlotWindow
+// updatePlotWindow: Initialises and updates GUI window displaying live output from ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
+
 void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputType)
 {
     long valuesToSave[2] = {timeStamp, long(value)};
@@ -436,16 +444,9 @@ void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputTy
     ImGui::End();
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// glfw_error_callback
-//---------------------------------------------------------------------------------------------------------------------------------------
-void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
-}
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// checkLimits
+// checkLimits: Checks the user input values do not go out of range 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 float checkLimits(float value, float maxLimit, float minValue)
@@ -462,11 +463,12 @@ float checkLimits(float value, float maxLimit, float minValue)
     return value;
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// checkLimits_Synapse
+// checkLimits_Synapse: Calls the checkLimits function using the predefined limits for each type of synapse
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-int checkLimits_Synapse(int value, int synapseType, int coreType)
+int checkLimits_Synapse(int value, int synapseType)
 {
     // Call checkLimits with correct maxLimit parameter
 
@@ -488,4 +490,14 @@ int checkLimits_Synapse(int value, int synapseType, int coreType)
     }
 
     return value;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// glfw_error_callback: Prints GLFW callback error to terminal
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void glfw_error_callback(int error, const char* description)
+{
+    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }

@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
-//
+// Source file for functions related to file handling and data conversion operations
 //
 // Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 
+// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include "../include/dataFunctions.h"
@@ -14,7 +14,7 @@ double masterCurrent[BIASGEN_NO_MASTER_CURRENTS] = {BIASGEN_MASTER_CURRENT_0, BI
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// parseCSV 
+// parseCSV: Parses CSV files containing POR bias value for the DAC and Bias Generator
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 std::vector<std::vector<std::string>> parseCSV(const std::string& path)
@@ -50,7 +50,7 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getDACvalues
+// getDACvalues: Initialises DAC_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void getDACvalues(DAC_command dac[])
@@ -73,8 +73,9 @@ void getDACvalues(DAC_command dac[])
     }
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getBiasGenValues
+// getBiasGenValues: Initialises BIASGEN_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void getBiasGenValues(BIASGEN_command biasGen[])
@@ -102,8 +103,9 @@ void getBiasGenValues(BIASGEN_command biasGen[])
     }
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getFileLines
+// getFileLines: Retrieves the number of lines in a given file
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 int getFileLines(const std::string& path)
@@ -120,8 +122,9 @@ int getFileLines(const std::string& path)
     return noRows;
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getRelevantFileRows
+// getRelevantFileRows_BiasGen: Retrieves the number of file lines containing the specified substring 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[], bool relevantFileRows[], int fileRows)
@@ -144,8 +147,9 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
     return counter;
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getBiasGenPacket
+// getBiasGenPacket: Converts the bias voltage value into the equivalent binary value to send to the Bias Generator
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 int getBiasGenPacket(float decimalVal, bool transistorType)
@@ -183,8 +187,9 @@ int getBiasGenPacket(float decimalVal, bool transistorType)
     }
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getAERpacket
+// getAERpacket: Generates the equivalent AER binary value for the user-selected options
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber)
@@ -229,8 +234,9 @@ int getAERpacket(int selection_chipCore, int selection_synapseType, int selectio
     }
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// printBinaryValue
+// printBinaryValue: Prints the given decimal value in binary to the terminal
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void printBinaryValue(int decimalVal, int size)
@@ -270,7 +276,7 @@ void printBinaryValue(int decimalVal, int size)
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// saveToCsv
+// saveToCSV: Creates, writes and appends the give values to the specified CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename)
@@ -279,7 +285,6 @@ void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename)
 
     for(int i = 0; i < arraySize; i++)
     {
-        // printf("%f\n", valuesToSave[i]);
         file << valuesToSave[i];
 
         if(i != arraySize - 1)
