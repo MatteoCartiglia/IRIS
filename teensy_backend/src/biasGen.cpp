@@ -1,15 +1,15 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
-//
+// Source file for BiasGen class
 //
 // Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 
+// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include "biasGen.h"
 #include "constants.h"
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// BiasGen constructor: initialises the BiasGen object
+// Class constructor; initialises the BiasGen object and sets up the relevant pins on Teensy
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 BiasGen::BiasGen(const int clk, const int reset, const int mosi , const int enable)
@@ -22,8 +22,9 @@ BiasGen::BiasGen(const int clk, const int reset, const int mosi , const int enab
     setupBiasGen();
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// Setup the bias generator
+// setupBiasGen: sets up the relevant pins on Teensy
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void BiasGen::setupBiasGen()
@@ -49,8 +50,9 @@ void BiasGen::setupBiasGen()
     delay(1);
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// Write to the bias generator 
+// writeBiasGen: Writes values to the bias generator 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void BiasGen::writeBiasGen(int address, int value)
@@ -77,9 +79,11 @@ void BiasGen::writeBiasGen(int address, int value)
     SPI.endTransaction();
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getBiasGenDecimal
+// getBiasGenDecimal: Converts the 12-bit binary value sent to Bias Generator into its approx. decimal equivalent 
 //---------------------------------------------------------------------------------------------------------------------------------------
+
 float BiasGen::getBiasGenDecimal(int binaryValue)
 {
     int binaryCoarseVal = binaryValue >> (BIASGEN_COURSE_SHIFT);

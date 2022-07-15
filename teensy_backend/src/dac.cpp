@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
-//
+// Source file for DAC class
 //
 // Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
-// Last updated: 24 JUN 2022 (Ciara Giles-Doran)
+// Last updated: 15 JUL 2022 (Ciara Giles-Doran)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <Wire.h>
@@ -10,9 +10,9 @@
 #include "constants.h"
 #include "dac.h"
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// DAC constructor: initialises the DAC object
-//---------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------
+// Class constructor; initialises the BiasGen object and sets up the relevant pins on Teensy
+//----------------------------------------------------------------------------------------------------------------------------------
 
 DAC::DAC(const int dac_rst, const int a0, const int a1) 
 {
@@ -20,14 +20,15 @@ DAC::DAC(const int dac_rst, const int a0, const int a1)
   _a0 =  a0;
   _a1 = a1;
 
-  setup_dacs();
+  setupDAC();
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// Setup the DAC
+// setupDAC: Sets up the relevant pin modes on Teensy
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void DAC::setup_dacs()
+void DAC::setupDAC()
 {
   pinMode(_dac_rst, OUTPUT);
   pinMode(_a1, OUTPUT);
@@ -50,21 +51,23 @@ void DAC::setup_dacs()
   Serial.println("DAC setup complete.");
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// Join the I2C bus
+// join_I2C_bus: Joins the I2C bus
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void DAC::join_i2c_bus()
+void DAC::join_I2C_bus()
 {
   Wire2.begin();
   delay(500);
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// Write to the DAC 
+// writeDAC: Writes valuse to the DAC
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void DAC::write_dacs(uint8_t command_addess, uint16_t value)
+void DAC::writeDAC(uint8_t command_addess, uint16_t value)
 {
     int commandAddess = command_addess; 
 
@@ -80,11 +83,12 @@ void DAC::write_dacs(uint8_t command_addess, uint16_t value)
     Wire2.endTransmission();
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// Turn off the internal reference voltage
+// turnReferenceOff: Turns off the internal reference voltage
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void DAC::turn_reference_off()
+void DAC::turnReferenceOff()
 {
     Wire2.beginTransmission(12);                 
     Wire2.write(0x70);             

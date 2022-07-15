@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
+// Header file defining enumerated and structured datatypes
 //
-//
-// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 
+// Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
+// Last updated: 15 JUL 2022 (Ciara Giles-Doran <gciara@student.ethz.ch>)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #ifndef DATATYPES_H
@@ -12,8 +12,9 @@
 #include <string>
 #include "constants.h"
 
-static constexpr std::size_t MAX_PKT_BODY_LEN = SERIAL_COMMS_MAX_PKT_LEN - sizeof(std::uint8_t);
+static constexpr std::size_t MAX_PKT_BODY_LEN = SERIAL_COMMS_MAX_PKT_LEN - sizeof(std::uint8_t);    // Clarify
 
+// ---------------------------------------------------- Defining struct prototypes ------------------------------------------------------
 struct DAC_command;
 struct BIASGEN_command;
 struct AER_DECODER_OUTPUT_command;
@@ -21,16 +22,21 @@ struct AER_ENCODER_INPUT_command;
 struct ENCODER_INPUT_command;
 struct C2F_INPUT_command;
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
 
+
+// ---------------------------------------------------- Teensy Status Return Types ------------------------------------------------------
 enum class TeensyStatus 
 {
     UnknownCommand                  = 0,
     Success                         = 1,
 };
 
+
+// --------------------------------------------------- PC -> Teensy Comm Packet Types --------------------------------------------------
 enum class P2tPktType 
 {
     P2t_setDACvoltage               = 1U,
@@ -40,10 +46,13 @@ enum class P2tPktType
     P2t_reqInputC2F                 = 5U
 };
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // STRUCTURED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
 
+
+// -------------------------------------------------- PC -> Teensy Comm Packet Struct ---------------------------------------------------
 struct P2TPkt 
 {
     P2TPkt(){};
@@ -58,6 +67,8 @@ struct P2TPkt
 
 }__attribute__ ((packed));
 
+
+// -------------------------------------------- Struct for PC -> Teensy -> DAC communication --------------------------------------------
 struct DAC_command
 {
     DAC_command() {};
@@ -68,6 +79,7 @@ struct DAC_command
     std::uint16_t data;
 };
 
+// ------------------------------------------ Struct for PC -> Teensy -> BIASGEN communication ------------------------------------------
 struct BIASGEN_command
 { 
     BIASGEN_command() {};
@@ -80,6 +92,7 @@ struct BIASGEN_command
     bool transistorType;
 };
 
+// --------------------------- Struct for PC -> Teensy -> ALIVE communication [DECODER: Teensy output, ALIVE input] ---------------------
 struct AER_DECODER_OUTPUT_command
 {
     AER_DECODER_OUTPUT_command() {};
@@ -88,15 +101,16 @@ struct AER_DECODER_OUTPUT_command
     std::uint16_t data;
 };
 
+// --------------------------- Struct for PC -> Teensy <- ALIVE communication [ENCODER: Teensy input, ALIVE output] ---------------------
 struct ENCODER_INPUT_command
 {
     ENCODER_INPUT_command() {};
 };
 
+// ----------------------------- Struct for PC -> Teensy <- ALIVE communication [C2F: Teensy input, ALIVE output] -----------------------
 struct C2F_INPUT_command
 {
     C2F_INPUT_command() {};
 };
-
 
 #endif

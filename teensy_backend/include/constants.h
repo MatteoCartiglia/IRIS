@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
-//
+// Constants file containing definitions of constant variables used in frontend and backend
 //
 // Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 24 JUN 2022
+// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #ifndef CONSTANTS_H

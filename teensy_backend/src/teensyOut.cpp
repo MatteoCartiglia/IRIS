@@ -1,15 +1,15 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
-//
+// Source file for TeensyOut class
 //
 // Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
-// Last updated: (Ciara Giles-Doran <gciara@student.ethz.ch>)
+// Last updated: 15 JUL 2022 (Ciara Giles-Doran <gciara@student.ethz.ch>)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include "teensyOut.h"
 #include "constants.h"
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// TeensyOut constructor
+// Class constructor; initialises the TeensyOut object and sets up the relevant pins on Teensy
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 TeensyOut::TeensyOut(const int outputReqPin, const int outputAckPin, int outputDataPins[], int outputNumDataPins, int outputDelay, bool outputActiveLow)
@@ -25,7 +25,7 @@ TeensyOut::TeensyOut(const int outputReqPin, const int outputAckPin, int outputD
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// 
+// dataWrite: Executes REQ/ACK handshake and writes output to ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 bool TeensyOut::dataWrite(unsigned int data) 
@@ -49,8 +49,9 @@ bool TeensyOut::dataWrite(unsigned int data)
   return handshakeStatus;
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// 
+// setupDecoderComms: Sets up the relevant pins for Decoder comms on Teensy
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void TeensyOut::setupDecoderComms()
@@ -79,8 +80,9 @@ void TeensyOut::setupDecoderComms()
   delay(1);
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// 
+// ackRead: Reads ACK pin state
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 bool TeensyOut::ackRead() 
@@ -88,8 +90,9 @@ bool TeensyOut::ackRead()
   return digitalReadFast(_outputAckPin)^_outputActiveLow;
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// 
+// reqWrite: Writes to REQ pin
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void TeensyOut::reqWrite(bool val) 
@@ -102,8 +105,9 @@ void TeensyOut::reqWrite(bool val)
   }
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// 
+// setOutputData: Write data to output pins
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void TeensyOut::setOutputData(unsigned int data) 

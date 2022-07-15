@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
+// main.cpp file containing main function and ISR interrupt functions
 //
-//
-// Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
-// Last updated: 
+// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
+// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <Arduino.h>
@@ -16,7 +16,7 @@
 #include "teensyOut.h"
 
 // Declaring function prototypes in order of definition
-static void setupRST();
+static void setupLFSR();
 static void aerInputEncoder_ISR();
 static void aerInputC2F_ISR();
 static void sendTeensyStatus(TeensyStatus status);
@@ -45,19 +45,19 @@ BiasGen biasGen{BIASGEN_SCK_PIN , BIASGEN_RESET_PIN , BIASGEN_MOSI_PIN, BIASGEN_
 
 void setup() 
 {
-    setupRST();
+    setupLFSR();
 
     attachInterrupt(digitalPinToInterrupt(ENCODER_REQ), aerInputEncoder_ISR, CHANGE);
     attachInterrupt(digitalPinToInterrupt(C2F_REQ), aerInputC2F_ISR, CHANGE);
 
-    dac.join_i2c_bus();
-    dac.turn_reference_off();
+    dac.join_I2C_bus();
+    dac.turnReferenceOff();
 
     Serial.print("********************* Setup complete *********************\n");
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// "main" function: reads in serial communication and 
+// "main" function: reads and writes PC <-> Teensy serial communication
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void loop() 
@@ -91,7 +91,7 @@ void loop()
             case P2tPktType::P2t_setDACvoltage:
             { 
                 DAC_command DAC(inputBuffer);
-                dac.write_dacs(DAC.command_address, DAC.data); 
+                dac.writeDAC(DAC.command_address, DAC.data); 
 
                 delay(100);
                 sendTeensyStatus(TeensyStatus::Success);
@@ -140,10 +140,10 @@ void loop()
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// Setup LFSR
+// setupLFSR: Sets up Linear Feedback Shift Register
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-static void setupRST()
+static void setupLFSR()
 {
   pinMode(LB_LFSR_RST, OUTPUT);
   pinMode(LB_LFSR_CLK, OUTPUT);
@@ -174,6 +174,7 @@ static void aerInputEncoder_ISR()
     }
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // AER Input Interrupt Servie Routine (ISR) for C2F input
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -191,8 +192,9 @@ static void aerInputC2F_ISR()
     }
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// sendStatus  
+// sendTeensyStatus: Sends Teensy Status update to PC 
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 static void sendTeensyStatus(TeensyStatus status)
