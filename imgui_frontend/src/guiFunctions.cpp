@@ -167,7 +167,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
         ImGui::SameLine();
 
         // Adding a update button to write to serial port
-        if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) || powerOnReset)
+        if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) ||powerOnReset )
         {
             P2TPkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
@@ -263,10 +263,10 @@ int setupAerWindow(bool show_AER_config, int serialPort)
 
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
+    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[])
 #else
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
+        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[])
 #endif
 {
     int serialDataSent = 0;      
@@ -310,9 +310,10 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 #else
                     // Adding an input field for changing bias value
                     ImGui::PushItemWidth(260);
-                    float inputField_BiasGenValue = biasGen[j].currentValue_uV;
+                    float inputField_BiasGenValue = biasGen[j].currentValue_uA;
                     inputField_BiasGenValue, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &inputField_BiasGenValue, 0.000001, 0, "%.6f", 0);
-                    biasGen[j].currentValue_uV = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT); 
+                    biasGen[j].currentValue_uA = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT); 
+                    biasGen[j].currentValue_binary = getBiasGenPacket(biasGen[j].currentValue_uA, biasGen[j].transistorType);
                     ImGui::SameLine();
 #endif
                     // Including units

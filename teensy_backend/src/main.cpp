@@ -10,7 +10,8 @@
 
 #include "constants.h"
 #include "datatypes.h"
-#include "biasGen.h"
+#include "configSPI.h"
+
 #include "dac.h"
 #include "teensyIn.h"
 #include "teensyOut.h"
@@ -37,7 +38,11 @@ TeensyIn inputC2F(C2F_REQ, C2F_ACK, inputC2F_dataPins, C2F_INPUT_NO_PIN, TEENSY_
 TeensyOut outputDecoder(DECODER_REQ, DECODER_ACK, outputDecoder_dataPins, DECODER_OUTPUT_NO_PIN);
 
 DAC dac{DAC_RESET, DAC_A0, DAC_A1};
-BiasGen biasGen{BIASGEN_SCK_PIN , BIASGEN_RESET_PIN , BIASGEN_MOSI_PIN, BIASGEN_ENABLE_PIN};
+
+#ifdef exists_biasgen
+configSPI biasGen{BIASGEN_SCK_PIN , BIASGEN_RESET_PIN , BIASGEN_MOSI_PIN,  BIASGEN_ENABLE_PIN, 0};
+#endif
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // "setup" function: 
@@ -46,6 +51,9 @@ BiasGen biasGen{BIASGEN_SCK_PIN , BIASGEN_RESET_PIN , BIASGEN_MOSI_PIN, BIASGEN_
 void setup() 
 {
     setupLFSR();
+
+    biasGen.setupSPI();
+    biasGen.resetSPI();
 
     attachInterrupt(digitalPinToInterrupt(ENCODER_REQ), aerInputEncoder_ISR, CHANGE);
     attachInterrupt(digitalPinToInterrupt(C2F_REQ), aerInputC2F_ISR, CHANGE);
@@ -74,7 +82,22 @@ void loop()
             case P2tPktType::P2t_setBiasGen:
             {  
                 BIASGEN_command biasGenCommand(inputBuffer);
-                biasGen.writeBiasGen(biasGenCommand.biasNo, biasGenCommand.currentValue_binary);
+                biasGen.writeSPI(biasGenCommand.biasNo, biasGenCommand.currentValue_binary);
+              
+                delay(100);
+                sendTeensyStatus(TeensyStatus::Success);
+                Serial.print("BIASGEN command received. Bias ");
+                Serial.print(biasGenCommand.biasNo);
+                Serial.print(" set to approx. ");
+                Serial.print(biasGen.getBiasGenDecimal(biasGenCommand.currentValue_binary), 6);
+                Serial.print(" uA.");
+                break;
+            }
+            // Setup SPIs
+            case P2tPktType::P2t_setSPI:
+            {  
+                BIASGEN_command biasGenCommand(inputBuffer);
+                biasGen.writeSPI(biasGenCommand.biasNo, biasGenCommand.currentValue_binary);
               
                 delay(100);
                 sendTeensyStatus(TeensyStatus::Success);
@@ -82,7 +105,6 @@ void loop()
                 Serial.print("BIASGEN command received. Bias ");
                 Serial.print(biasGenCommand.biasNo);
                 Serial.print(" set to approx. ");
-                Serial.print(biasGen.getBiasGenDecimal(biasGenCommand.currentValue_binary), 6);
                 Serial.print(" uA.");
                 break;
             }
@@ -131,7 +153,7 @@ void loop()
 
             default: 
             {
-                sendTeensyStatus(TeensyStatus::UnknownCommand);
+               // sendTeensyStatus(TeensyStatus::UnknownCommand);
                 break;  
             }
         } 

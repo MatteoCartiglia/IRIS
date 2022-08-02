@@ -1,0 +1,5155 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr User 25251 23566
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Wire Wire Line
+	2450 9850 2650 9850
+Wire Wire Line
+	2650 9850 2850 9850
+Wire Wire Line
+	2850 9850 3050 9850
+Wire Wire Line
+	16050 21600 15950 21600
+Connection ~ 2650 9850
+Connection ~ 2850 9850
+Wire Wire Line
+	19350 21700 19250 21700
+Wire Wire Line
+	15950 22000 15950 22200
+Wire Wire Line
+	9850 700  9850 800 
+Wire Wire Line
+	9850 700  9850 600 
+Wire Wire Line
+	3150 1400 3150 1600
+Wire Wire Line
+	3150 1800 3150 1600
+Wire Wire Line
+	1400 1400 1400 1600
+Wire Wire Line
+	1400 1600 1400 1800
+Wire Wire Line
+	18800 22400 18900 22400
+Wire Wire Line
+	2650 10150 2450 10150
+Wire Wire Line
+	3250 7850 3450 7850
+Wire Wire Line
+	3450 7850 3650 7850
+Wire Wire Line
+	3650 7850 3850 7850
+Wire Wire Line
+	3250 7850 3050 7850
+Wire Wire Line
+	3050 7850 2850 7850
+Wire Wire Line
+	2650 10150 2850 10150
+Wire Wire Line
+	2850 10150 3050 10150
+Connection ~ 1400 1600
+Connection ~ 3150 1600
+Connection ~ 9850 700 
+Connection ~ 2450 10150
+Connection ~ 3650 7850
+Connection ~ 3450 7850
+Connection ~ 3050 7850
+Connection ~ 3250 7850
+Connection ~ 2650 10150
+Connection ~ 2850 10150
+Text Label 1400 1600 0    10   ~ 0
+GND
+Wire Wire Line
+	2850 7550 3050 7550
+Wire Wire Line
+	3050 7550 3250 7550
+Wire Wire Line
+	3250 7550 3450 7550
+Wire Wire Line
+	3450 7550 3650 7550
+Wire Wire Line
+	3650 7550 3850 7550
+Connection ~ 3450 7550
+Connection ~ 3650 7550
+Connection ~ 3250 7550
+Connection ~ 3050 7550
+Text Label 13025 22350 0    70   ~ 0
+D3
+Text Label 13000 22050 0    70   ~ 0
+D0
+Text Label 13000 22150 0    70   ~ 0
+D1
+Text Label 13000 22250 0    70   ~ 0
+D2
+Text Label 13000 22450 0    70   ~ 0
+D23
+Text Label 13000 22550 0    70   ~ 0
+D22
+Text Label 13000 22650 0    70   ~ 0
+D21
+Text Label 13025 22750 0    70   ~ 0
+D20
+$Comp
+L classchip-eagle-import:MCP23017T-E_SS U5
+U 1 1 FECC9F54
+P 10550 1200
+F 0 "U5" H 10050 2200 59  0000 L BNN
+F 1 "MCP23017T-E_SS" H 10050 100 59  0000 L BNN
+F 2 "classchip:SOP65P780X200-28N" H 10550 1200 50  0001 C CNN
+F 3 "" H 10550 1200 50  0001 C CNN
+	1    10550 1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:74HC4051TSSOP U10
+U 1 1 2052ED07
+P 800 1000
+F 0 "U10" H 699 1800 42  0000 C CNN
+F 1 "74HC4051TSSOP" H 699 -302 42  0000 C CNN
+F 2 "classchip:TSSOP_16" H 800 1000 50  0001 C CNN
+F 3 "" H 800 1000 50  0001 C CNN
+	1    800  1000
+	-1   0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:74HC4051TSSOP U11
+U 1 1 D5584A1C
+P 2550 1000
+F 0 "U11" H 2449 1800 42  0000 C CNN
+F 1 "74HC4051TSSOP" H 2549 -202 42  0000 C CNN
+F 2 "classchip:TSSOP_16" H 2550 1000 50  0001 C CNN
+F 3 "" H 2550 1000 50  0001 C CNN
+	1    2550 1000
+	-1   0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:PCA9517DP U4
+U 1 1 7C57E89D
+P 18900 22100
+F 0 "U4" H 20014 22459 69  0000 L BNN
+F 1 "TCA9517DR" H 19889 22359 69  0000 L BNN
+F 2 "classchip:SOT96-1_NXP" H 18900 22100 50  0001 C CNN
+F 3 "" H 18900 22100 50  0001 C CNN
+	1    18900 22100
+	-1   0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:CLASSCHIP U1
+U 1 1 FF06A490
+P 7600 6450
+F 0 "U1" H 7600 6450 50  0001 C CNN
+F 1 "AE11110-ND" H 7600 6450 50  0001 C CNN
+F 2 "classchip:S84" H 7600 6450 50  0001 C CNN
+F 3 "" H 7600 6450 50  0001 C CNN
+	1    7600 6450
+	-1   0    0    1   
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C17
+U 1 1 DECE6061
+P 9000 3950
+F 0 "C17" H 9060 3965 59  0000 L BNN
+F 1 "0.1u" H 9060 3765 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 9000 3950 50  0001 C CNN
+F 3 "" H 9000 3950 50  0001 C CNN
+	1    9000 3950
+	0    1    1    0   
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C20
+U 1 1 FB8761BE
+P 2450 9950
+F 0 "C20" H 2510 9965 59  0000 L BNN
+F 1 "0.1u" H 2510 9765 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 2450 9950 50  0001 C CNN
+F 3 "" H 2450 9950 50  0001 C CNN
+	1    2450 9950
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C21
+U 1 1 EF0CA58A
+P 2650 9950
+F 0 "C21" H 2710 9965 59  0000 L BNN
+F 1 "0.1u" H 2710 9765 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 2650 9950 50  0001 C CNN
+F 3 "" H 2650 9950 50  0001 C CNN
+	1    2650 9950
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:TXB0108PWR U3
+U 1 1 9A04CEE8
+P 13800 22250
+F 0 "U3" H 13300 23050 42  0000 L BNN
+F 1 "TXB0108PWR" H 13300 21350 42  0000 L BNN
+F 2 "classchip:TSSOP20" H 13800 22250 50  0001 C CNN
+F 3 "" H 13800 22250 50  0001 C CNN
+	1    13800 22250
+	-1   0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C19
+U 1 1 BB7493D6
+P 11900 21150
+F 0 "C19" H 11960 21165 59  0000 L BNN
+F 1 "0.1u" H 11960 20965 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 11900 21150 50  0001 C CNN
+F 3 "" H 11900 21150 50  0001 C CNN
+	1    11900 21150
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:TXB0108PWR U2
+U 1 1 C2DEB937
+P 11650 22300
+F 0 "U2" H 11150 23100 42  0000 L BNN
+F 1 "TXB0108PWR" H 11150 21400 42  0000 L BNN
+F 2 "classchip:TSSOP20" H 11650 22300 50  0001 C CNN
+F 3 "" H 11650 22300 50  0001 C CNN
+	1    11650 22300
+	-1   0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C23
+U 1 1 94C3F010
+P 10800 21150
+F 0 "C23" H 10860 21165 59  0000 L BNN
+F 1 "0.1u" H 10860 20965 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 10800 21150 50  0001 C CNN
+F 3 "" H 10800 21150 50  0001 C CNN
+	1    10800 21150
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:R R21
+U 1 1 083A2446
+P 14600 21750
+F 0 "R21" H 14450 21809 59  0000 L BNN
+F 1 "100k" H 14450 21620 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 14600 21750 50  0001 C CNN
+F 3 "" H 14600 21750 50  0001 C CNN
+	1    14600 21750
+	-1   0    0    1   
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C24
+U 1 1 23CFB56E
+P 3450 7650
+F 0 "C24" H 3510 7665 59  0000 L BNN
+F 1 "0.1u" H 3510 7465 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 3450 7650 50  0001 C CNN
+F 3 "" H 3450 7650 50  0001 C CNN
+	1    3450 7650
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC1206 C26
+U 1 1 B33389F0
+P 3250 7650
+F 0 "C26" H 3310 7665 59  0000 L BNN
+F 1 "10u" H 3310 7465 59  0000 L BNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 3250 7650 50  0001 C CNN
+F 3 "" H 3250 7650 50  0001 C CNN
+	1    3250 7650
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EU025-024X044 C33
+U 1 1 40B663F4
+P 2850 7650
+F 0 "C33" H 2910 7665 59  0000 L BNN
+F 1 "100u" H 2910 7465 59  0000 L BNN
+F 2 "classchip:C025-024X044" H 2850 7650 50  0001 C CNN
+F 3 "" H 2850 7650 50  0001 C CNN
+	1    2850 7650
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:R R22
+U 1 1 4920326A
+P 19250 21900
+F 0 "R22" H 19100 21959 59  0000 L BNN
+F 1 "10k" H 19100 21770 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 19250 21900 50  0001 C CNN
+F 3 "" H 19250 21900 50  0001 C CNN
+	1    19250 21900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R23
+U 1 1 18259785
+P 19350 21900
+F 0 "R23" H 19200 21959 59  0000 L BNN
+F 1 "10k" H 19200 21770 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 19350 21900 50  0001 C CNN
+F 3 "" H 19350 21900 50  0001 C CNN
+	1    19350 21900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R16
+U 1 1 D5A58622
+P 15950 21800
+F 0 "R16" H 15800 21859 59  0000 L BNN
+F 1 "10k" H 15800 21670 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 15950 21800 50  0001 C CNN
+F 3 "" H 15950 21800 50  0001 C CNN
+	1    15950 21800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R17
+U 1 1 DB79B4F3
+P 16050 21800
+F 0 "R17" H 15900 21859 59  0000 L BNN
+F 1 "10k" H 15900 21670 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 16050 21800 50  0001 C CNN
+F 3 "" H 16050 21800 50  0001 C CNN
+	1    16050 21800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R26
+U 1 1 DC00A67A
+P 8200 8700
+F 0 "R26" H 8050 8759 59  0000 L BNN
+F 1 "100k" H 8050 8570 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8200 8700 50  0001 C CNN
+F 3 "" H 8200 8700 50  0001 C CNN
+	1    8200 8700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R25
+U 1 1 FD98CD69
+P 8300 8700
+F 0 "R25" H 8150 8759 59  0000 L BNN
+F 1 "100k" H 8150 8570 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 8700 50  0001 C CNN
+F 3 "" H 8300 8700 50  0001 C CNN
+	1    8300 8700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C29
+U 1 1 82AE9324
+P 2850 9950
+F 0 "C29" H 2910 9965 59  0000 L BNN
+F 1 "0.1u" H 2910 9765 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 2850 9950 50  0001 C CNN
+F 3 "" H 2850 9950 50  0001 C CNN
+	1    2850 9950
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C30
+U 1 1 8FF82DCA
+P 3050 9950
+F 0 "C30" H 3110 9965 59  0000 L BNN
+F 1 "0.1u" H 3110 9765 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3050 9950 50  0001 C CNN
+F 3 "" H 3050 9950 50  0001 C CNN
+	1    3050 9950
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  400  0    50   Input ~ 0
+MUX1_0
+Text GLabel 400  600  0    50   Input ~ 0
+MUX1_1
+Text GLabel 400  800  0    50   Input ~ 0
+MUX1_2
+Text GLabel 400  1000 0    50   Input ~ 0
+MUX1_3
+Text GLabel 400  1200 0    50   Input ~ 0
+MUX1_4
+Text GLabel 400  1400 0    50   Input ~ 0
+MUX1_5
+Text GLabel 400  1600 0    50   Input ~ 0
+MUX1_6
+Text GLabel 400  1800 0    50   Input ~ 0
+MUX1_7
+Text GLabel 5400 5150 0    50   Input ~ 0
+MUX1_7
+Text GLabel 5400 5650 0    50   Input ~ 0
+MUX1_0
+Text GLabel 5400 5450 0    50   Input ~ 0
+MUX1_1
+Text GLabel 5400 5550 0    50   Input ~ 0
+MUX1_2
+Text GLabel 5400 5750 0    50   Input ~ 0
+MUX1_3
+Text GLabel 5400 5350 0    50   Input ~ 0
+MUX1_4
+Text GLabel 5400 5050 0    50   Input ~ 0
+MUX1_5
+Text GLabel 5400 5250 0    50   Input ~ 0
+MUX1_6
+Text GLabel 2150 400  0    50   Input ~ 0
+MUX2_0
+Text GLabel 2150 600  0    50   Input ~ 0
+MUX2_1
+Text GLabel 2150 800  0    50   Input ~ 0
+MUX2_2
+Text GLabel 2150 1000 0    50   Input ~ 0
+MUX2_3
+Text GLabel 2150 1200 0    50   Input ~ 0
+MUX2_4
+Text GLabel 2150 1400 0    50   Input ~ 0
+MUX2_5
+Text GLabel 2150 1600 0    50   Input ~ 0
+MUX2_6
+Text GLabel 2150 1800 0    50   Input ~ 0
+MUX2_7
+Text GLabel 5400 6450 0    50   Input ~ 0
+MUX2_0
+Text GLabel 5400 6250 0    50   Input ~ 0
+MUX2_1
+Text GLabel 5400 6350 0    50   Input ~ 0
+MUX2_2
+Text GLabel 5400 6550 0    50   Input ~ 0
+MUX2_3
+Text GLabel 5400 6150 0    50   Input ~ 0
+MUX2_4
+Text GLabel 5400 5850 0    50   Input ~ 0
+MUX2_5
+Text GLabel 5400 6050 0    50   Input ~ 0
+MUX2_6
+Text GLabel 5400 5950 0    50   Input ~ 0
+MUX2_7
+Text GLabel 900  2100 0    50   Input ~ 0
+MUX1_OUT
+Text GLabel 2650 2100 0    50   Input ~ 0
+MUX2_OUT
+Text GLabel 3150 600  2    50   Input ~ 0
+MUX_S0
+Text GLabel 3150 800  2    50   Input ~ 0
+MUX_S1
+Text GLabel 3150 1000 2    50   Input ~ 0
+MUX_S2
+Text GLabel 1400 600  2    50   Input ~ 0
+MUX_S0
+Text GLabel 1400 800  2    50   Input ~ 0
+MUX_S1
+Text GLabel 1400 1000 2    50   Input ~ 0
+MUX_S2
+$Comp
+L power:GND #PWR0101
+U 1 1 6529B5C3
+P 1400 1800
+F 0 "#PWR0101" H 1400 1550 50  0001 C CNN
+F 1 "GND" H 1405 1627 50  0000 C CNN
+F 2 "" H 1400 1800 50  0001 C CNN
+F 3 "" H 1400 1800 50  0001 C CNN
+	1    1400 1800
+	1    0    0    -1  
+$EndComp
+Connection ~ 1400 1800
+$Comp
+L power:GND #PWR0102
+U 1 1 6529D1E3
+P 3150 1800
+F 0 "#PWR0102" H 3150 1550 50  0001 C CNN
+F 1 "GND" H 3155 1627 50  0000 C CNN
+F 2 "" H 3150 1800 50  0001 C CNN
+F 3 "" H 3150 1800 50  0001 C CNN
+	1    3150 1800
+	1    0    0    -1  
+$EndComp
+Connection ~ 3150 1800
+$Comp
+L power:GND #PWR0103
+U 1 1 655CB3E7
+P 2450 10150
+F 0 "#PWR0103" H 2450 9900 50  0001 C CNN
+F 1 "GND" H 2455 9977 50  0000 C CNN
+F 2 "" H 2450 10150 50  0001 C CNN
+F 3 "" H 2450 10150 50  0001 C CNN
+	1    2450 10150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0104
+U 1 1 657E49F1
+P 13400 3150
+F 0 "#PWR0104" H 13400 2900 50  0001 C CNN
+F 1 "GND" H 13405 2977 50  0000 C CNN
+F 2 "" H 13400 3150 50  0001 C CNN
+F 3 "" H 13400 3150 50  0001 C CNN
+	1    13400 3150
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0105
+U 1 1 657E614E
+P 13700 3150
+F 0 "#PWR0105" H 13700 2900 50  0001 C CNN
+F 1 "GND" H 13705 2977 50  0000 C CNN
+F 2 "" H 13700 3150 50  0001 C CNN
+F 3 "" H 13700 3150 50  0001 C CNN
+	1    13700 3150
+	-1   0    0    1   
+$EndComp
+Text GLabel 13800 3150 1    50   Input ~ 0
+3V3
+Text GLabel 3150 1200 2    50   Input ~ 0
+3V3
+$Comp
+L power:GND #PWR0106
+U 1 1 65D1F3E1
+P 13800 23150
+F 0 "#PWR0106" H 13800 22900 50  0001 C CNN
+F 1 "GND" H 13805 22977 50  0000 C CNN
+F 2 "" H 13800 23150 50  0001 C CNN
+F 3 "" H 13800 23150 50  0001 C CNN
+	1    13800 23150
+	1    0    0    -1  
+$EndComp
+Text Notes 100  150  0    50   ~ 0
+Analog Mux
+Text GLabel 13600 3150 1    50   Input ~ 0
+VIN
+Text GLabel 2850 7550 1    50   Input ~ 0
+VIN
+$Comp
+L power:GND #PWR0115
+U 1 1 6721AC27
+P 2850 7850
+F 0 "#PWR0115" H 2850 7600 50  0001 C CNN
+F 1 "GND" H 2855 7677 50  0000 C CNN
+F 2 "" H 2850 7850 50  0001 C CNN
+F 3 "" H 2850 7850 50  0001 C CNN
+	1    2850 7850
+	1    0    0    -1  
+$EndComp
+Connection ~ 2850 7850
+$Comp
+L power:GND #PWR0118
+U 1 1 67412E98
+P 10800 21350
+F 0 "#PWR0118" H 10800 21100 50  0001 C CNN
+F 1 "GND" H 10805 21177 50  0000 C CNN
+F 2 "" H 10800 21350 50  0001 C CNN
+F 3 "" H 10800 21350 50  0001 C CNN
+	1    10800 21350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0119
+U 1 1 6751054C
+P 14800 21750
+F 0 "#PWR0119" H 14800 21500 50  0001 C CNN
+F 1 "GND" H 14805 21577 50  0000 C CNN
+F 2 "" H 14800 21750 50  0001 C CNN
+F 3 "" H 14800 21750 50  0001 C CNN
+	1    14800 21750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0139
+U 1 1 68CF0888
+P 2450 13450
+F 0 "#PWR0139" H 2450 13200 50  0001 C CNN
+F 1 "GND" V 2455 13322 50  0000 R CNN
+F 2 "" H 2450 13450 50  0001 C CNN
+F 3 "" H 2450 13450 50  0001 C CNN
+	1    2450 13450
+	0    -1   -1   0   
+$EndComp
+Text GLabel 8300 8500 2    50   Input ~ 0
+SRST
+Text GLabel 8200 8500 0    50   Input ~ 0
+PRST
+Text GLabel 9850 1200 0    50   Input ~ 0
+SRST
+Text GLabel 9850 1300 0    50   Input ~ 0
+PRST
+$Comp
+L power:GND #PWR0145
+U 1 1 6A64E6CD
+P 8200 8900
+F 0 "#PWR0145" H 8200 8650 50  0001 C CNN
+F 1 "GND" H 8205 8727 50  0000 C CNN
+F 2 "" H 8200 8900 50  0001 C CNN
+F 3 "" H 8200 8900 50  0001 C CNN
+	1    8200 8900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0146
+U 1 1 6A65CB34
+P 8300 8900
+F 0 "#PWR0146" H 8300 8650 50  0001 C CNN
+F 1 "GND" H 8305 8727 50  0000 C CNN
+F 2 "" H 8300 8900 50  0001 C CNN
+F 3 "" H 8300 8900 50  0001 C CNN
+	1    8300 8900
+	1    0    0    -1  
+$EndComp
+Text GLabel 2450 9850 0    50   Input ~ 0
+3V3
+Text GLabel 2450 14150 2    50   Input ~ 0
+3V3
+Text GLabel 8400 3300 1    50   Input ~ 0
+AIN0
+Text GLabel 8200 3300 1    50   Input ~ 0
+AIN2
+Text GLabel 8100 3300 1    50   Input ~ 0
+AIN3
+Text GLabel 8000 3300 1    50   Input ~ 0
+AIN4
+Text GLabel 7900 3300 1    50   Input ~ 0
+AIN5
+Text GLabel 7800 3300 1    50   Input ~ 0
+AIN6
+Text GLabel 7700 3300 1    50   Input ~ 0
+AIN7
+Text GLabel 7600 3300 1    50   Input ~ 0
+AIN8
+Text GLabel 7500 3300 1    50   Input ~ 0
+AIN9
+Text GLabel 7400 3300 1    50   Input ~ 0
+AIN10
+Text GLabel 7300 3300 1    50   Input ~ 0
+AIN11
+Text GLabel 7200 3300 1    50   Input ~ 0
+AIN12
+Text GLabel 7100 3300 1    50   Input ~ 0
+AIN13
+Text GLabel 7000 3300 1    50   Input ~ 0
+AIN14
+Text GLabel 6900 3300 1    50   Input ~ 0
+AIN15
+Text GLabel 8300 3300 1    50   Input ~ 0
+AIN1
+Text GLabel 1700 12950 0    50   Input ~ 0
+AIN9
+Text GLabel 1700 13050 0    50   Input ~ 0
+AIN10
+Text GLabel 1700 13150 0    50   Input ~ 0
+AIN11
+Text GLabel 1700 12450 0    50   Input ~ 0
+AIN12
+Text GLabel 1700 12550 0    50   Input ~ 0
+AIN13
+Text GLabel 1700 12650 0    50   Input ~ 0
+AIN14
+Text GLabel 1700 12750 0    50   Input ~ 0
+AIN15
+Text GLabel 1700 12850 0    50   Input ~ 0
+AIN8
+Text GLabel 1700 13750 0    50   Input ~ 0
+AIN7
+Text GLabel 1700 13650 0    50   Input ~ 0
+AIN6
+Text GLabel 1700 13550 0    50   Input ~ 0
+AIN5
+Text GLabel 1700 13450 0    50   Input ~ 0
+AIN4
+Text GLabel 1700 14150 0    50   Input ~ 0
+AIN3
+Text GLabel 1700 14050 0    50   Input ~ 0
+AIN2
+Text GLabel 1700 13950 0    50   Input ~ 0
+AIN1
+Text GLabel 1700 13850 0    50   Input ~ 0
+AIN0
+$Comp
+L power:GND #PWR0155
+U 1 1 6DF0F994
+P 11250 2100
+F 0 "#PWR0155" H 11250 1850 50  0001 C CNN
+F 1 "GND" H 11255 1927 50  0000 C CNN
+F 2 "" H 11250 2100 50  0001 C CNN
+F 3 "" H 11250 2100 50  0001 C CNN
+	1    11250 2100
+	1    0    0    -1  
+$EndComp
+Text GLabel 8600 3800 1    50   Input ~ 0
+AVDD
+Text GLabel 8800 3650 1    50   Input ~ 0
+ALLVDD
+Text GLabel 10150 5650 2    50   Input ~ 0
+DVDD
+Text GLabel 11250 300  2    50   Input ~ 0
+DVDD
+Text GLabel 18800 22100 2    50   Input ~ 0
+DVDD
+Text GLabel 19350 21700 2    50   Input ~ 0
+DVDD
+Text GLabel 11750 21500 2    50   Input ~ 0
+DVDD
+Text GLabel 13900 21450 2    50   Input ~ 0
+DVDD
+Text GLabel 14400 21600 2    50   Input ~ 0
+DVDD
+Text Notes 50   2700 0    50   ~ 0
+Regulators
+Wire Notes Line
+	4150 15050 0    15050
+Wire Notes Line
+	4150 2550 4150 15050
+Text GLabel 5400 6650 0    50   Input ~ 0
+G020
+Text GLabel 5400 6750 0    50   Input ~ 0
+G021
+Text GLabel 5400 6850 0    50   Input ~ 0
+G022
+Text GLabel 5400 6950 0    50   Input ~ 0
+G023
+Text GLabel 6800 8550 3    50   Input ~ 0
+G05
+Text GLabel 6900 8550 3    50   Input ~ 0
+G04
+Text GLabel 7000 8550 3    50   Input ~ 0
+G03
+Text GLabel 7100 8550 3    50   Input ~ 0
+G02
+Text GLabel 7200 8550 3    50   Input ~ 0
+G01
+Text GLabel 7300 8550 3    50   Input ~ 0
+G00
+Text GLabel 11250 1800 2    50   Input ~ 0
+IID5
+Text GLabel 11250 1700 2    50   Input ~ 0
+IID6
+Text GLabel 11250 1600 2    50   Input ~ 0
+IID7
+Text GLabel 11250 1500 2    50   Input ~ 0
+IID8
+Text GLabel 11250 1300 2    50   Input ~ 0
+IID10
+Text GLabel 11250 1200 2    50   Input ~ 0
+IIDLY0
+Text GLabel 11250 1100 2    50   Input ~ 0
+IIDLY1
+Text GLabel 11250 1400 2    50   Input ~ 0
+IID9
+Text GLabel 7400 7750 3    50   Input ~ 0
+IID5
+Text GLabel 7500 7750 3    50   Input ~ 0
+IID6
+Text GLabel 7600 7750 3    50   Input ~ 0
+IID7
+Text GLabel 7700 7750 3    50   Input ~ 0
+IID8
+Text GLabel 7800 7750 3    50   Input ~ 0
+IID9
+Text GLabel 7900 7750 3    50   Input ~ 0
+IID10
+Text GLabel 8000 7750 3    50   Input ~ 0
+IIDLY0
+Text GLabel 8100 7750 3    50   Input ~ 0
+IIDLY1
+Wire Wire Line
+	8200 7750 8200 8500
+Wire Wire Line
+	8300 7750 8300 8500
+Text GLabel 12250 22700 2    50   Input ~ 0
+IIACKB
+Text GLabel 12250 22600 2    50   Input ~ 0
+AERO0
+Text GLabel 12250 22500 2    50   Input ~ 0
+AERO1
+Text GLabel 12250 22400 2    50   Input ~ 0
+AERO2
+Text GLabel 8400 7750 3    50   Input ~ 0
+IIACKB
+Text GLabel 8500 7750 3    50   Input ~ 0
+AERO0
+Text GLabel 8600 7750 3    50   Input ~ 0
+AERO1
+Text GLabel 8700 7750 3    50   Input ~ 0
+AERO2
+Text GLabel 14400 22150 2    50   Input ~ 0
+IIREQB
+Text GLabel 14400 22250 2    50   Input ~ 0
+C2FACKB
+Text GLabel 14400 22350 2    50   Input ~ 0
+C2FREQB
+Text GLabel 14400 22450 2    50   Input ~ 0
+C2FO3
+Text GLabel 14400 22550 2    50   Input ~ 0
+C2FO2
+Text GLabel 14400 22650 2    50   Input ~ 0
+C2FO1
+Text GLabel 14400 22750 2    50   Input ~ 0
+C2FO0
+Text GLabel 9500 6850 2    50   Input ~ 0
+C2FO0
+Text GLabel 9500 6750 2    50   Input ~ 0
+C2FO1
+Text GLabel 9500 6650 2    50   Input ~ 0
+C2FO2
+Text GLabel 9500 6550 2    50   Input ~ 0
+C2FO3
+Text GLabel 9500 6450 2    50   Input ~ 0
+C2FREQB
+Text GLabel 9500 6350 2    50   Input ~ 0
+C2FACKB
+Text GLabel 9500 6250 2    50   Input ~ 0
+IIREQB
+Text GLabel 9500 6950 2    50   Input ~ 0
+AERREQB
+Text GLabel 9500 7050 2    50   Input ~ 0
+AERACKB
+Text GLabel 12250 22100 2    50   Input ~ 0
+AERACKB
+Text GLabel 12250 22200 2    50   Input ~ 0
+AERREQB
+Text GLabel 13700 21450 0    50   Input ~ 0
+3V3
+Text GLabel 9850 900  0    50   Input ~ 0
+EXPAMDER_RST
+Text GLabel 14400 22050 2    50   Input ~ 0
+EXPAMDER_RST
+Text GLabel 13000 4650 0    50   Input ~ 0
+D10
+Text GLabel 13000 4550 0    50   Input ~ 0
+D9
+Text GLabel 13000 4450 0    50   Input ~ 0
+D8
+Text GLabel 13000 4350 0    50   Input ~ 0
+D7
+Text GLabel 13000 4150 0    50   Input ~ 0
+D5
+Text GLabel 13000 4050 0    50   Input ~ 0
+D4
+Text GLabel 13000 3950 0    50   Input ~ 0
+D3
+Text GLabel 13000 3850 0    50   Input ~ 0
+D2
+Text GLabel 13000 3750 0    50   Input ~ 0
+D1
+Text GLabel 13000 3650 0    50   Input ~ 0
+D0
+Text GLabel 11050 22100 0    50   Input ~ 0
+D4
+Text GLabel 11050 22200 0    50   Input ~ 0
+D5
+Text GLabel 11050 22400 0    50   Input ~ 0
+D7
+Text GLabel 11050 22500 0    50   Input ~ 0
+D8
+Text GLabel 11050 22600 0    50   Input ~ 0
+D9
+Text GLabel 11050 22700 0    50   Input ~ 0
+D10
+Text GLabel 13200 22050 0    50   Input ~ 0
+D0
+Text GLabel 13200 22150 0    50   Input ~ 0
+D1
+Text GLabel 13200 22250 0    50   Input ~ 0
+D2
+Text GLabel 13200 22350 0    50   Input ~ 0
+D3
+Text GLabel 13200 22450 0    50   Input ~ 0
+D23
+Text GLabel 13200 22550 0    50   Input ~ 0
+D22
+Text GLabel 13200 22650 0    50   Input ~ 0
+D21
+Text GLabel 13200 22750 0    50   Input ~ 0
+D20
+Text GLabel 14800 3650 2    50   Input ~ 0
+D23
+Text GLabel 14800 3750 2    50   Input ~ 0
+D22
+Text GLabel 14800 3850 2    50   Input ~ 0
+D21
+Text GLabel 14800 3950 2    50   Input ~ 0
+D20
+Text GLabel 11550 21500 0    50   Input ~ 0
+3V3
+Text GLabel 12250 21800 2    50   Input ~ 0
+DVDD
+Wire Wire Line
+	14400 21600 14400 21750
+Connection ~ 14400 21750
+$Comp
+L power:GND #PWR0120
+U 1 1 72674F75
+P 11650 23200
+F 0 "#PWR0120" H 11650 22950 50  0001 C CNN
+F 1 "GND" H 11655 23027 50  0000 C CNN
+F 2 "" H 11650 23200 50  0001 C CNN
+F 3 "" H 11650 23200 50  0001 C CNN
+	1    11650 23200
+	1    0    0    -1  
+$EndComp
+Text Notes 10600 20950 0    50   ~ 0
+Shifter
+$Comp
+L power:GND #PWR0121
+U 1 1 727DB204
+P 9850 700
+F 0 "#PWR0121" H 9850 450 50  0001 C CNN
+F 1 "GND" V 9855 572 50  0000 R CNN
+F 2 "" H 9850 700 50  0001 C CNN
+F 3 "" H 9850 700 50  0001 C CNN
+	1    9850 700 
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0122
+U 1 1 727DB99A
+P 18900 22400
+F 0 "#PWR0122" H 18900 22150 50  0001 C CNN
+F 1 "GND" H 18905 22227 50  0000 C CNN
+F 2 "" H 18900 22400 50  0001 C CNN
+F 3 "" H 18900 22400 50  0001 C CNN
+	1    18900 22400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0125
+U 1 1 72980D76
+P 8500 4350
+F 0 "#PWR0125" H 8500 4100 50  0001 C CNN
+F 1 "GND" H 8505 4177 50  0000 C CNN
+F 2 "" H 8500 4350 50  0001 C CNN
+F 3 "" H 8500 4350 50  0001 C CNN
+	1    8500 4350
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0126
+U 1 1 729DA2BE
+P 8700 4350
+F 0 "#PWR0126" H 8700 4100 50  0001 C CNN
+F 1 "GND" H 8705 4177 50  0000 C CNN
+F 2 "" H 8700 4350 50  0001 C CNN
+F 3 "" H 8700 4350 50  0001 C CNN
+	1    8700 4350
+	-1   0    0    1   
+$EndComp
+Text GLabel 19450 22200 2    50   Input ~ 0
+SCL_1V8
+Text GLabel 9850 500  0    50   Input ~ 0
+SCL_1V8
+Wire Wire Line
+	18800 22200 19250 22200
+Wire Wire Line
+	19250 22100 19250 22200
+Connection ~ 19250 22200
+Wire Wire Line
+	19250 22200 19450 22200
+Text GLabel 19450 22300 2    50   Input ~ 0
+SDA_1V8
+Wire Wire Line
+	19350 22100 19350 22300
+Connection ~ 19350 22300
+Wire Wire Line
+	19350 22300 19450 22300
+Text GLabel 9850 1100 0    50   Input ~ 0
+SDA_1V8
+Wire Wire Line
+	18800 22300 19350 22300
+Text GLabel 16400 22100 0    50   Input ~ 0
+3V3
+Text GLabel 16400 22400 0    50   Input ~ 0
+3V3
+Text GLabel 15700 22200 0    50   Input ~ 0
+SCL_3V3
+Text GLabel 15700 22300 0    50   Input ~ 0
+SDA_3V3
+Text GLabel 14800 4050 2    50   Input ~ 0
+SCL_3V3
+Text GLabel 14800 4150 2    50   Input ~ 0
+SDA_3V3
+Wire Wire Line
+	15950 22200 15700 22200
+Wire Wire Line
+	16050 22300 15700 22300
+Text GLabel 16050 21600 2    50   Input ~ 0
+3V3
+Wire Wire Line
+	16400 22200 15950 22200
+Connection ~ 15950 22200
+Wire Wire Line
+	16050 22000 16050 22300
+Wire Wire Line
+	16400 22300 16050 22300
+Connection ~ 16050 22300
+Wire Notes Line
+	9000 2550 9000 0   
+Text GLabel 9850 1500 0    50   Input ~ 0
+IID4
+Text GLabel 9850 1600 0    50   Input ~ 0
+IID3
+Text GLabel 9850 1700 0    50   Input ~ 0
+IID2
+Text GLabel 9850 1800 0    50   Input ~ 0
+IID1
+Text GLabel 9850 1900 0    50   Input ~ 0
+IID0
+Text GLabel 9500 5750 2    50   Input ~ 0
+IID4
+Text GLabel 9500 5850 2    50   Input ~ 0
+IID3
+Text GLabel 9500 5950 2    50   Input ~ 0
+IID2
+Text GLabel 9500 6050 2    50   Input ~ 0
+IID1
+Text GLabel 9500 6150 2    50   Input ~ 0
+IID0
+Text Notes 9100 100  0    50   ~ 0
+Expander
+$Comp
+L Jumper:SolderJumper_2_Bridged JP55
+U 1 1 732C60D2
+P 10000 5650
+F 0 "JP55" H 10000 5855 50  0000 C CNN
+F 1 "SolderJumper_2_Bridged" H 10000 5764 50  0000 C CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 10000 5650 50  0001 C CNN
+F 3 "~" H 10000 5650 50  0001 C CNN
+	1    10000 5650
+	-1   0    0    1   
+$EndComp
+$Comp
+L Jumper:SolderJumper_2_Bridged JP54
+U 1 1 732E8337
+P 8800 3800
+F 0 "JP54" V 8754 3868 50  0000 L CNN
+F 1 "SolderJumper_2_Bridged" V 8845 3868 50  0000 L CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 8800 3800 50  0001 C CNN
+F 3 "~" H 8800 3800 50  0001 C CNN
+	1    8800 3800
+	0    1    1    0   
+$EndComp
+$Comp
+L Jumper:SolderJumper_2_Bridged JP53
+U 1 1 732E9040
+P 8600 3950
+F 0 "JP53" V 8554 4018 50  0000 L CNN
+F 1 "SolderJumper_2_Bridged" V 8645 4018 50  0000 L CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm" H 8600 3950 50  0001 C CNN
+F 3 "~" H 8600 3950 50  0001 C CNN
+	1    8600 3950
+	0    1    1    0   
+$EndComp
+Text Notes 4300 2700 0    50   ~ 0
+Coach
+Wire Notes Line
+	4150 9300 12050 9300
+Text Notes 12100 2700 0    50   ~ 0
+Teensy
+Wire Notes Line
+	12050 8000 16750 8000
+Wire Notes Line
+	0    2550 16750 2550
+$Comp
+L power:GND #PWR0116
+U 1 1 60956539
+P 9500 5550
+F 0 "#PWR0116" H 9500 5300 50  0001 C CNN
+F 1 "GND" H 9505 5377 50  0000 C CNN
+F 2 "" H 9500 5550 50  0001 C CNN
+F 3 "" H 9500 5550 50  0001 C CNN
+	1    9500 5550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C18
+U 1 1 B44A133C
+P 11700 21150
+F 0 "C18" H 11760 21165 59  0000 L BNN
+F 1 "0.1u" H 11760 20965 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 11700 21150 50  0001 C CNN
+F 3 "" H 11700 21150 50  0001 C CNN
+	1    11700 21150
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C22
+U 1 1 8034EA12
+P 11000 21150
+F 0 "C22" H 11060 21165 59  0000 L BNN
+F 1 "0.1u" H 11060 20965 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 11000 21150 50  0001 C CNN
+F 3 "" H 11000 21150 50  0001 C CNN
+	1    11000 21150
+	1    0    0    -1  
+$EndComp
+Text GLabel 11900 21050 2    50   Input ~ 0
+DVDD
+Text GLabel 10800 21050 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	11900 21350 11700 21350
+Connection ~ 10800 21350
+Wire Wire Line
+	11000 21350 10800 21350
+Connection ~ 11700 21350
+Wire Wire Line
+	11700 21350 11500 21350
+Wire Wire Line
+	11000 21050 10800 21050
+Wire Wire Line
+	11700 21050 11900 21050
+$Comp
+L classchip-eagle-import:C-EUC0805 C34
+U 1 1 607B6DDD
+P 11500 21150
+F 0 "C34" H 11560 21165 59  0000 L BNN
+F 1 "0.1u" H 11560 20965 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 11500 21150 50  0001 C CNN
+F 3 "" H 11500 21150 50  0001 C CNN
+	1    11500 21150
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C31
+U 1 1 607C7338
+P 11200 21150
+F 0 "C31" H 11260 21165 59  0000 L BNN
+F 1 "0.1u" H 11260 20965 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 11200 21150 50  0001 C CNN
+F 3 "" H 11200 21150 50  0001 C CNN
+	1    11200 21150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11000 21350 11200 21350
+Connection ~ 11000 21350
+Connection ~ 11500 21350
+Connection ~ 11200 21350
+Wire Wire Line
+	11200 21350 11500 21350
+Wire Wire Line
+	11500 21050 11700 21050
+Connection ~ 11700 21050
+Wire Wire Line
+	11000 21050 11200 21050
+Connection ~ 11000 21050
+$Comp
+L classchip-eagle-import:C-EUC0805 C10
+U 1 1 6089A217
+P 7650 2150
+F 0 "C10" H 7710 2165 59  0000 L BNN
+F 1 "0.1u" H 7710 1965 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7650 2150 50  0001 C CNN
+F 3 "" H 7650 2150 50  0001 C CNN
+	1    7650 2150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0127
+U 1 1 6089A885
+P 7850 2150
+F 0 "#PWR0127" H 7850 1900 50  0001 C CNN
+F 1 "GND" H 7855 1977 50  0000 C CNN
+F 2 "" H 7850 2150 50  0001 C CNN
+F 3 "" H 7850 2150 50  0001 C CNN
+	1    7850 2150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C11
+U 1 1 6089A88F
+P 7650 1950
+F 0 "C11" H 7710 1965 59  0000 L BNN
+F 1 "0.1u" H 7710 1765 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7650 1950 50  0001 C CNN
+F 3 "" H 7650 1950 50  0001 C CNN
+	1    7650 1950
+	0    -1   -1   0   
+$EndComp
+Text GLabel 7550 2150 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	7850 1950 7850 2150
+Wire Wire Line
+	7550 1950 7550 2150
+Wire Notes Line
+	16750 0    16750 8000
+Text GLabel 1400 1200 2    50   Input ~ 0
+3V3
+$Comp
+L classchip-eagle-import:C-EUC0805 C35
+U 1 1 60995AC2
+P 9300 2050
+F 0 "C35" H 9360 2065 59  0000 L BNN
+F 1 "0.1u" H 9360 1865 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 9300 2050 50  0001 C CNN
+F 3 "" H 9300 2050 50  0001 C CNN
+	1    9300 2050
+	1    0    0    -1  
+$EndComp
+Text GLabel 9300 1950 1    50   Input ~ 0
+DVDD
+$Comp
+L power:GND #PWR0128
+U 1 1 609C493A
+P 9300 2250
+F 0 "#PWR0128" H 9300 2000 50  0001 C CNN
+F 1 "GND" H 9305 2077 50  0000 C CNN
+F 2 "" H 9300 2250 50  0001 C CNN
+F 3 "" H 9300 2250 50  0001 C CNN
+	1    9300 2250
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C13
+U 1 1 60A0FC0B
+P 10250 3400
+F 0 "C13" H 10310 3415 59  0000 L BNN
+F 1 "0.1u" H 10310 3215 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 10250 3400 50  0001 C CNN
+F 3 "" H 10250 3400 50  0001 C CNN
+	1    10250 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C14
+U 1 1 60A0FF69
+P 10450 3400
+F 0 "C14" H 10510 3415 59  0000 L BNN
+F 1 "0.1u" H 10510 3215 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 10450 3400 50  0001 C CNN
+F 3 "" H 10450 3400 50  0001 C CNN
+	1    10450 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C15
+U 1 1 60A0FF73
+P 10650 3400
+F 0 "C15" H 10710 3415 59  0000 L BNN
+F 1 "0.1u" H 10710 3215 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 10650 3400 50  0001 C CNN
+F 3 "" H 10650 3400 50  0001 C CNN
+	1    10650 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C28
+U 1 1 60A0FF7D
+P 10850 3400
+F 0 "C28" H 10910 3415 59  0000 L BNN
+F 1 "0.1u" H 10910 3215 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 10850 3400 50  0001 C CNN
+F 3 "" H 10850 3400 50  0001 C CNN
+	1    10850 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C32
+U 1 1 60A0FF87
+P 11050 3400
+F 0 "C32" H 11110 3415 59  0000 L BNN
+F 1 "0.1u" H 11110 3215 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 11050 3400 50  0001 C CNN
+F 3 "" H 11050 3400 50  0001 C CNN
+	1    11050 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C12
+U 1 1 60A0FF91
+P 9850 5750
+F 0 "C12" H 9910 5765 59  0000 L BNN
+F 1 "0.1u" H 9910 5565 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 9850 5750 50  0001 C CNN
+F 3 "" H 9850 5750 50  0001 C CNN
+	1    9850 5750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10250 3600 10450 3600
+Connection ~ 10450 3600
+Wire Wire Line
+	10450 3600 10650 3600
+Connection ~ 10650 3600
+Wire Wire Line
+	10650 3600 10750 3600
+Connection ~ 10850 3600
+Wire Wire Line
+	10850 3600 11050 3600
+$Comp
+L power:GND #PWR0129
+U 1 1 60A0FFA7
+P 10750 3600
+F 0 "#PWR0129" H 10750 3350 50  0001 C CNN
+F 1 "GND" H 10755 3427 50  0000 C CNN
+F 2 "" H 10750 3600 50  0001 C CNN
+F 3 "" H 10750 3600 50  0001 C CNN
+	1    10750 3600
+	1    0    0    -1  
+$EndComp
+Connection ~ 10750 3600
+Wire Wire Line
+	10750 3600 10850 3600
+Text GLabel 11050 3300 1    50   Input ~ 0
+NCVDD5
+Text GLabel 10850 3300 1    50   Input ~ 0
+NCVDD4
+Text GLabel 10650 3300 1    50   Input ~ 0
+NCVDD3
+Text GLabel 10450 3300 1    50   Input ~ 0
+NCVDD2
+Text GLabel 10250 3300 1    50   Input ~ 0
+NCVDD1
+$Comp
+L classchip-eagle-import:C-EUC0805 C16
+U 1 1 04FB86BF
+P 8800 4100
+F 0 "C16" H 8860 4115 59  0000 L BNN
+F 1 "0.1u" H 8860 3915 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 8800 4100 50  0001 C CNN
+F 3 "" H 8800 4100 50  0001 C CNN
+	1    8800 4100
+	0    1    1    0   
+$EndComp
+$Comp
+L dac53608:dac53608 U12
+U 1 1 60D7E591
+P 2150 14350
+F 0 "U12" H 2225 13235 50  0000 C CNN
+F 1 "dac53608" H 2225 13326 50  0000 C CNN
+F 2 "kicadlibs:QFN50P300X300X80-17N" H 2150 14350 50  0001 C CNN
+F 3 "" H 2150 14350 50  0001 C CNN
+	1    2150 14350
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0132
+U 1 1 60E98180
+P 2450 14050
+F 0 "#PWR0132" H 2450 13800 50  0001 C CNN
+F 1 "GND" V 2455 13922 50  0000 R CNN
+F 2 "" H 2450 14050 50  0001 C CNN
+F 3 "" H 2450 14050 50  0001 C CNN
+	1    2450 14050
+	0    -1   -1   0   
+$EndComp
+Text GLabel 2450 13750 2    50   Input ~ 0
+SCL_3V3
+Text GLabel 2450 13850 2    50   Input ~ 0
+SDA_3V3
+Wire Wire Line
+	2950 10500 3150 10500
+Wire Wire Line
+	3150 10500 3350 10500
+Wire Wire Line
+	3350 10500 3550 10500
+Connection ~ 3150 10500
+Connection ~ 3350 10500
+Wire Wire Line
+	3150 10800 2950 10800
+Wire Wire Line
+	3150 10800 3350 10800
+Wire Wire Line
+	3350 10800 3550 10800
+Connection ~ 2950 10800
+Connection ~ 3150 10800
+Connection ~ 3350 10800
+$Comp
+L classchip-eagle-import:C-EUC0805 C36
+U 1 1 60F01AA1
+P 2950 10600
+F 0 "C36" H 3010 10615 59  0000 L BNN
+F 1 "0.1u" H 3010 10415 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 2950 10600 50  0001 C CNN
+F 3 "" H 2950 10600 50  0001 C CNN
+	1    2950 10600
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C37
+U 1 1 60F01AAB
+P 3150 10600
+F 0 "C37" H 3210 10615 59  0000 L BNN
+F 1 "0.1u" H 3210 10415 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3150 10600 50  0001 C CNN
+F 3 "" H 3150 10600 50  0001 C CNN
+	1    3150 10600
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C38
+U 1 1 60F01AB5
+P 3350 10600
+F 0 "C38" H 3410 10615 59  0000 L BNN
+F 1 "0.1u" H 3410 10415 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3350 10600 50  0001 C CNN
+F 3 "" H 3350 10600 50  0001 C CNN
+	1    3350 10600
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C39
+U 1 1 60F01ABF
+P 3550 10600
+F 0 "C39" H 3610 10615 59  0000 L BNN
+F 1 "0.1u" H 3610 10415 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3550 10600 50  0001 C CNN
+F 3 "" H 3550 10600 50  0001 C CNN
+	1    3550 10600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0133
+U 1 1 60F01AC9
+P 2950 10800
+F 0 "#PWR0133" H 2950 10550 50  0001 C CNN
+F 1 "GND" H 2955 10627 50  0000 C CNN
+F 2 "" H 2950 10800 50  0001 C CNN
+F 3 "" H 2950 10800 50  0001 C CNN
+	1    2950 10800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0134
+U 1 1 60F815D1
+P 2450 12450
+F 0 "#PWR0134" H 2450 12200 50  0001 C CNN
+F 1 "GND" V 2455 12322 50  0000 R CNN
+F 2 "" H 2450 12450 50  0001 C CNN
+F 3 "" H 2450 12450 50  0001 C CNN
+	1    2450 12450
+	0    -1   -1   0   
+$EndComp
+Text GLabel 2450 13150 2    50   Input ~ 0
+3V3
+$Comp
+L dac53608:dac53608 U8
+U 1 1 60F8166E
+P 2150 13350
+F 0 "U8" H 2225 12235 50  0000 C CNN
+F 1 "dac53608" H 2225 12326 50  0000 C CNN
+F 2 "kicadlibs:QFN50P300X300X80-17N" H 2150 13350 50  0001 C CNN
+F 3 "" H 2150 13350 50  0001 C CNN
+	1    2150 13350
+	-1   0    0    1   
+$EndComp
+Text GLabel 2450 12750 2    50   Input ~ 0
+SCL_3V3
+Text GLabel 2450 12850 2    50   Input ~ 0
+SDA_3V3
+$Comp
+L power:GND #PWR0135
+U 1 1 60F94E80
+P 1650 11450
+F 0 "#PWR0135" H 1650 11200 50  0001 C CNN
+F 1 "GND" V 1655 11322 50  0000 R CNN
+F 2 "" H 1650 11450 50  0001 C CNN
+F 3 "" H 1650 11450 50  0001 C CNN
+	1    1650 11450
+	0    -1   -1   0   
+$EndComp
+Text GLabel 1650 12150 2    50   Input ~ 0
+3V3
+$Comp
+L dac53608:dac53608 U7
+U 1 1 60F94F4D
+P 1350 12350
+F 0 "U7" H 1425 11235 50  0000 C CNN
+F 1 "dac53608" H 1425 11326 50  0000 C CNN
+F 2 "kicadlibs:QFN50P300X300X80-17N" H 1350 12350 50  0001 C CNN
+F 3 "" H 1350 12350 50  0001 C CNN
+	1    1350 12350
+	-1   0    0    1   
+$EndComp
+Text GLabel 1650 11750 2    50   Input ~ 0
+SCL_3V3
+Text GLabel 1650 11850 2    50   Input ~ 0
+SDA_3V3
+$Comp
+L power:GND #PWR0136
+U 1 1 60F94F5C
+P 1650 10450
+F 0 "#PWR0136" H 1650 10200 50  0001 C CNN
+F 1 "GND" V 1655 10322 50  0000 R CNN
+F 2 "" H 1650 10450 50  0001 C CNN
+F 3 "" H 1650 10450 50  0001 C CNN
+	1    1650 10450
+	0    -1   -1   0   
+$EndComp
+Text GLabel 1650 11150 2    50   Input ~ 0
+3V3
+$Comp
+L dac53608:dac53608 U6
+U 1 1 60F94F67
+P 1350 11350
+F 0 "U6" H 1425 10235 50  0000 C CNN
+F 1 "dac53608" H 1425 10326 50  0000 C CNN
+F 2 "kicadlibs:QFN50P300X300X80-17N" H 1350 11350 50  0001 C CNN
+F 3 "" H 1350 11350 50  0001 C CNN
+	1    1350 11350
+	-1   0    0    1   
+$EndComp
+Text GLabel 1650 10750 2    50   Input ~ 0
+SCL_3V3
+Text GLabel 1650 10850 2    50   Input ~ 0
+SDA_3V3
+$Comp
+L power:GND #PWR0137
+U 1 1 60FC4FD9
+P 2450 13650
+F 0 "#PWR0137" H 2450 13400 50  0001 C CNN
+F 1 "GND" V 2455 13522 50  0000 R CNN
+F 2 "" H 2450 13650 50  0001 C CNN
+F 3 "" H 2450 13650 50  0001 C CNN
+	1    2450 13650
+	0    -1   -1   0   
+$EndComp
+Text GLabel 2450 12650 2    50   Input ~ 0
+3V3
+Text GLabel 1650 11650 2    50   Input ~ 0
+SDA_3V3
+Text GLabel 1650 10650 2    50   Input ~ 0
+SCL_3V3
+$Comp
+L classchip-eagle-import:MY_TEENSY TEENSY1
+U 1 1 0DD4651B
+P 14000 4750
+F 0 "TEENSY1" H 14000 4750 50  0001 C CNN
+F 1 "MY_TEENSY" H 14000 4750 50  0001 C CNN
+F 2 "classchip:MY_TEENSY" H 14000 4750 50  0001 C CNN
+F 3 "" H 14000 4750 50  0001 C CNN
+	1    14000 4750
+	1    0    0    -1  
+$EndComp
+Text GLabel 13000 5050 0    50   Input ~ 0
+MUX_S2
+Text GLabel 13000 5250 0    50   Input ~ 0
+MUX_S1
+Text GLabel 13000 5450 0    50   Input ~ 0
+MUX_S0
+Text GLabel 13000 5750 0    50   Input ~ 0
+MUX2_OUT
+Text GLabel 13000 5650 0    50   Input ~ 0
+MUX1_OUT
+$Comp
+L classchip-eagle-import:C-EUC0805 C9
+U 1 1 1EEFB72A
+P 3850 7650
+F 0 "C9" H 3910 7665 59  0000 L BNN
+F 1 "1u" H 3910 7465 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3850 7650 50  0001 C CNN
+F 3 "" H 3850 7650 50  0001 C CNN
+	1    3850 7650
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C25
+U 1 1 35BABC8C
+P 3650 7650
+F 0 "C25" H 3710 7665 59  0000 L BNN
+F 1 "0.01u" H 3710 7465 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3650 7650 50  0001 C CNN
+F 3 "" H 3650 7650 50  0001 C CNN
+	1    3650 7650
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EU025-024X044 C27
+U 1 1 984E694D
+P 3050 7650
+F 0 "C27" H 3110 7665 59  0000 L BNN
+F 1 "47u" H 3110 7465 59  0000 L BNN
+F 2 "classchip:C025-024X044" H 3050 7650 50  0001 C CNN
+F 3 "" H 3050 7650 50  0001 C CNN
+	1    3050 7650
+	1    0    0    -1  
+$EndComp
+Text Notes 50   15200 0    50   ~ 0
+Current sensing preamps
+Text Notes 12100 100  0    50   ~ 0
+LED
+Text Notes 4250 9450 0    50   ~ 0
+Pluggable Component
+$Comp
+L Mechanical:MountingHole_Pad H4
+U 1 1 6146CB2E
+P 25000 200
+F 0 "H4" H 25100 249 50  0000 L CNN
+F 1 "MountingHole_Pad" H 25100 158 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.3mm_M4_ISO14580" H 25000 200 50  0001 C CNN
+F 3 "~" H 25000 200 50  0001 C CNN
+	1    25000 200 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H3
+U 1 1 6146D41E
+P 24800 200
+F 0 "H3" H 24900 249 50  0000 L CNN
+F 1 "MountingHole_Pad" H 24900 158 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.3mm_M4_ISO14580" H 24800 200 50  0001 C CNN
+F 3 "~" H 24800 200 50  0001 C CNN
+	1    24800 200 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole_Pad H1
+U 1 1 6146DC1D
+P 24400 200
+F 0 "H1" H 24500 249 50  0000 L CNN
+F 1 "MountingHole_Pad" H 24500 158 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.3mm_M4_ISO14580" H 24400 200 50  0001 C CNN
+F 3 "~" H 24400 200 50  0001 C CNN
+	1    24400 200 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0130
+U 1 1 61716D15
+P 9850 5950
+F 0 "#PWR0130" H 9850 5700 50  0001 C CNN
+F 1 "GND" H 9855 5777 50  0000 C CNN
+F 2 "" H 9850 5950 50  0001 C CNN
+F 3 "" H 9850 5950 50  0001 C CNN
+	1    9850 5950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9850 5650 9500 5650
+Connection ~ 9850 5650
+$Comp
+L power:GND #PWR0140
+U 1 1 6175FFCD
+P 9100 3950
+F 0 "#PWR0140" H 9100 3700 50  0001 C CNN
+F 1 "GND" H 9105 3777 50  0000 C CNN
+F 2 "" H 9100 3950 50  0001 C CNN
+F 3 "" H 9100 3950 50  0001 C CNN
+	1    9100 3950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0141
+U 1 1 61762B06
+P 8900 4100
+F 0 "#PWR0141" H 8900 3850 50  0001 C CNN
+F 1 "GND" H 8905 3927 50  0000 C CNN
+F 2 "" H 8900 4100 50  0001 C CNN
+F 3 "" H 8900 4100 50  0001 C CNN
+	1    8900 4100
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	8800 3950 8800 4350
+Connection ~ 8800 3950
+Wire Wire Line
+	8600 4100 8600 4350
+Connection ~ 8600 4100
+Wire Wire Line
+	6800 7750 6800 8450
+Wire Wire Line
+	6900 7750 6900 8450
+Wire Wire Line
+	7000 7750 7000 8450
+Wire Wire Line
+	7100 7750 7100 8450
+Wire Wire Line
+	7200 7750 7200 8450
+Wire Wire Line
+	7300 7750 7300 8450
+Wire Wire Line
+	5400 6950 5450 6950
+Wire Wire Line
+	5400 6850 5450 6850
+Wire Wire Line
+	5400 6750 5450 6750
+Wire Wire Line
+	5400 6650 5450 6650
+Wire Wire Line
+	5400 6550 5450 6550
+Wire Wire Line
+	5400 6450 5450 6450
+Wire Wire Line
+	5400 6350 5450 6350
+Wire Wire Line
+	5400 6250 5450 6250
+Wire Wire Line
+	5400 6150 5450 6150
+Wire Wire Line
+	5400 6050 5450 6050
+Wire Wire Line
+	5400 5950 5450 5950
+Wire Wire Line
+	5400 5850 5450 5850
+Wire Wire Line
+	5400 5750 5450 5750
+Wire Wire Line
+	5400 5650 5450 5650
+Wire Wire Line
+	5400 5550 5450 5550
+Wire Wire Line
+	5400 5450 5450 5450
+Wire Wire Line
+	5400 5350 5450 5350
+Wire Wire Line
+	5400 5250 5450 5250
+Wire Wire Line
+	5400 5150 5450 5150
+Wire Wire Line
+	5400 5050 5450 5050
+Wire Wire Line
+	8400 3300 8400 3450
+Wire Wire Line
+	8300 3300 8300 3450
+Wire Wire Line
+	8200 3300 8200 3450
+Wire Wire Line
+	6900 3300 6900 3450
+$Comp
+L Connector:TestPoint_Small TP1
+U 1 1 6180B4B2
+P 6900 3450
+F 0 "TP1" H 6948 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 6948 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7100 3450 50  0001 C CNN
+F 3 "~" H 7100 3450 50  0001 C CNN
+	1    6900 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 6900 3450
+Wire Wire Line
+	6900 3450 6900 4350
+Wire Wire Line
+	8100 3300 8100 3450
+Wire Wire Line
+	8000 3300 8000 3450
+Wire Wire Line
+	7900 3300 7900 3450
+Wire Wire Line
+	7800 3300 7800 3450
+Wire Wire Line
+	7700 3300 7700 3450
+Wire Wire Line
+	7600 3300 7600 3450
+Wire Wire Line
+	7500 3300 7500 3450
+Wire Wire Line
+	7400 3300 7400 3450
+Wire Wire Line
+	7300 3300 7300 3450
+Wire Wire Line
+	7200 3300 7200 3450
+Wire Wire Line
+	7100 3300 7100 3450
+Wire Wire Line
+	7000 3300 7000 3450
+$Comp
+L Connector:TestPoint_Small TP24
+U 1 1 61817D59
+P 7000 3450
+F 0 "TP24" H 7048 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7048 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7200 3450 50  0001 C CNN
+F 3 "~" H 7200 3450 50  0001 C CNN
+	1    7000 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7000 3450
+Wire Wire Line
+	7000 3450 7000 4350
+$Comp
+L Connector:TestPoint_Small TP26
+U 1 1 6181815C
+P 7100 3450
+F 0 "TP26" H 7148 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7148 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7300 3450 50  0001 C CNN
+F 3 "~" H 7300 3450 50  0001 C CNN
+	1    7100 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7100 3450
+Wire Wire Line
+	7100 3450 7100 4350
+$Comp
+L Connector:TestPoint_Small TP28
+U 1 1 61818595
+P 7200 3450
+F 0 "TP28" H 7248 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7248 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7400 3450 50  0001 C CNN
+F 3 "~" H 7400 3450 50  0001 C CNN
+	1    7200 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7200 3450
+Wire Wire Line
+	7200 3450 7200 4350
+$Comp
+L Connector:TestPoint_Small TP30
+U 1 1 618189CF
+P 7300 3450
+F 0 "TP30" H 7348 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7348 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7500 3450 50  0001 C CNN
+F 3 "~" H 7500 3450 50  0001 C CNN
+	1    7300 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7300 3450
+Wire Wire Line
+	7300 3450 7300 4350
+$Comp
+L Connector:TestPoint_Small TP32
+U 1 1 61818DE8
+P 7400 3450
+F 0 "TP32" H 7448 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7448 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7600 3450 50  0001 C CNN
+F 3 "~" H 7600 3450 50  0001 C CNN
+	1    7400 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7400 3450
+Wire Wire Line
+	7400 3450 7400 4350
+$Comp
+L Connector:TestPoint_Small TP33
+U 1 1 61819249
+P 7500 3450
+F 0 "TP33" H 7548 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7548 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7700 3450 50  0001 C CNN
+F 3 "~" H 7700 3450 50  0001 C CNN
+	1    7500 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7500 3450
+Wire Wire Line
+	7500 3450 7500 4350
+$Comp
+L Connector:TestPoint_Small TP34
+U 1 1 61819714
+P 7600 3450
+F 0 "TP34" H 7648 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7648 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7800 3450 50  0001 C CNN
+F 3 "~" H 7800 3450 50  0001 C CNN
+	1    7600 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7600 3450
+Wire Wire Line
+	7600 3450 7600 4350
+$Comp
+L Connector:TestPoint_Small TP35
+U 1 1 61819C12
+P 7700 3450
+F 0 "TP35" H 7748 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7748 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7900 3450 50  0001 C CNN
+F 3 "~" H 7900 3450 50  0001 C CNN
+	1    7700 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7700 3450
+Wire Wire Line
+	7700 3450 7700 4350
+$Comp
+L Connector:TestPoint_Small TP36
+U 1 1 6181A054
+P 7800 3450
+F 0 "TP36" H 7848 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7848 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 8000 3450 50  0001 C CNN
+F 3 "~" H 8000 3450 50  0001 C CNN
+	1    7800 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7800 3450
+Wire Wire Line
+	7800 3450 7800 4350
+$Comp
+L Connector:TestPoint_Small TP37
+U 1 1 6181A462
+P 7900 3450
+F 0 "TP37" H 7948 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7948 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 8100 3450 50  0001 C CNN
+F 3 "~" H 8100 3450 50  0001 C CNN
+	1    7900 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7900 3450
+Wire Wire Line
+	7900 3450 7900 4350
+$Comp
+L Connector:TestPoint_Small TP38
+U 1 1 6181A922
+P 8000 3450
+F 0 "TP38" H 8048 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 8048 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 8200 3450 50  0001 C CNN
+F 3 "~" H 8200 3450 50  0001 C CNN
+	1    8000 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 8000 3450
+Wire Wire Line
+	8000 3450 8000 4350
+$Comp
+L Connector:TestPoint_Small TP39
+U 1 1 6181AE0A
+P 8100 3450
+F 0 "TP39" H 8148 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 8148 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 8300 3450 50  0001 C CNN
+F 3 "~" H 8300 3450 50  0001 C CNN
+	1    8100 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 8100 3450
+Wire Wire Line
+	8100 3450 8100 4350
+$Comp
+L Connector:TestPoint_Small TP40
+U 1 1 6181B33F
+P 8200 3450
+F 0 "TP40" H 8248 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 8248 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 8400 3450 50  0001 C CNN
+F 3 "~" H 8400 3450 50  0001 C CNN
+	1    8200 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 8200 3450
+Wire Wire Line
+	8200 3450 8200 4350
+$Comp
+L Connector:TestPoint_Small TP41
+U 1 1 6181B755
+P 8300 3450
+F 0 "TP41" H 8348 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 8348 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 8500 3450 50  0001 C CNN
+F 3 "~" H 8500 3450 50  0001 C CNN
+	1    8300 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 8300 3450
+Wire Wire Line
+	8300 3450 8300 4350
+$Comp
+L Connector:TestPoint_Small TP42
+U 1 1 6181BC26
+P 8400 3450
+F 0 "TP42" H 8448 3496 50  0000 L CNN
+F 1 "TestPoint_Small" H 8448 3405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 8600 3450 50  0001 C CNN
+F 3 "~" H 8600 3450 50  0001 C CNN
+	1    8400 3450
+	1    0    0    -1  
+$EndComp
+Connection ~ 8400 3450
+Wire Wire Line
+	8400 3450 8400 4350
+$Comp
+L Connector:TestPoint_Small TP2
+U 1 1 6181C155
+P 5450 5050
+F 0 "TP2" H 5498 5096 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5005 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5050 50  0001 C CNN
+F 3 "~" H 5650 5050 50  0001 C CNN
+	1    5450 5050
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5050
+Wire Wire Line
+	5450 5050 6100 5050
+$Comp
+L Connector:TestPoint_Small TP3
+U 1 1 6181EE1E
+P 5450 5150
+F 0 "TP3" H 5498 5196 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5105 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5150 50  0001 C CNN
+F 3 "~" H 5650 5150 50  0001 C CNN
+	1    5450 5150
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5150
+Wire Wire Line
+	5450 5150 6100 5150
+$Comp
+L Connector:TestPoint_Small TP4
+U 1 1 6181F1FF
+P 5450 5250
+F 0 "TP4" H 5498 5296 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5205 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5250 50  0001 C CNN
+F 3 "~" H 5650 5250 50  0001 C CNN
+	1    5450 5250
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5250
+Wire Wire Line
+	5450 5250 6100 5250
+$Comp
+L Connector:TestPoint_Small TP5
+U 1 1 6181F5B5
+P 5450 5350
+F 0 "TP5" H 5498 5396 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5305 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5350 50  0001 C CNN
+F 3 "~" H 5650 5350 50  0001 C CNN
+	1    5450 5350
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5350
+Wire Wire Line
+	5450 5350 6100 5350
+$Comp
+L Connector:TestPoint_Small TP6
+U 1 1 6181F9A6
+P 5450 5450
+F 0 "TP6" H 5498 5496 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5450 50  0001 C CNN
+F 3 "~" H 5650 5450 50  0001 C CNN
+	1    5450 5450
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5450
+Wire Wire Line
+	5450 5450 6100 5450
+$Comp
+L Connector:TestPoint_Small TP7
+U 1 1 61820482
+P 5450 5550
+F 0 "TP7" H 5498 5596 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5505 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5550 50  0001 C CNN
+F 3 "~" H 5650 5550 50  0001 C CNN
+	1    5450 5550
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5550
+Wire Wire Line
+	5450 5550 6100 5550
+$Comp
+L Connector:TestPoint_Small TP8
+U 1 1 61820809
+P 5450 5650
+F 0 "TP8" H 5498 5696 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5605 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5650 50  0001 C CNN
+F 3 "~" H 5650 5650 50  0001 C CNN
+	1    5450 5650
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5650
+Wire Wire Line
+	5450 5650 6100 5650
+$Comp
+L Connector:TestPoint_Small TP9
+U 1 1 61820B7D
+P 5450 5750
+F 0 "TP9" H 5498 5796 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5705 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5750 50  0001 C CNN
+F 3 "~" H 5650 5750 50  0001 C CNN
+	1    5450 5750
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5750
+Wire Wire Line
+	5450 5750 6100 5750
+$Comp
+L Connector:TestPoint_Small TP10
+U 1 1 61820F65
+P 5450 5850
+F 0 "TP10" H 5498 5896 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5805 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5850 50  0001 C CNN
+F 3 "~" H 5650 5850 50  0001 C CNN
+	1    5450 5850
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5850
+Wire Wire Line
+	5450 5850 6100 5850
+$Comp
+L Connector:TestPoint_Small TP11
+U 1 1 61821371
+P 5450 5950
+F 0 "TP11" H 5498 5996 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 5905 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 5950 50  0001 C CNN
+F 3 "~" H 5650 5950 50  0001 C CNN
+	1    5450 5950
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 5950
+Wire Wire Line
+	5450 5950 6100 5950
+$Comp
+L Connector:TestPoint_Small TP12
+U 1 1 61821794
+P 5450 6050
+F 0 "TP12" H 5498 6096 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6005 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6050 50  0001 C CNN
+F 3 "~" H 5650 6050 50  0001 C CNN
+	1    5450 6050
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6050
+Wire Wire Line
+	5450 6050 6100 6050
+$Comp
+L Connector:TestPoint_Small TP13
+U 1 1 61822262
+P 5450 6150
+F 0 "TP13" H 5498 6196 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6105 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6150 50  0001 C CNN
+F 3 "~" H 5650 6150 50  0001 C CNN
+	1    5450 6150
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6150
+Wire Wire Line
+	5450 6150 6100 6150
+$Comp
+L Connector:TestPoint_Small TP14
+U 1 1 618225B9
+P 5450 6250
+F 0 "TP14" H 5498 6296 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6205 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6250 50  0001 C CNN
+F 3 "~" H 5650 6250 50  0001 C CNN
+	1    5450 6250
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6250
+Wire Wire Line
+	5450 6250 6100 6250
+$Comp
+L Connector:TestPoint_Small TP15
+U 1 1 6182292D
+P 5450 6350
+F 0 "TP15" H 5498 6396 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6305 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6350 50  0001 C CNN
+F 3 "~" H 5650 6350 50  0001 C CNN
+	1    5450 6350
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6350
+Wire Wire Line
+	5450 6350 6100 6350
+$Comp
+L Connector:TestPoint_Small TP16
+U 1 1 61822D11
+P 5450 6450
+F 0 "TP16" H 5498 6496 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6450 50  0001 C CNN
+F 3 "~" H 5650 6450 50  0001 C CNN
+	1    5450 6450
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6450
+Wire Wire Line
+	5450 6450 6100 6450
+$Comp
+L Connector:TestPoint_Small TP17
+U 1 1 61823126
+P 5450 6550
+F 0 "TP17" H 5498 6596 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6505 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6550 50  0001 C CNN
+F 3 "~" H 5650 6550 50  0001 C CNN
+	1    5450 6550
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6550
+Wire Wire Line
+	5450 6550 6100 6550
+$Comp
+L Connector:TestPoint_Small TP18
+U 1 1 618234B4
+P 5450 6650
+F 0 "TP18" H 5498 6696 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6605 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6650 50  0001 C CNN
+F 3 "~" H 5650 6650 50  0001 C CNN
+	1    5450 6650
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6650
+Wire Wire Line
+	5450 6650 6100 6650
+$Comp
+L Connector:TestPoint_Small TP19
+U 1 1 618238A8
+P 5450 6750
+F 0 "TP19" H 5498 6796 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6705 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6750 50  0001 C CNN
+F 3 "~" H 5650 6750 50  0001 C CNN
+	1    5450 6750
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6750
+Wire Wire Line
+	5450 6750 6100 6750
+$Comp
+L Connector:TestPoint_Small TP20
+U 1 1 61823C94
+P 5450 6850
+F 0 "TP20" H 5498 6896 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6805 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6850 50  0001 C CNN
+F 3 "~" H 5650 6850 50  0001 C CNN
+	1    5450 6850
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6850
+Wire Wire Line
+	5450 6850 6100 6850
+$Comp
+L Connector:TestPoint_Small TP21
+U 1 1 61823F3D
+P 5450 6950
+F 0 "TP21" H 5498 6996 50  0000 L CNN
+F 1 "TestPoint_Small" H 5498 6905 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 5650 6950 50  0001 C CNN
+F 3 "~" H 5650 6950 50  0001 C CNN
+	1    5450 6950
+	1    0    0    -1  
+$EndComp
+Connection ~ 5450 6950
+Wire Wire Line
+	5450 6950 6100 6950
+$Comp
+L Connector:TestPoint_Small TP22
+U 1 1 61824335
+P 6800 8450
+F 0 "TP22" H 6848 8496 50  0000 L CNN
+F 1 "TestPoint_Small" H 6848 8405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7000 8450 50  0001 C CNN
+F 3 "~" H 7000 8450 50  0001 C CNN
+	1    6800 8450
+	1    0    0    -1  
+$EndComp
+Connection ~ 6800 8450
+Wire Wire Line
+	6800 8450 6800 8550
+$Comp
+L Connector:TestPoint_Small TP23
+U 1 1 61827025
+P 6900 8450
+F 0 "TP23" H 6948 8496 50  0000 L CNN
+F 1 "TestPoint_Small" H 6948 8405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7100 8450 50  0001 C CNN
+F 3 "~" H 7100 8450 50  0001 C CNN
+	1    6900 8450
+	1    0    0    -1  
+$EndComp
+Connection ~ 6900 8450
+Wire Wire Line
+	6900 8450 6900 8550
+$Comp
+L Connector:TestPoint_Small TP25
+U 1 1 61827354
+P 7000 8450
+F 0 "TP25" H 7048 8496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7048 8405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7200 8450 50  0001 C CNN
+F 3 "~" H 7200 8450 50  0001 C CNN
+	1    7000 8450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7000 8450
+Wire Wire Line
+	7000 8450 7000 8550
+$Comp
+L Connector:TestPoint_Small TP27
+U 1 1 618276A5
+P 7100 8450
+F 0 "TP27" H 7148 8496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7148 8405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7300 8450 50  0001 C CNN
+F 3 "~" H 7300 8450 50  0001 C CNN
+	1    7100 8450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7100 8450
+Wire Wire Line
+	7100 8450 7100 8550
+$Comp
+L Connector:TestPoint_Small TP29
+U 1 1 61827A4D
+P 7200 8450
+F 0 "TP29" H 7248 8496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7248 8405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7400 8450 50  0001 C CNN
+F 3 "~" H 7400 8450 50  0001 C CNN
+	1    7200 8450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7200 8450
+Wire Wire Line
+	7200 8450 7200 8550
+$Comp
+L Connector:TestPoint_Small TP31
+U 1 1 61827D3A
+P 7300 8450
+F 0 "TP31" H 7348 8496 50  0000 L CNN
+F 1 "TestPoint_Small" H 7348 8405 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 7500 8450 50  0001 C CNN
+F 3 "~" H 7500 8450 50  0001 C CNN
+	1    7300 8450
+	1    0    0    -1  
+$EndComp
+Connection ~ 7300 8450
+Wire Wire Line
+	7300 8450 7300 8550
+Text GLabel 1500 2800 2    50   Input ~ 0
+NCVDD5_
+$Comp
+L classchip-eagle-import:C-EUC0805 C1
+U 1 1 B9BDB640
+P 1500 2900
+F 0 "C1" H 1560 2915 59  0000 L BNN
+F 1 "10u" H 1560 2715 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 2900 50  0001 C CNN
+F 3 "" H 1500 2900 50  0001 C CNN
+	1    1500 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0154
+U 1 1 6D7B27CD
+P 1500 3100
+F 0 "#PWR0154" H 1500 2850 50  0001 C CNN
+F 1 "GND" H 1505 2927 50  0000 C CNN
+F 2 "" H 1500 3100 50  0001 C CNN
+F 3 "" H 1500 3100 50  0001 C CNN
+	1    1500 3100
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  2800 0    50   Input ~ 0
+VIN
+$Comp
+L power:GND #PWR0114
+U 1 1 6614E527
+P 300 3200
+F 0 "#PWR0114" H 300 2950 50  0001 C CNN
+F 1 "GND" H 305 3027 50  0000 C CNN
+F 2 "" H 300 3200 50  0001 C CNN
+F 3 "" H 300 3200 50  0001 C CNN
+	1    300  3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:TPS770 U34
+U 1 1 9E915A49
+P 800 3000
+F 0 "U34" H 500 3350 59  0000 L BNN
+F 1 "TPS770" H 500 2600 59  0000 L BNN
+F 2 "classchip:SOT23-DBV" H 800 3000 50  0001 C CNN
+F 3 "" H 800 3000 50  0001 C CNN
+	1    800  3000
+	1    0    0    -1  
+$EndComp
+Connection ~ 300  3200
+Wire Wire Line
+	300  3000 400  3000
+Wire Wire Line
+	300  3200 300  3000
+Wire Wire Line
+	300  3200 400  3200
+Wire Wire Line
+	1300 2800 1500 2800
+Text GLabel 1500 3650 2    50   Input ~ 0
+NCVDD4_
+$Comp
+L power:GND #PWR0153
+U 1 1 6D7B215E
+P 1500 3950
+F 0 "#PWR0153" H 1500 3700 50  0001 C CNN
+F 1 "GND" H 1505 3777 50  0000 C CNN
+F 2 "" H 1500 3950 50  0001 C CNN
+F 3 "" H 1500 3950 50  0001 C CNN
+	1    1500 3950
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  3650 0    50   Input ~ 0
+VIN
+$Comp
+L power:GND #PWR0113
+U 1 1 6614DEA0
+P 300 4050
+F 0 "#PWR0113" H 300 3800 50  0001 C CNN
+F 1 "GND" H 305 3877 50  0000 C CNN
+F 2 "" H 300 4050 50  0001 C CNN
+F 3 "" H 300 4050 50  0001 C CNN
+	1    300  4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C2
+U 1 1 F1388863
+P 1500 3750
+F 0 "C2" H 1560 3765 59  0000 L BNN
+F 1 "10u" H 1560 3565 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 3750 50  0001 C CNN
+F 3 "" H 1500 3750 50  0001 C CNN
+	1    1500 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:TPS770 U33
+U 1 1 28A84A3D
+P 800 3850
+F 0 "U33" H 500 4200 59  0000 L BNN
+F 1 "TPS770" H 500 3450 59  0000 L BNN
+F 2 "classchip:SOT23-DBV" H 800 3850 50  0001 C CNN
+F 3 "" H 800 3850 50  0001 C CNN
+	1    800  3850
+	1    0    0    -1  
+$EndComp
+Connection ~ 300  4050
+Wire Wire Line
+	300  3850 400  3850
+Wire Wire Line
+	300  4050 300  3850
+Wire Wire Line
+	400  4050 300  4050
+Wire Wire Line
+	1300 3650 1500 3650
+Text GLabel 1500 4400 2    50   Input ~ 0
+NCVDD3_
+$Comp
+L classchip-eagle-import:C-EUC0805 C3
+U 1 1 92D7109B
+P 1500 4500
+F 0 "C3" H 1560 4515 59  0000 L BNN
+F 1 "10u" H 1560 4315 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 4500 50  0001 C CNN
+F 3 "" H 1500 4500 50  0001 C CNN
+	1    1500 4500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0152
+U 1 1 6D7AE81C
+P 1500 4700
+F 0 "#PWR0152" H 1500 4450 50  0001 C CNN
+F 1 "GND" H 1505 4527 50  0000 C CNN
+F 2 "" H 1500 4700 50  0001 C CNN
+F 3 "" H 1500 4700 50  0001 C CNN
+	1    1500 4700
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  4400 0    50   Input ~ 0
+VIN
+$Comp
+L power:GND #PWR0112
+U 1 1 6614C1D5
+P 300 4800
+F 0 "#PWR0112" H 300 4550 50  0001 C CNN
+F 1 "GND" H 305 4627 50  0000 C CNN
+F 2 "" H 300 4800 50  0001 C CNN
+F 3 "" H 300 4800 50  0001 C CNN
+	1    300  4800
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:TPS770 U32
+U 1 1 6F29EAB7
+P 800 4600
+F 0 "U32" H 500 4950 59  0000 L BNN
+F 1 "TPS770" H 500 4200 59  0000 L BNN
+F 2 "classchip:SOT23-DBV" H 800 4600 50  0001 C CNN
+F 3 "" H 800 4600 50  0001 C CNN
+	1    800  4600
+	1    0    0    -1  
+$EndComp
+Connection ~ 300  4800
+Wire Wire Line
+	400  4600 300  4600
+Wire Wire Line
+	300  4800 300  4600
+Wire Wire Line
+	400  4800 300  4800
+Wire Wire Line
+	1300 4400 1500 4400
+Text Notes 50   9350 0    50   ~ 0
+DACs
+Wire Notes Line
+	4150 9250 0    9250
+Text GLabel 1500 5250 2    50   Input ~ 0
+NCVDD2_
+$Comp
+L power:GND #PWR0151
+U 1 1 6D7AC45E
+P 1500 5550
+F 0 "#PWR0151" H 1500 5300 50  0001 C CNN
+F 1 "GND" H 1505 5377 50  0000 C CNN
+F 2 "" H 1500 5550 50  0001 C CNN
+F 3 "" H 1500 5550 50  0001 C CNN
+	1    1500 5550
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  5250 0    50   Input ~ 0
+VIN
+$Comp
+L power:GND #PWR0111
+U 1 1 6614BC6D
+P 300 5650
+F 0 "#PWR0111" H 300 5400 50  0001 C CNN
+F 1 "GND" H 305 5477 50  0000 C CNN
+F 2 "" H 300 5650 50  0001 C CNN
+F 3 "" H 300 5650 50  0001 C CNN
+	1    300  5650
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C4
+U 1 1 B07FA321
+P 1500 5350
+F 0 "C4" H 1560 5365 59  0000 L BNN
+F 1 "10u" H 1560 5165 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 5350 50  0001 C CNN
+F 3 "" H 1500 5350 50  0001 C CNN
+	1    1500 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:TPS770 U31
+U 1 1 B493CC6D
+P 800 5450
+F 0 "U31" H 500 5800 59  0000 L BNN
+F 1 "TPS770" H 500 5050 59  0000 L BNN
+F 2 "classchip:SOT23-DBV" H 800 5450 50  0001 C CNN
+F 3 "" H 800 5450 50  0001 C CNN
+	1    800  5450
+	1    0    0    -1  
+$EndComp
+Connection ~ 300  5650
+Wire Wire Line
+	400  5450 300  5450
+Wire Wire Line
+	300  5650 300  5450
+Wire Wire Line
+	400  5650 300  5650
+Wire Wire Line
+	1300 5250 1500 5250
+Text GLabel 1500 6100 2    50   Input ~ 0
+NCVDD1_
+$Comp
+L power:GND #PWR0149
+U 1 1 6D7AAE01
+P 1500 6400
+F 0 "#PWR0149" H 1500 6150 50  0001 C CNN
+F 1 "GND" H 1505 6227 50  0000 C CNN
+F 2 "" H 1500 6400 50  0001 C CNN
+F 3 "" H 1500 6400 50  0001 C CNN
+	1    1500 6400
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  6100 0    50   Input ~ 0
+VIN
+$Comp
+L power:GND #PWR0110
+U 1 1 6614B594
+P 300 6500
+F 0 "#PWR0110" H 300 6250 50  0001 C CNN
+F 1 "GND" H 305 6327 50  0000 C CNN
+F 2 "" H 300 6500 50  0001 C CNN
+F 3 "" H 300 6500 50  0001 C CNN
+	1    300  6500
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C5
+U 1 1 61218984
+P 1500 6200
+F 0 "C5" H 1560 6215 59  0000 L BNN
+F 1 "10u" H 1560 6015 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 6200 50  0001 C CNN
+F 3 "" H 1500 6200 50  0001 C CNN
+	1    1500 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:TPS770 U30
+U 1 1 5D996E58
+P 800 6300
+F 0 "U30" H 500 6650 59  0000 L BNN
+F 1 "TPS770" H 500 5900 59  0000 L BNN
+F 2 "classchip:SOT23-DBV" H 800 6300 50  0001 C CNN
+F 3 "" H 800 6300 50  0001 C CNN
+	1    800  6300
+	1    0    0    -1  
+$EndComp
+Connection ~ 300  6500
+Wire Wire Line
+	400  6300 300  6300
+Wire Wire Line
+	300  6500 300  6300
+Wire Wire Line
+	400  6500 300  6500
+Wire Wire Line
+	1300 6100 1500 6100
+Text GLabel 1500 6950 2    50   Input ~ 0
+DVDD
+$Comp
+L power:GND #PWR0150
+U 1 1 6D7ABF51
+P 1500 7250
+F 0 "#PWR0150" H 1500 7000 50  0001 C CNN
+F 1 "GND" H 1505 7077 50  0000 C CNN
+F 2 "" H 1500 7250 50  0001 C CNN
+F 3 "" H 1500 7250 50  0001 C CNN
+	1    1500 7250
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  6950 0    50   Input ~ 0
+VIN
+$Comp
+L classchip-eagle-import:TPS770 U29
+U 1 1 274317ED
+P 800 7150
+F 0 "U29" H 500 7500 59  0000 L BNN
+F 1 "TPS770" H 500 6750 59  0000 L BNN
+F 2 "classchip:SOT23-DBV" H 800 7150 50  0001 C CNN
+F 3 "" H 800 7150 50  0001 C CNN
+	1    800  7150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0109
+U 1 1 66148529
+P 300 7350
+F 0 "#PWR0109" H 300 7100 50  0001 C CNN
+F 1 "GND" H 305 7177 50  0000 C CNN
+F 2 "" H 300 7350 50  0001 C CNN
+F 3 "" H 300 7350 50  0001 C CNN
+	1    300  7350
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C6
+U 1 1 6655CD2A
+P 1500 7050
+F 0 "C6" H 1560 7065 59  0000 L BNN
+F 1 "10u" H 1560 6865 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 7050 50  0001 C CNN
+F 3 "" H 1500 7050 50  0001 C CNN
+	1    1500 7050
+	1    0    0    -1  
+$EndComp
+Connection ~ 300  7350
+Wire Wire Line
+	400  7150 300  7150
+Wire Wire Line
+	300  7350 300  7150
+Wire Wire Line
+	400  7350 300  7350
+Wire Wire Line
+	1300 6950 1500 6950
+Text GLabel 1500 7800 2    50   Input ~ 0
+ALLVDD
+$Comp
+L power:GND #PWR0148
+U 1 1 6D7AA9D3
+P 1500 8100
+F 0 "#PWR0148" H 1500 7850 50  0001 C CNN
+F 1 "GND" H 1505 7927 50  0000 C CNN
+F 2 "" H 1500 8100 50  0001 C CNN
+F 3 "" H 1500 8100 50  0001 C CNN
+	1    1500 8100
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  7800 0    50   Input ~ 0
+VIN
+$Comp
+L classchip-eagle-import:TPS770 U28
+U 1 1 26355386
+P 800 8000
+F 0 "U28" H 500 8350 59  0000 L BNN
+F 1 "TPS770" H 500 7600 59  0000 L BNN
+F 2 "classchip:SOT23-DBV" H 800 8000 50  0001 C CNN
+F 3 "" H 800 8000 50  0001 C CNN
+	1    800  8000
+	1    0    0    -1  
+$EndComp
+Connection ~ 300  8200
+$Comp
+L power:GND #PWR0108
+U 1 1 661480EC
+P 300 8200
+F 0 "#PWR0108" H 300 7950 50  0001 C CNN
+F 1 "GND" H 305 8027 50  0000 C CNN
+F 2 "" H 300 8200 50  0001 C CNN
+F 3 "" H 300 8200 50  0001 C CNN
+	1    300  8200
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C7
+U 1 1 21D1DBFD
+P 1500 7900
+F 0 "C7" H 1560 7915 59  0000 L BNN
+F 1 "10u" H 1560 7715 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 7900 50  0001 C CNN
+F 3 "" H 1500 7900 50  0001 C CNN
+	1    1500 7900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	400  8000 300  8000
+Wire Wire Line
+	300  8200 300  8000
+Wire Wire Line
+	400  8200 300  8200
+Wire Wire Line
+	1300 7800 1500 7800
+Text GLabel 1500 8650 2    50   Input ~ 0
+AVDD
+$Comp
+L power:GND #PWR0147
+U 1 1 6D7AA5A2
+P 1500 8950
+F 0 "#PWR0147" H 1500 8700 50  0001 C CNN
+F 1 "GND" H 1505 8777 50  0000 C CNN
+F 2 "" H 1500 8950 50  0001 C CNN
+F 3 "" H 1500 8950 50  0001 C CNN
+	1    1500 8950
+	1    0    0    -1  
+$EndComp
+Text GLabel 400  8650 0    50   Input ~ 0
+VIN
+$Comp
+L power:GND #PWR0107
+U 1 1 65D25193
+P 300 9050
+F 0 "#PWR0107" H 300 8800 50  0001 C CNN
+F 1 "GND" H 305 8877 50  0000 C CNN
+F 2 "" H 300 9050 50  0001 C CNN
+F 3 "" H 300 9050 50  0001 C CNN
+	1    300  9050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	300  9050 300  8850
+$Comp
+L classchip-eagle-import:C-EUC0805 C8
+U 1 1 FA2D35D6
+P 1500 8750
+F 0 "C8" H 1560 8765 59  0000 L BNN
+F 1 "10u" H 1560 8565 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1500 8750 50  0001 C CNN
+F 3 "" H 1500 8750 50  0001 C CNN
+	1    1500 8750
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:TPS770 U27
+U 1 1 042F0AE4
+P 800 8850
+F 0 "U27" H 500 9200 59  0000 L BNN
+F 1 "TPS770" H 500 8450 59  0000 L BNN
+F 2 "classchip:SOT23-DBV" H 800 8850 50  0001 C CNN
+F 3 "" H 800 8850 50  0001 C CNN
+	1    800  8850
+	1    0    0    -1  
+$EndComp
+Connection ~ 300  9050
+Wire Wire Line
+	400  8850 300  8850
+Wire Wire Line
+	400  9050 300  9050
+Wire Wire Line
+	1300 8650 1500 8650
+Text GLabel 9500 5050 2    50   Input ~ 0
+NCVDD5
+Text GLabel 9500 5150 2    50   Input ~ 0
+NCVDD4
+Text GLabel 9500 5250 2    50   Input ~ 0
+NCVDD3
+Text GLabel 9500 5350 2    50   Input ~ 0
+NCVDD2
+Text GLabel 9500 5450 2    50   Input ~ 0
+NCVDD1
+$Comp
+L classchip-eagle-import:C-EUC0805 C41
+U 1 1 60B0C70D
+P 7650 1550
+F 0 "C41" H 7710 1565 59  0000 L BNN
+F 1 "0.1u" H 7710 1365 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7650 1550 50  0001 C CNN
+F 3 "" H 7650 1550 50  0001 C CNN
+	1    7650 1550
+	0    -1   -1   0   
+$EndComp
+Connection ~ 7550 1950
+Connection ~ 7850 1950
+Wire Wire Line
+	5250 1350 5250 1550
+Wire Wire Line
+	5250 1750 5250 1550
+Connection ~ 5250 1550
+$Comp
+L classchip-eagle-import:74HC4051TSSOP U13
+U 1 1 60B5D58C
+P 4650 950
+F 0 "U13" H 4549 1750 42  0000 C CNN
+F 1 "74HC4051TSSOP" H 4649 -252 42  0000 C CNN
+F 2 "classchip:TSSOP_16" H 4650 950 50  0001 C CNN
+F 3 "" H 4650 950 50  0001 C CNN
+	1    4650 950 
+	-1   0    0    -1  
+$EndComp
+Text GLabel 4250 350  0    50   Input ~ 0
+MUX4_0
+Text GLabel 4250 550  0    50   Input ~ 0
+MUX4_1
+Text GLabel 4250 750  0    50   Input ~ 0
+MUX4_2
+Text GLabel 4250 950  0    50   Input ~ 0
+MUX4_3
+Text GLabel 4250 1150 0    50   Input ~ 0
+MUX4_4
+Text GLabel 4250 1350 0    50   Input ~ 0
+MUX4_5
+Text GLabel 4250 1550 0    50   Input ~ 0
+MUX4_6
+Text GLabel 4250 1750 0    50   Input ~ 0
+MUX4_7
+Text GLabel 4750 2050 0    50   Input ~ 0
+MUX4_OUT
+Text GLabel 5250 550  2    50   Input ~ 0
+MUX_S0
+Text GLabel 5250 750  2    50   Input ~ 0
+MUX_S1
+Text GLabel 5250 950  2    50   Input ~ 0
+MUX_S2
+$Comp
+L power:GND #PWR0143
+U 1 1 60B5D5B9
+P 5250 1750
+F 0 "#PWR0143" H 5250 1500 50  0001 C CNN
+F 1 "GND" H 5255 1577 50  0000 C CNN
+F 2 "" H 5250 1750 50  0001 C CNN
+F 3 "" H 5250 1750 50  0001 C CNN
+	1    5250 1750
+	1    0    0    -1  
+$EndComp
+Connection ~ 5250 1750
+Text GLabel 5250 1150 2    50   Input ~ 0
+3V3
+Wire Notes Line
+	12050 0    12050 9300
+Wire Wire Line
+	7000 1350 7000 1550
+Wire Wire Line
+	7000 1750 7000 1550
+Connection ~ 7000 1550
+$Comp
+L classchip-eagle-import:74HC4051TSSOP U14
+U 1 1 60CA7846
+P 6400 950
+F 0 "U14" H 6299 1750 42  0000 C CNN
+F 1 "74HC4051TSSOP" H 6399 -252 42  0000 C CNN
+F 2 "classchip:TSSOP_16" H 6400 950 50  0001 C CNN
+F 3 "" H 6400 950 50  0001 C CNN
+	1    6400 950 
+	-1   0    0    -1  
+$EndComp
+Text GLabel 6000 350  0    50   Input ~ 0
+MUX5_0
+Text GLabel 6000 550  0    50   Input ~ 0
+MUX5_1
+Text GLabel 6000 750  0    50   Input ~ 0
+MUX5_2
+Text GLabel 6000 950  0    50   Input ~ 0
+MUX5_3
+Text GLabel 6000 1150 0    50   Input ~ 0
+MUX5_4
+Text GLabel 6000 1350 0    50   Input ~ 0
+MUX5_5
+Text GLabel 6000 1550 0    50   Input ~ 0
+MUX5_6
+Text GLabel 6000 1750 0    50   Input ~ 0
+MUX5_7
+Text GLabel 6500 2050 0    50   Input ~ 0
+MUX5_OUT
+Text GLabel 7000 550  2    50   Input ~ 0
+MUX_S0
+Text GLabel 7000 750  2    50   Input ~ 0
+MUX_S1
+Text GLabel 7000 950  2    50   Input ~ 0
+MUX_S2
+$Comp
+L power:GND #PWR0144
+U 1 1 60CA785C
+P 7000 1750
+F 0 "#PWR0144" H 7000 1500 50  0001 C CNN
+F 1 "GND" H 7005 1577 50  0000 C CNN
+F 2 "" H 7000 1750 50  0001 C CNN
+F 3 "" H 7000 1750 50  0001 C CNN
+	1    7000 1750
+	1    0    0    -1  
+$EndComp
+Connection ~ 7000 1750
+Text GLabel 7000 1150 2    50   Input ~ 0
+3V3
+Connection ~ 7850 2150
+Text GLabel 13000 5950 0    50   Input ~ 0
+MUX4_OUT
+$Comp
+L classchip-eagle-import:C-EUC0805 C42
+U 1 1 60F366DF
+P 7650 1350
+F 0 "C42" H 7710 1365 59  0000 L BNN
+F 1 "0.1u" H 7710 1165 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7650 1350 50  0001 C CNN
+F 3 "" H 7650 1350 50  0001 C CNN
+	1    7650 1350
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	7550 1350 7550 1550
+Connection ~ 7550 1550
+Wire Wire Line
+	7850 1350 7850 1550
+Connection ~ 7850 1550
+Text GLabel 3000 19300 2    50   Input ~ 0
+3V3
+$Comp
+L power:GND #PWR0156
+U 1 1 60F87D4E
+P 3000 19400
+F 0 "#PWR0156" H 3000 19150 50  0001 C CNN
+F 1 "GND" H 3005 19227 50  0000 C CNN
+F 2 "" H 3000 19400 50  0001 C CNN
+F 3 "" H 3000 19400 50  0001 C CNN
+	1    3000 19400
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3000 19600 2    50   Input ~ 0
+MUX5_4
+$Comp
+L classchip-eagle-import:R R1
+U 1 1 60FAF11D
+P 600 20200
+F 0 "R1" H 450 20259 59  0000 L BNN
+F 1 "330" H 450 20070 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 600 20200 50  0001 C CNN
+F 3 "" H 600 20200 50  0001 C CNN
+	1    600  20200
+	0    -1   -1   0   
+$EndComp
+Text GLabel 600  20000 0    50   Input ~ 0
+NCVDD2_
+Text GLabel 600  20400 0    50   Input ~ 0
+NCVDD2
+Wire Wire Line
+	1600 19600 1600 19700
+Text GLabel 13000 5850 0    50   Input ~ 0
+MUX5_OUT
+Wire Wire Line
+	600  20000 1600 20000
+$Comp
+L classchip-eagle-import:R R3
+U 1 1 61119F6F
+P 3100 20200
+F 0 "R3" H 2950 20259 59  0000 L BNN
+F 1 "190k" H 2950 20070 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3100 20200 50  0001 C CNN
+F 3 "" H 3100 20200 50  0001 C CNN
+	1    3100 20200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R4
+U 1 1 6111C2E2
+P 3100 20600
+F 0 "R4" H 2950 20659 59  0000 L BNN
+F 1 "10k" H 2950 20470 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3100 20600 50  0001 C CNN
+F 3 "" H 3100 20600 50  0001 C CNN
+	1    3100 20600
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3100 20000 2    50   Input ~ 0
+MUX5_4
+Text GLabel 1600 20500 0    50   Input ~ 0
+I_SENS_1_RGA
+Text GLabel 3100 20400 2    50   Input ~ 0
+I_SENS_1_RGA
+Text GLabel 1600 19800 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	1600 19800 1600 19900
+Text GLabel 3000 19700 2    50   Input ~ 0
+MUX5_6
+Text GLabel 1600 20700 0    50   Input ~ 0
+I_SENS_1_RGB
+$Comp
+L classchip-eagle-import:R R5
+U 1 1 6114A624
+P 3800 20200
+F 0 "R5" H 3650 20259 59  0000 L BNN
+F 1 "190k" H 3650 20070 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3800 20200 50  0001 C CNN
+F 3 "" H 3800 20200 50  0001 C CNN
+	1    3800 20200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R6
+U 1 1 6114A6B4
+P 3800 20600
+F 0 "R6" H 3650 20659 59  0000 L BNN
+F 1 "10k" H 3650 20470 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3800 20600 50  0001 C CNN
+F 3 "" H 3800 20600 50  0001 C CNN
+	1    3800 20600
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3800 20000 2    50   Input ~ 0
+MUX5_6
+Text GLabel 3800 20400 2    50   Input ~ 0
+I_SENS_1_RGB
+Text GLabel 600  20600 0    50   Input ~ 0
+NCVDD3_
+Text GLabel 600  21000 0    50   Input ~ 0
+NCVDD3
+Wire Wire Line
+	600  20400 750  20400
+Wire Wire Line
+	750  20400 750  20200
+Wire Wire Line
+	750  20200 1600 20200
+Wire Wire Line
+	600  20600 800  20600
+Wire Wire Line
+	800  20600 800  20100
+Wire Wire Line
+	800  20100 1600 20100
+Wire Wire Line
+	600  21000 850  21000
+Wire Wire Line
+	850  21000 850  20300
+Wire Wire Line
+	850  20300 1600 20300
+Text GLabel 3000 21600 2    50   Input ~ 0
+3V3
+$Comp
+L power:GND #PWR0117
+U 1 1 6124D938
+P 3000 21700
+F 0 "#PWR0117" H 3000 21450 50  0001 C CNN
+F 1 "GND" H 3005 21527 50  0000 C CNN
+F 2 "" H 3000 21700 50  0001 C CNN
+F 3 "" H 3000 21700 50  0001 C CNN
+	1    3000 21700
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3000 17550 2    50   Input ~ 0
+MUX5_7
+Text GLabel 600  22300 0    50   Input ~ 0
+NCVDD4_
+Text GLabel 600  22700 0    50   Input ~ 0
+NCVDD4
+Wire Wire Line
+	1600 21900 1600 22000
+Wire Wire Line
+	600  22300 1600 22300
+$Comp
+L classchip-eagle-import:R R9
+U 1 1 6124D95C
+P 3100 22500
+F 0 "R9" H 2950 22559 59  0000 L BNN
+F 1 "190k" H 2950 22370 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3100 22500 50  0001 C CNN
+F 3 "" H 3100 22500 50  0001 C CNN
+	1    3100 22500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R10
+U 1 1 6124D966
+P 3100 22900
+F 0 "R10" H 2950 22959 59  0000 L BNN
+F 1 "10k" H 2950 22770 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3100 22900 50  0001 C CNN
+F 3 "" H 3100 22900 50  0001 C CNN
+	1    3100 22900
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3100 17950 2    50   Input ~ 0
+MUX5_7
+Text GLabel 1600 22800 0    50   Input ~ 0
+I_SENS_2_RGA
+Text GLabel 3100 22700 2    50   Input ~ 0
+I_SENS_2_RGA
+Text GLabel 1600 22100 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	1600 22100 1600 22200
+Text GLabel 3000 17650 2    50   Input ~ 0
+MUX5_5
+Text GLabel 1600 23000 0    50   Input ~ 0
+I_SENS_2_RGB
+$Comp
+L classchip-eagle-import:R R11
+U 1 1 6124D977
+P 3800 22500
+F 0 "R11" H 3650 22559 59  0000 L BNN
+F 1 "190k" H 3650 22370 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3800 22500 50  0001 C CNN
+F 3 "" H 3800 22500 50  0001 C CNN
+	1    3800 22500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R12
+U 1 1 6124D981
+P 3800 22900
+F 0 "R12" H 3650 22959 59  0000 L BNN
+F 1 "10k" H 3650 22770 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3800 22900 50  0001 C CNN
+F 3 "" H 3800 22900 50  0001 C CNN
+	1    3800 22900
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3800 17950 2    50   Input ~ 0
+MUX5_5
+Text GLabel 3800 22700 2    50   Input ~ 0
+I_SENS_2_RGB
+Text GLabel 600  22900 0    50   Input ~ 0
+NCVDD5_
+Text GLabel 600  23300 0    50   Input ~ 0
+NCVDD5
+Wire Wire Line
+	600  22700 750  22700
+Wire Wire Line
+	750  22700 750  22500
+Wire Wire Line
+	750  22500 1600 22500
+Wire Wire Line
+	600  22900 800  22900
+Wire Wire Line
+	800  22900 800  22400
+Wire Wire Line
+	800  22400 1600 22400
+Wire Wire Line
+	600  23300 850  23300
+Wire Wire Line
+	850  23300 850  22600
+Wire Wire Line
+	850  22600 1600 22600
+Wire Wire Line
+	3100 23100 3450 23100
+Wire Wire Line
+	250  15900 450  15900
+Wire Wire Line
+	450  15900 650  15900
+Connection ~ 450  15900
+Wire Wire Line
+	450  16200 250  16200
+Wire Wire Line
+	450  16200 650  16200
+Connection ~ 450  16200
+$Comp
+L classchip-eagle-import:C-EUC0805 C44
+U 1 1 6129779B
+P 450 16000
+F 0 "C44" H 510 16015 59  0000 L BNN
+F 1 "0.1u" H 510 15815 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 450 16000 50  0001 C CNN
+F 3 "" H 450 16000 50  0001 C CNN
+	1    450  16000
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C45
+U 1 1 612977A5
+P 650 16000
+F 0 "C45" H 710 16015 59  0000 L BNN
+F 1 "0.1u" H 710 15815 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 650 16000 50  0001 C CNN
+F 3 "" H 650 16000 50  0001 C CNN
+	1    650  16000
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C46
+U 1 1 612977AF
+P 250 16000
+F 0 "C46" H 310 16015 59  0000 L BNN
+F 1 "0.1u" H 310 15815 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 250 16000 50  0001 C CNN
+F 3 "" H 250 16000 50  0001 C CNN
+	1    250  16000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0157
+U 1 1 612977B9
+P 250 16200
+F 0 "#PWR0157" H 250 15950 50  0001 C CNN
+F 1 "GND" H 255 16027 50  0000 C CNN
+F 2 "" H 250 16200 50  0001 C CNN
+F 3 "" H 250 16200 50  0001 C CNN
+	1    250  16200
+	1    0    0    -1  
+$EndComp
+Text GLabel 250  15900 0    50   Input ~ 0
+3V3
+Text GLabel 3000 17250 2    50   Input ~ 0
+3V3
+Text GLabel 3000 21900 2    50   Input ~ 0
+MUX5_2
+$Comp
+L classchip-eagle-import:R R13
+U 1 1 614830D8
+P 600 18150
+F 0 "R13" H 450 18209 59  0000 L BNN
+F 1 "330" H 450 18020 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 600 18150 50  0001 C CNN
+F 3 "" H 600 18150 50  0001 C CNN
+	1    600  18150
+	0    -1   -1   0   
+$EndComp
+Text GLabel 600  18550 0    50   Input ~ 0
+NCVDD1_
+Text GLabel 600  18950 0    50   Input ~ 0
+NCVDD1
+Wire Wire Line
+	1600 17550 1600 17650
+Wire Wire Line
+	600  17950 1600 17950
+$Comp
+L classchip-eagle-import:R R15
+U 1 1 614830F1
+P 3100 18150
+F 0 "R15" H 2950 18209 59  0000 L BNN
+F 1 "190k" H 2950 18020 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3100 18150 50  0001 C CNN
+F 3 "" H 3100 18150 50  0001 C CNN
+	1    3100 18150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R18
+U 1 1 614830FB
+P 3100 18550
+F 0 "R18" H 2950 18609 59  0000 L BNN
+F 1 "10k" H 2950 18420 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3100 18550 50  0001 C CNN
+F 3 "" H 3100 18550 50  0001 C CNN
+	1    3100 18550
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3100 22300 2    50   Input ~ 0
+MUX5_2
+Text GLabel 1600 18450 0    50   Input ~ 0
+I_SENS_3_RGA
+Text GLabel 3100 18350 2    50   Input ~ 0
+I_SENS_3_RGA
+Text GLabel 1600 17750 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	1600 17750 1600 17850
+Text GLabel 3000 22000 2    50   Input ~ 0
+MUX5_1
+Text GLabel 1600 18650 0    50   Input ~ 0
+I_SENS_3_RGB
+$Comp
+L classchip-eagle-import:R R19
+U 1 1 6148310C
+P 3800 18150
+F 0 "R19" H 3650 18209 59  0000 L BNN
+F 1 "190k" H 3650 18020 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3800 18150 50  0001 C CNN
+F 3 "" H 3800 18150 50  0001 C CNN
+	1    3800 18150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R20
+U 1 1 61483116
+P 3800 18550
+F 0 "R20" H 3650 18609 59  0000 L BNN
+F 1 "10k" H 3650 18420 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 3800 18550 50  0001 C CNN
+F 3 "" H 3800 18550 50  0001 C CNN
+	1    3800 18550
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3800 22300 2    50   Input ~ 0
+MUX5_1
+Text GLabel 3800 18350 2    50   Input ~ 0
+I_SENS_3_RGB
+Text GLabel 600  17950 0    50   Input ~ 0
+PLUG_
+$Comp
+L classchip-eagle-import:R R14
+U 1 1 61483123
+P 600 18750
+F 0 "R14" H 450 18809 59  0000 L BNN
+F 1 "330" H 450 18620 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 600 18750 50  0001 C CNN
+F 3 "" H 600 18750 50  0001 C CNN
+	1    600  18750
+	0    -1   -1   0   
+$EndComp
+Text GLabel 600  18350 0    50   Input ~ 0
+PLUG
+Wire Wire Line
+	600  18350 750  18350
+Wire Wire Line
+	750  18350 750  18150
+Wire Wire Line
+	750  18150 1600 18150
+Wire Wire Line
+	600  18550 800  18550
+Wire Wire Line
+	800  18550 800  18050
+Wire Wire Line
+	800  18050 1600 18050
+Wire Wire Line
+	600  18950 850  18950
+Wire Wire Line
+	850  18950 850  18250
+Wire Wire Line
+	850  18250 1600 18250
+Wire Wire Line
+	3100 18750 3400 18750
+$Comp
+L INA2331AIPWT:INA2331AIPWT U17
+U 1 1 614830E4
+P 2300 18050
+F 0 "U17" H 2300 19120 50  0000 C CNN
+F 1 "INA2331AIPWT" H 2300 19029 50  0000 C CNN
+F 2 "SOP65P640X120-14N" H 2300 18050 50  0001 L BNN
+F 3 "" H 2300 18050 50  0001 L BNN
+	1    2300 18050
+	1    0    0    -1  
+$EndComp
+$Comp
+L INA2331AIPWT:INA2331AIPWT U16
+U 1 1 6124D94F
+P 2300 22400
+F 0 "U16" H 2300 23470 50  0000 C CNN
+F 1 "INA2331AIPWT" H 2300 23379 50  0000 C CNN
+F 2 "SOP65P640X120-14N" H 2300 22400 50  0001 L BNN
+F 3 "" H 2300 22400 50  0001 L BNN
+	1    2300 22400
+	1    0    0    -1  
+$EndComp
+$Comp
+L INA2331AIPWT:INA2331AIPWT U15
+U 1 1 61031A75
+P 2300 20100
+F 0 "U15" H 2300 21170 50  0000 C CNN
+F 1 "INA2331AIPWT" H 2300 21079 50  0000 C CNN
+F 2 "SOP65P640X120-14N" H 2300 20100 50  0001 L BNN
+F 3 "" H 2300 20100 50  0001 L BNN
+	1    2300 20100
+	1    0    0    -1  
+$EndComp
+Text GLabel 900  10450 0    50   Input ~ 0
+PLUG_
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP1
+U 1 1 6152ACC4
+P 4600 9700
+F 0 "JP1" H 4678 9753 59  0000 L CNN
+F 1 "PINHD-1X1" H 4678 9648 59  0000 L CNN
+F 2 "classchip:1X01" H 4600 9700 50  0001 C CNN
+F 3 "" H 4600 9700 50  0001 C CNN
+	1    4600 9700
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP2
+U 1 1 6152DE51
+P 4600 9900
+F 0 "JP2" H 4678 9953 59  0000 L CNN
+F 1 "PINHD-1X1" H 4678 9848 59  0000 L CNN
+F 2 "classchip:1X01" H 4600 9900 50  0001 C CNN
+F 3 "" H 4600 9900 50  0001 C CNN
+	1    4600 9900
+	1    0    0    -1  
+$EndComp
+Text GLabel 4500 9700 0    50   Input ~ 0
+PLUG
+$Comp
+L power:GND #PWR0159
+U 1 1 61562F95
+P 4500 9900
+F 0 "#PWR0159" H 4500 9650 50  0001 C CNN
+F 1 "GND" H 4505 9727 50  0000 C CNN
+F 2 "" H 4500 9900 50  0001 C CNN
+F 3 "" H 4500 9900 50  0001 C CNN
+	1    4500 9900
+	1    0    0    -1  
+$EndComp
+Connection ~ 250  16200
+$Comp
+L power:GND #PWR0131
+U 1 1 60987DA0
+P 2450 13550
+F 0 "#PWR0131" H 2450 13300 50  0001 C CNN
+F 1 "GND" V 2455 13422 50  0000 R CNN
+F 2 "" H 2450 13550 50  0001 C CNN
+F 3 "" H 2450 13550 50  0001 C CNN
+	1    2450 13550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0160
+U 1 1 6098810A
+P 2450 13050
+F 0 "#PWR0160" H 2450 12800 50  0001 C CNN
+F 1 "GND" V 2455 12922 50  0000 R CNN
+F 2 "" H 2450 13050 50  0001 C CNN
+F 3 "" H 2450 13050 50  0001 C CNN
+	1    2450 13050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0161
+U 1 1 609883BB
+P 2450 12550
+F 0 "#PWR0161" H 2450 12300 50  0001 C CNN
+F 1 "GND" V 2455 12422 50  0000 R CNN
+F 2 "" H 2450 12550 50  0001 C CNN
+F 3 "" H 2450 12550 50  0001 C CNN
+	1    2450 12550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0162
+U 1 1 60988729
+P 1650 12050
+F 0 "#PWR0162" H 1650 11800 50  0001 C CNN
+F 1 "GND" V 1655 11922 50  0000 R CNN
+F 2 "" H 1650 12050 50  0001 C CNN
+F 3 "" H 1650 12050 50  0001 C CNN
+	1    1650 12050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0163
+U 1 1 6098A1B4
+P 1650 11550
+F 0 "#PWR0163" H 1650 11300 50  0001 C CNN
+F 1 "GND" V 1655 11422 50  0000 R CNN
+F 2 "" H 1650 11550 50  0001 C CNN
+F 3 "" H 1650 11550 50  0001 C CNN
+	1    1650 11550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0164
+U 1 1 6098A568
+P 1650 11050
+F 0 "#PWR0164" H 1650 10800 50  0001 C CNN
+F 1 "GND" V 1655 10922 50  0000 R CNN
+F 2 "" H 1650 11050 50  0001 C CNN
+F 3 "" H 1650 11050 50  0001 C CNN
+	1    1650 11050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0165
+U 1 1 6098AB48
+P 1650 10550
+F 0 "#PWR0165" H 1650 10300 50  0001 C CNN
+F 1 "GND" V 1655 10422 50  0000 R CNN
+F 2 "" H 1650 10550 50  0001 C CNN
+F 3 "" H 1650 10550 50  0001 C CNN
+	1    1650 10550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0158
+U 1 1 614830CD
+P 3000 17350
+F 0 "#PWR0158" H 3000 17100 50  0001 C CNN
+F 1 "GND" H 3005 17177 50  0000 C CNN
+F 2 "" H 3000 17350 50  0001 C CNN
+F 3 "" H 3000 17350 50  0001 C CNN
+	1    3000 17350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R2
+U 1 1 6115D26F
+P 600 20800
+F 0 "R2" H 450 20859 59  0000 L BNN
+F 1 "330" H 450 20670 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 600 20800 50  0001 C CNN
+F 3 "" H 600 20800 50  0001 C CNN
+	1    600  20800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R7
+U 1 1 6124D943
+P 600 22500
+F 0 "R7" H 450 22559 59  0000 L BNN
+F 1 "330" H 450 22370 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 600 22500 50  0001 C CNN
+F 3 "" H 600 22500 50  0001 C CNN
+	1    600  22500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R8
+U 1 1 6124D98E
+P 600 23100
+F 0 "R8" H 450 23159 59  0000 L BNN
+F 1 "330" H 450 22970 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 600 23100 50  0001 C CNN
+F 3 "" H 600 23100 50  0001 C CNN
+	1    600  23100
+	0    -1   -1   0   
+$EndComp
+Text GLabel 8200 15450 2    50   Input ~ 0
+3V3
+$Comp
+L classchip-eagle-import:R R24
+U 1 1 60A495EC
+P 5800 16350
+F 0 "R24" H 5650 16409 59  0000 L BNN
+F 1 "1k" H 5650 16220 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5800 16350 50  0001 C CNN
+F 3 "" H 5800 16350 50  0001 C CNN
+	1    5800 16350
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6800 15750 6800 15850
+Wire Wire Line
+	5800 16150 6800 16150
+$Comp
+L classchip-eagle-import:R R30
+U 1 1 60A495FA
+P 8300 16350
+F 0 "R30" H 8150 16409 59  0000 L BNN
+F 1 "190k" H 8150 16220 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 16350 50  0001 C CNN
+F 3 "" H 8300 16350 50  0001 C CNN
+	1    8300 16350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R31
+U 1 1 60A49604
+P 8300 16750
+F 0 "R31" H 8150 16809 59  0000 L BNN
+F 1 "10k" H 8150 16620 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 16750 50  0001 C CNN
+F 3 "" H 8300 16750 50  0001 C CNN
+	1    8300 16750
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 16650 0    50   Input ~ 0
+I_SENS_5_RGA
+Text GLabel 8300 16550 2    50   Input ~ 0
+I_SENS_5_RGA
+Text GLabel 6800 15950 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	6800 15950 6800 16050
+$Comp
+L classchip-eagle-import:R R32
+U 1 1 60A49613
+P 9000 16350
+F 0 "R32" H 8850 16409 59  0000 L BNN
+F 1 "190k" H 8850 16220 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 16350 50  0001 C CNN
+F 3 "" H 9000 16350 50  0001 C CNN
+	1    9000 16350
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R33
+U 1 1 60A4961D
+P 9000 16750
+F 0 "R33" H 8850 16809 59  0000 L BNN
+F 1 "10k" H 8850 16620 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 16750 50  0001 C CNN
+F 3 "" H 9000 16750 50  0001 C CNN
+	1    9000 16750
+	0    -1   -1   0   
+$EndComp
+Text GLabel 9000 16550 2    50   Input ~ 0
+I_SENS_5_RGB
+Wire Wire Line
+	5800 16550 5950 16550
+Wire Wire Line
+	5950 16550 5950 16350
+Wire Wire Line
+	5950 16350 6800 16350
+Wire Wire Line
+	6050 16450 6800 16450
+Wire Wire Line
+	8300 16950 8650 16950
+$Comp
+L INA2331AIPWT:INA2331AIPWT U18
+U 1 1 60A4963E
+P 7500 16250
+F 0 "U18" H 7500 17320 50  0000 C CNN
+F 1 "INA2331AIPWT" H 7500 17229 50  0000 C CNN
+F 2 "SOP65P640X120-14N" H 7500 16250 50  0001 L BNN
+F 3 "" H 7500 16250 50  0001 L BNN
+	1    7500 16250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0166
+U 1 1 60A4964A
+P 8200 15550
+F 0 "#PWR0166" H 8200 15300 50  0001 C CNN
+F 1 "GND" H 8205 15377 50  0000 C CNN
+F 2 "" H 8200 15550 50  0001 C CNN
+F 3 "" H 8200 15550 50  0001 C CNN
+	1    8200 15550
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 16850 0    50   Input ~ 0
+I_SENS_5_RGB
+$Comp
+L power:GND #PWR0167
+U 1 1 60BCC784
+P 3400 18750
+F 0 "#PWR0167" H 3400 18500 50  0001 C CNN
+F 1 "GND" H 3405 18577 50  0000 C CNN
+F 2 "" H 3400 18750 50  0001 C CNN
+F 3 "" H 3400 18750 50  0001 C CNN
+	1    3400 18750
+	1    0    0    -1  
+$EndComp
+Connection ~ 3400 18750
+Wire Wire Line
+	3400 18750 3800 18750
+$Comp
+L power:GND #PWR0168
+U 1 1 60BCCE36
+P 1600 17550
+F 0 "#PWR0168" H 1600 17300 50  0001 C CNN
+F 1 "GND" H 1605 17377 50  0000 C CNN
+F 2 "" H 1600 17550 50  0001 C CNN
+F 3 "" H 1600 17550 50  0001 C CNN
+	1    1600 17550
+	0    1    1    0   
+$EndComp
+Connection ~ 1600 17550
+$Comp
+L power:GND #PWR0169
+U 1 1 60BE303D
+P 3450 20800
+F 0 "#PWR0169" H 3450 20550 50  0001 C CNN
+F 1 "GND" H 3455 20627 50  0000 C CNN
+F 2 "" H 3450 20800 50  0001 C CNN
+F 3 "" H 3450 20800 50  0001 C CNN
+	1    3450 20800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3100 20800 3450 20800
+Wire Wire Line
+	3450 20800 3800 20800
+Connection ~ 3450 20800
+$Comp
+L power:GND #PWR0170
+U 1 1 60BE47AD
+P 1600 19600
+F 0 "#PWR0170" H 1600 19350 50  0001 C CNN
+F 1 "GND" H 1605 19427 50  0000 C CNN
+F 2 "" H 1600 19600 50  0001 C CNN
+F 3 "" H 1600 19600 50  0001 C CNN
+	1    1600 19600
+	0    1    1    0   
+$EndComp
+Connection ~ 1600 19600
+$Comp
+L power:GND #PWR0171
+U 1 1 60BFA648
+P 3450 23100
+F 0 "#PWR0171" H 3450 22850 50  0001 C CNN
+F 1 "GND" H 3455 22927 50  0000 C CNN
+F 2 "" H 3450 23100 50  0001 C CNN
+F 3 "" H 3450 23100 50  0001 C CNN
+	1    3450 23100
+	1    0    0    -1  
+$EndComp
+Connection ~ 3450 23100
+Wire Wire Line
+	3450 23100 3800 23100
+$Comp
+L power:GND #PWR0172
+U 1 1 60BFAF5E
+P 1600 21900
+F 0 "#PWR0172" H 1600 21650 50  0001 C CNN
+F 1 "GND" H 1605 21727 50  0000 C CNN
+F 2 "" H 1600 21900 50  0001 C CNN
+F 3 "" H 1600 21900 50  0001 C CNN
+	1    1600 21900
+	0    1    1    0   
+$EndComp
+Connection ~ 1600 21900
+$Comp
+L classchip-eagle-import:LED_E LED2
+U 1 1 6A31474D
+P 14000 1500
+F 0 "LED2" V 14140 1320 59  0000 L BNN
+F 1 "LED_E" V 14225 1320 59  0000 L BNN
+F 2 "classchip:LED_1206" H 14000 1500 50  0001 C CNN
+F 3 "" H 14000 1500 50  0001 C CNN
+	1    14000 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0124
+U 1 1 728136B7
+P 14000 2100
+F 0 "#PWR0124" H 14000 1850 50  0001 C CNN
+F 1 "GND" H 14005 1927 50  0000 C CNN
+F 2 "" H 14000 2100 50  0001 C CNN
+F 3 "" H 14000 2100 50  0001 C CNN
+	1    14000 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0123
+U 1 1 728128E4
+P 14350 2100
+F 0 "#PWR0123" H 14350 1850 50  0001 C CNN
+F 1 "GND" H 14355 1927 50  0000 C CNN
+F 2 "" H 14350 2100 50  0001 C CNN
+F 3 "" H 14350 2100 50  0001 C CNN
+	1    14350 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:R R27
+U 1 1 6ABB949B
+P 14000 1900
+F 0 "R27" H 13850 1959 59  0000 L BNN
+F 1 "1k" H 13850 1770 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 14000 1900 50  0001 C CNN
+F 3 "" H 14000 1900 50  0001 C CNN
+	1    14000 1900
+	0    1    1    0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R28
+U 1 1 D39EF5DE
+P 14350 1900
+F 0 "R28" H 14200 1959 59  0000 L BNN
+F 1 "1k" H 14200 1770 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 14350 1900 50  0001 C CNN
+F 3 "" H 14350 1900 50  0001 C CNN
+	1    14350 1900
+	0    1    1    0   
+$EndComp
+$Comp
+L classchip-eagle-import:LED_E LED1
+U 1 1 D5D4A691
+P 14350 1500
+F 0 "LED1" V 14490 1320 59  0000 L BNN
+F 1 "LED_E" V 14575 1320 59  0000 L BNN
+F 2 "classchip:LED_1206" H 14350 1500 50  0001 C CNN
+F 3 "" H 14350 1500 50  0001 C CNN
+	1    14350 1500
+	1    0    0    -1  
+$EndComp
+Text GLabel 8200 17550 2    50   Input ~ 0
+3V3
+$Comp
+L classchip-eagle-import:R R36
+U 1 1 60C987B5
+P 5800 18450
+F 0 "R36" H 5650 18509 59  0000 L BNN
+F 1 "10k" H 5650 18320 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5800 18450 50  0001 C CNN
+F 3 "" H 5800 18450 50  0001 C CNN
+	1    5800 18450
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6800 17850 6800 17950
+Wire Wire Line
+	5800 18250 6800 18250
+$Comp
+L classchip-eagle-import:R R44
+U 1 1 60C987C3
+P 8300 18450
+F 0 "R44" H 8150 18509 59  0000 L BNN
+F 1 "190k" H 8150 18320 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 18450 50  0001 C CNN
+F 3 "" H 8300 18450 50  0001 C CNN
+	1    8300 18450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R45
+U 1 1 60C987CD
+P 8300 18850
+F 0 "R45" H 8150 18909 59  0000 L BNN
+F 1 "10k" H 8150 18720 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 18850 50  0001 C CNN
+F 3 "" H 8300 18850 50  0001 C CNN
+	1    8300 18850
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 18750 0    50   Input ~ 0
+I_SENS_6_RGA
+Text GLabel 8300 18650 2    50   Input ~ 0
+I_SENS_6_RGA
+Text GLabel 6800 18050 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	6800 18050 6800 18150
+$Comp
+L classchip-eagle-import:R R52
+U 1 1 60C987DB
+P 9000 18450
+F 0 "R52" H 8850 18509 59  0000 L BNN
+F 1 "190k" H 8850 18320 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 18450 50  0001 C CNN
+F 3 "" H 9000 18450 50  0001 C CNN
+	1    9000 18450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R53
+U 1 1 60C987E5
+P 9000 18850
+F 0 "R53" H 8850 18909 59  0000 L BNN
+F 1 "10k" H 8850 18720 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 18850 50  0001 C CNN
+F 3 "" H 9000 18850 50  0001 C CNN
+	1    9000 18850
+	0    -1   -1   0   
+$EndComp
+Text GLabel 9000 18650 2    50   Input ~ 0
+I_SENS_6_RGB
+$Comp
+L classchip-eagle-import:R R37
+U 1 1 60C987F1
+P 5800 19050
+F 0 "R37" H 5650 19109 59  0000 L BNN
+F 1 "10k" H 5650 18920 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5800 19050 50  0001 C CNN
+F 3 "" H 5800 19050 50  0001 C CNN
+	1    5800 19050
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5800 18650 5950 18650
+Wire Wire Line
+	5950 18650 5950 18450
+Wire Wire Line
+	5950 18450 6800 18450
+Wire Wire Line
+	5800 18850 6000 18850
+Wire Wire Line
+	6000 18850 6000 18350
+Wire Wire Line
+	6000 18350 6800 18350
+Wire Wire Line
+	5800 19250 6050 19250
+Wire Wire Line
+	6050 19250 6050 18550
+Wire Wire Line
+	6050 18550 6800 18550
+Wire Wire Line
+	8300 19050 8650 19050
+$Comp
+L INA2331AIPWT:INA2331AIPWT U20
+U 1 1 60C98806
+P 7500 18350
+F 0 "U20" H 7500 19420 50  0000 C CNN
+F 1 "INA2331AIPWT" H 7500 19329 50  0000 C CNN
+F 2 "SOP65P640X120-14N" H 7500 18350 50  0001 L BNN
+F 3 "" H 7500 18350 50  0001 L BNN
+	1    7500 18350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0173
+U 1 1 60C98812
+P 8200 17650
+F 0 "#PWR0173" H 8200 17400 50  0001 C CNN
+F 1 "GND" H 8205 17477 50  0000 C CNN
+F 2 "" H 8200 17650 50  0001 C CNN
+F 3 "" H 8200 17650 50  0001 C CNN
+	1    8200 17650
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 18950 0    50   Input ~ 0
+I_SENS_6_RGB
+Text GLabel 8200 19600 2    50   Input ~ 0
+3V3
+$Comp
+L classchip-eagle-import:R R38
+U 1 1 60CDA99D
+P 5800 22550
+F 0 "R38" H 5650 22609 59  0000 L BNN
+F 1 "33k" H 5650 22420 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5800 22550 50  0001 C CNN
+F 3 "" H 5800 22550 50  0001 C CNN
+	1    5800 22550
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6800 19900 6800 20000
+Wire Wire Line
+	5800 22350 6800 22350
+$Comp
+L classchip-eagle-import:R R46
+U 1 1 60CDA9AB
+P 8300 20500
+F 0 "R46" H 8150 20559 59  0000 L BNN
+F 1 "190k" H 8150 20370 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 20500 50  0001 C CNN
+F 3 "" H 8300 20500 50  0001 C CNN
+	1    8300 20500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R47
+U 1 1 60CDA9B5
+P 8300 20900
+F 0 "R47" H 8150 20959 59  0000 L BNN
+F 1 "10k" H 8150 20770 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 20900 50  0001 C CNN
+F 3 "" H 8300 20900 50  0001 C CNN
+	1    8300 20900
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 20800 0    50   Input ~ 0
+I_SENS_7_RGA
+Text GLabel 8300 20700 2    50   Input ~ 0
+I_SENS_7_RGA
+Text GLabel 6800 20100 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	6800 20100 6800 20200
+$Comp
+L classchip-eagle-import:R R54
+U 1 1 60CDA9C3
+P 9000 20500
+F 0 "R54" H 8850 20559 59  0000 L BNN
+F 1 "190k" H 8850 20370 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 20500 50  0001 C CNN
+F 3 "" H 9000 20500 50  0001 C CNN
+	1    9000 20500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R55
+U 1 1 60CDA9CD
+P 9000 20900
+F 0 "R55" H 8850 20959 59  0000 L BNN
+F 1 "10k" H 8850 20770 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 20900 50  0001 C CNN
+F 3 "" H 9000 20900 50  0001 C CNN
+	1    9000 20900
+	0    -1   -1   0   
+$EndComp
+Text GLabel 9000 20700 2    50   Input ~ 0
+I_SENS_7_RGB
+$Comp
+L classchip-eagle-import:R R39
+U 1 1 60CDA9D9
+P 5800 23150
+F 0 "R39" H 5650 23209 59  0000 L BNN
+F 1 "33k" H 5650 23020 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5800 23150 50  0001 C CNN
+F 3 "" H 5800 23150 50  0001 C CNN
+	1    5800 23150
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5800 22750 5950 22750
+Wire Wire Line
+	5950 22750 5950 22550
+Wire Wire Line
+	5950 22550 6800 22550
+Wire Wire Line
+	5800 22950 6000 22950
+Wire Wire Line
+	6000 22950 6000 22450
+Wire Wire Line
+	6000 22450 6800 22450
+Wire Wire Line
+	5800 23350 6050 23350
+Wire Wire Line
+	6050 23350 6050 22650
+Wire Wire Line
+	6050 22650 6800 22650
+Wire Wire Line
+	8300 21100 8650 21100
+$Comp
+L INA2331AIPWT:INA2331AIPWT U21
+U 1 1 60CDA9EE
+P 7500 20400
+F 0 "U21" H 7500 21470 50  0000 C CNN
+F 1 "INA2331AIPWT" H 7500 21379 50  0000 C CNN
+F 2 "SOP65P640X120-14N" H 7500 20400 50  0001 L BNN
+F 3 "" H 7500 20400 50  0001 L BNN
+	1    7500 20400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0174
+U 1 1 60CDA9FA
+P 8200 19700
+F 0 "#PWR0174" H 8200 19450 50  0001 C CNN
+F 1 "GND" H 8205 19527 50  0000 C CNN
+F 2 "" H 8200 19700 50  0001 C CNN
+F 3 "" H 8200 19700 50  0001 C CNN
+	1    8200 19700
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 21000 0    50   Input ~ 0
+I_SENS_7_RGB
+Text GLabel 8200 21650 2    50   Input ~ 0
+3V3
+$Comp
+L classchip-eagle-import:R R40
+U 1 1 60CDAA0A
+P 5800 20500
+F 0 "R40" H 5650 20559 59  0000 L BNN
+F 1 "33k" H 5650 20370 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5800 20500 50  0001 C CNN
+F 3 "" H 5800 20500 50  0001 C CNN
+	1    5800 20500
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6800 21950 6800 22050
+Wire Wire Line
+	5800 20300 6800 20300
+$Comp
+L classchip-eagle-import:R R48
+U 1 1 60CDAA18
+P 8300 22550
+F 0 "R48" H 8150 22609 59  0000 L BNN
+F 1 "190k" H 8150 22420 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 22550 50  0001 C CNN
+F 3 "" H 8300 22550 50  0001 C CNN
+	1    8300 22550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R49
+U 1 1 60CDAA22
+P 8300 22950
+F 0 "R49" H 8150 23009 59  0000 L BNN
+F 1 "10k" H 8150 22820 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 22950 50  0001 C CNN
+F 3 "" H 8300 22950 50  0001 C CNN
+	1    8300 22950
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 22850 0    50   Input ~ 0
+I_SENS_8_RGA
+Text GLabel 8300 22750 2    50   Input ~ 0
+I_SENS_8_RGA
+Text GLabel 6800 22150 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	6800 22150 6800 22250
+$Comp
+L classchip-eagle-import:R R56
+U 1 1 60CDAA30
+P 9000 22550
+F 0 "R56" H 8850 22609 59  0000 L BNN
+F 1 "190k" H 8850 22420 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 22550 50  0001 C CNN
+F 3 "" H 9000 22550 50  0001 C CNN
+	1    9000 22550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R57
+U 1 1 60CDAA3A
+P 9000 22950
+F 0 "R57" H 8850 23009 59  0000 L BNN
+F 1 "10k" H 8850 22820 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 22950 50  0001 C CNN
+F 3 "" H 9000 22950 50  0001 C CNN
+	1    9000 22950
+	0    -1   -1   0   
+$EndComp
+Text GLabel 9000 22750 2    50   Input ~ 0
+I_SENS_8_RGB
+$Comp
+L classchip-eagle-import:R R41
+U 1 1 60CDAA46
+P 5800 21100
+F 0 "R41" H 5650 21159 59  0000 L BNN
+F 1 "33k" H 5650 20970 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5800 21100 50  0001 C CNN
+F 3 "" H 5800 21100 50  0001 C CNN
+	1    5800 21100
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5800 20700 5950 20700
+Wire Wire Line
+	5950 20700 5950 20500
+Wire Wire Line
+	5950 20500 6800 20500
+Wire Wire Line
+	5800 20900 6000 20900
+Wire Wire Line
+	6000 20900 6000 20400
+Wire Wire Line
+	6000 20400 6800 20400
+Wire Wire Line
+	5800 21300 6050 21300
+Wire Wire Line
+	6050 21300 6050 20600
+Wire Wire Line
+	6050 20600 6800 20600
+Wire Wire Line
+	8300 23150 8650 23150
+$Comp
+L INA2331AIPWT:INA2331AIPWT U22
+U 1 1 60CDAA5B
+P 7500 22450
+F 0 "U22" H 7500 23520 50  0000 C CNN
+F 1 "INA2331AIPWT" H 7500 23429 50  0000 C CNN
+F 2 "SOP65P640X120-14N" H 7500 22450 50  0001 L BNN
+F 3 "" H 7500 22450 50  0001 L BNN
+	1    7500 22450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0175
+U 1 1 60CDAA67
+P 8200 21750
+F 0 "#PWR0175" H 8200 21500 50  0001 C CNN
+F 1 "GND" H 8205 21577 50  0000 C CNN
+F 2 "" H 8200 21750 50  0001 C CNN
+F 3 "" H 8200 21750 50  0001 C CNN
+	1    8200 21750
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 23050 0    50   Input ~ 0
+I_SENS_8_RGB
+Text GLabel 8200 13400 2    50   Input ~ 0
+3V3
+$Comp
+L classchip-eagle-import:R R34
+U 1 1 60D15950
+P 5800 14300
+F 0 "R34" H 5650 14359 59  0000 L BNN
+F 1 "1k" H 5650 14170 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5800 14300 50  0001 C CNN
+F 3 "" H 5800 14300 50  0001 C CNN
+	1    5800 14300
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6800 13700 6800 13800
+Wire Wire Line
+	5800 14100 6800 14100
+$Comp
+L classchip-eagle-import:R R42
+U 1 1 60D1595E
+P 8300 14300
+F 0 "R42" H 8150 14359 59  0000 L BNN
+F 1 "190k" H 8150 14170 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 14300 50  0001 C CNN
+F 3 "" H 8300 14300 50  0001 C CNN
+	1    8300 14300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R43
+U 1 1 60D15968
+P 8300 14700
+F 0 "R43" H 8150 14759 59  0000 L BNN
+F 1 "10k" H 8150 14570 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 8300 14700 50  0001 C CNN
+F 3 "" H 8300 14700 50  0001 C CNN
+	1    8300 14700
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 14600 0    50   Input ~ 0
+I_SENS_4_RGA
+Text GLabel 8300 14500 2    50   Input ~ 0
+I_SENS_4_RGA
+Text GLabel 6800 13900 0    50   Input ~ 0
+3V3
+Wire Wire Line
+	6800 13900 6800 14000
+$Comp
+L classchip-eagle-import:R R50
+U 1 1 60D15976
+P 9000 14300
+F 0 "R50" H 8850 14359 59  0000 L BNN
+F 1 "190k" H 8850 14170 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 14300 50  0001 C CNN
+F 3 "" H 9000 14300 50  0001 C CNN
+	1    9000 14300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R51
+U 1 1 60D15980
+P 9000 14700
+F 0 "R51" H 8850 14759 59  0000 L BNN
+F 1 "10k" H 8850 14570 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 9000 14700 50  0001 C CNN
+F 3 "" H 9000 14700 50  0001 C CNN
+	1    9000 14700
+	0    -1   -1   0   
+$EndComp
+Text GLabel 9000 14500 2    50   Input ~ 0
+I_SENS_4_RGB
+Wire Wire Line
+	5800 14500 5950 14500
+Wire Wire Line
+	5950 14500 5950 14300
+Wire Wire Line
+	5950 14300 6800 14300
+Wire Wire Line
+	6050 14400 6800 14400
+Wire Wire Line
+	8300 14900 8700 14900
+$Comp
+L INA2331AIPWT:INA2331AIPWT U19
+U 1 1 60D159A1
+P 7500 14200
+F 0 "U19" H 7500 15270 50  0000 C CNN
+F 1 "INA2331AIPWT" H 7500 15179 50  0000 C CNN
+F 2 "SOP65P640X120-14N" H 7500 14200 50  0001 L BNN
+F 3 "" H 7500 14200 50  0001 L BNN
+	1    7500 14200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0176
+U 1 1 60D159AD
+P 8200 13500
+F 0 "#PWR0176" H 8200 13250 50  0001 C CNN
+F 1 "GND" H 8205 13327 50  0000 C CNN
+F 2 "" H 8200 13500 50  0001 C CNN
+F 3 "" H 8200 13500 50  0001 C CNN
+	1    8200 13500
+	0    -1   -1   0   
+$EndComp
+Text GLabel 6800 14800 0    50   Input ~ 0
+I_SENS_4_RGB
+Text GLabel 5800 19250 0    50   Input ~ 0
+G05
+Text GLabel 900  11550 0    50   Input ~ 0
+G04
+Text GLabel 5800 18650 0    50   Input ~ 0
+G03
+Text GLabel 5800 16550 0    50   Input ~ 0
+G02
+Text GLabel 900  11650 0    50   Input ~ 0
+G01
+Text GLabel 5800 14500 0    50   Input ~ 0
+G00
+Text GLabel 5800 22950 0    50   Input ~ 0
+G020
+Text GLabel 5800 21300 0    50   Input ~ 0
+G022
+Text GLabel 5800 20700 0    50   Input ~ 0
+G023
+Text GLabel 5800 14100 0    50   Input ~ 0
+G00_
+Text GLabel 5800 18850 0    50   Input ~ 0
+G05_
+Text GLabel 900  11750 0    50   Input ~ 0
+G00_
+Text GLabel 5800 18250 0    50   Input ~ 0
+G03_
+Text GLabel 900  12150 0    50   Input ~ 0
+G03_
+Text GLabel 5800 16150 0    50   Input ~ 0
+G02_
+Text GLabel 900  11450 0    50   Input ~ 0
+G02_
+Text GLabel 900  12050 0    50   Input ~ 0
+G05_
+$Comp
+L classchip-eagle-import:C-EUC0805 C43
+U 1 1 613B2406
+P 850 16000
+F 0 "C43" H 910 16015 59  0000 L BNN
+F 1 "0.1u" H 910 15815 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 850 16000 50  0001 C CNN
+F 3 "" H 850 16000 50  0001 C CNN
+	1    850  16000
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C47
+U 1 1 613B287B
+P 1050 16000
+F 0 "C47" H 1110 16015 59  0000 L BNN
+F 1 "0.1u" H 1110 15815 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1050 16000 50  0001 C CNN
+F 3 "" H 1050 16000 50  0001 C CNN
+	1    1050 16000
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C48
+U 1 1 613B2DEA
+P 1250 16000
+F 0 "C48" H 1310 16015 59  0000 L BNN
+F 1 "0.1u" H 1310 15815 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1250 16000 50  0001 C CNN
+F 3 "" H 1250 16000 50  0001 C CNN
+	1    1250 16000
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C49
+U 1 1 613B32B3
+P 1450 16000
+F 0 "C49" H 1510 16015 59  0000 L BNN
+F 1 "0.1u" H 1510 15815 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1450 16000 50  0001 C CNN
+F 3 "" H 1450 16000 50  0001 C CNN
+	1    1450 16000
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:C-EUC0805 C50
+U 1 1 613B3725
+P 1650 16000
+F 0 "C50" H 1710 16015 59  0000 L BNN
+F 1 "0.1u" H 1710 15815 59  0000 L BNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1650 16000 50  0001 C CNN
+F 3 "" H 1650 16000 50  0001 C CNN
+	1    1650 16000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	650  15900 850  15900
+Connection ~ 650  15900
+Wire Wire Line
+	850  15900 1050 15900
+Connection ~ 850  15900
+Wire Wire Line
+	1050 15900 1250 15900
+Connection ~ 1050 15900
+Wire Wire Line
+	1250 15900 1450 15900
+Connection ~ 1250 15900
+Wire Wire Line
+	1450 15900 1650 15900
+Connection ~ 1450 15900
+Wire Wire Line
+	650  16200 850  16200
+Connection ~ 650  16200
+Wire Wire Line
+	850  16200 1050 16200
+Connection ~ 850  16200
+Wire Wire Line
+	1050 16200 1250 16200
+Connection ~ 1050 16200
+Wire Wire Line
+	1250 16200 1450 16200
+Connection ~ 1250 16200
+Wire Wire Line
+	1450 16200 1650 16200
+Connection ~ 1450 16200
+$Comp
+L classchip-eagle-import:R R58
+U 1 1 61970418
+P 12750 450
+F 0 "R58" H 12600 509 59  0000 L BNN
+F 1 "200" H 12600 320 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 12750 450 50  0001 C CNN
+F 3 "" H 12750 450 50  0001 C CNN
+	1    12750 450 
+	-1   0    0    1   
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP4
+U 1 1 619891D6
+P 13350 450
+F 0 "JP4" H 13428 503 59  0000 L CNN
+F 1 "PINHD-1X1" H 13428 398 59  0000 L CNN
+F 2 "classchip:1X01" H 13350 450 50  0001 C CNN
+F 3 "" H 13350 450 50  0001 C CNN
+	1    13350 450 
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP5
+U 1 1 61989342
+P 13350 650
+F 0 "JP5" H 13428 703 59  0000 L CNN
+F 1 "PINHD-1X1" H 13428 598 59  0000 L CNN
+F 2 "classchip:1X01" H 13350 650 50  0001 C CNN
+F 3 "" H 13350 650 50  0001 C CNN
+	1    13350 650 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0179
+U 1 1 6198934D
+P 13250 650
+F 0 "#PWR0179" H 13250 400 50  0001 C CNN
+F 1 "GND" H 13255 477 50  0000 C CNN
+F 2 "" H 13250 650 50  0001 C CNN
+F 3 "" H 13250 650 50  0001 C CNN
+	1    13250 650 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13250 450  12950 450 
+Wire Wire Line
+	7550 1550 7550 1950
+Wire Wire Line
+	7850 1550 7850 1950
+Text GLabel 8200 17950 2    50   Input ~ 0
+MUX4_0
+Text GLabel 8200 19900 2    50   Input ~ 0
+MUX4_1
+Text GLabel 8200 20000 2    50   Input ~ 0
+MUX4_2
+Text GLabel 8200 17850 2    50   Input ~ 0
+MUX4_3
+Text GLabel 8200 15850 2    50   Input ~ 0
+MUX4_4
+Text GLabel 8200 13700 2    50   Input ~ 0
+MUX4_5
+Text GLabel 8200 15750 2    50   Input ~ 0
+MUX4_6
+Text GLabel 8200 13800 2    50   Input ~ 0
+MUX4_7
+Text GLabel 8300 14100 2    50   Input ~ 0
+MUX4_5
+Text GLabel 9000 14100 2    50   Input ~ 0
+MUX4_7
+Text GLabel 8300 16150 2    50   Input ~ 0
+MUX4_6
+Text GLabel 9000 16150 2    50   Input ~ 0
+MUX4_4
+Text GLabel 5450 23350 0    50   Input ~ 0
+GO20_
+Text GLabel 5450 22750 0    50   Input ~ 0
+GO21_
+Text GLabel 8300 18250 2    50   Input ~ 0
+MUX4_3
+Text GLabel 9000 18250 2    50   Input ~ 0
+MUX4_0
+Text GLabel 8300 20300 2    50   Input ~ 0
+MUX4_1
+Text GLabel 9000 20300 2    50   Input ~ 0
+MUX4_2
+Text GLabel 900  10650 0    50   Input ~ 0
+GO20_
+Text GLabel 900  10550 0    50   Input ~ 0
+GO21_
+Text GLabel 900  11950 0    50   Input ~ 0
+G022_
+Text GLabel 900  11850 0    50   Input ~ 0
+G023_
+$Comp
+L classchip-eagle-import:R R60
+U 1 1 6238EAAD
+P 5450 23150
+F 0 "R60" H 5300 23209 59  0000 L BNN
+F 1 "330" H 5300 23020 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5450 23150 50  0001 C CNN
+F 3 "" H 5450 23150 50  0001 C CNN
+	1    5450 23150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R59
+U 1 1 6238F568
+P 5450 22550
+F 0 "R59" H 5300 22609 59  0000 L BNN
+F 1 "330" H 5300 22420 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5450 22550 50  0001 C CNN
+F 3 "" H 5450 22550 50  0001 C CNN
+	1    5450 22550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R61
+U 1 1 6238FF8F
+P 5450 20500
+F 0 "R61" H 5300 20559 59  0000 L BNN
+F 1 "330" H 5300 20370 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5450 20500 50  0001 C CNN
+F 3 "" H 5450 20500 50  0001 C CNN
+	1    5450 20500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L classchip-eagle-import:R R62
+U 1 1 62390E89
+P 5450 21100
+F 0 "R62" H 5300 21159 59  0000 L BNN
+F 1 "330" H 5300 20970 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 5450 21100 50  0001 C CNN
+F 3 "" H 5450 21100 50  0001 C CNN
+	1    5450 21100
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5450 22750 5800 22750
+Connection ~ 5800 22750
+Wire Wire Line
+	5450 23350 5800 23350
+Connection ~ 5800 23350
+Wire Wire Line
+	5450 20300 5800 20300
+Connection ~ 5800 20300
+Wire Wire Line
+	5450 20900 5800 20900
+Connection ~ 5800 20900
+Text GLabel 4950 10700 0    50   Input ~ 0
+G020
+Text GLabel 4950 10800 0    50   Input ~ 0
+G021
+Text GLabel 4950 11850 0    50   Input ~ 0
+G022
+Text GLabel 4950 11950 0    50   Input ~ 0
+G023
+Text GLabel 5450 22950 0    50   Input ~ 0
+G020_switch
+Text GLabel 5800 22350 0    50   Input ~ 0
+G021
+Text GLabel 5450 22350 0    50   Input ~ 0
+G021_switch
+Text GLabel 6150 10700 2    50   Input ~ 0
+G020_switch
+Text GLabel 6150 10800 2    50   Input ~ 0
+G021_switch
+Text GLabel 6150 11850 2    50   Input ~ 0
+G022_switch
+Text GLabel 6150 11950 2    50   Input ~ 0
+G023_switch
+Text GLabel 5450 20700 0    50   Input ~ 0
+G023_switch
+Text GLabel 5450 21300 0    50   Input ~ 0
+G022_switch
+Text GLabel 5450 20300 0    50   Input ~ 0
+G023_
+Text GLabel 5450 20900 0    50   Input ~ 0
+G022_
+Text GLabel 13000 4750 0    50   Input ~ 0
+D11
+Text GLabel 6150 10900 2    50   Input ~ 0
+D11
+$Comp
+L power:GND #PWR0142
+U 1 1 6290E7B5
+P 4950 10900
+F 0 "#PWR0142" H 4950 10650 50  0001 C CNN
+F 1 "GND" H 4955 10727 50  0000 C CNN
+F 2 "" H 4950 10900 50  0001 C CNN
+F 3 "" H 4950 10900 50  0001 C CNN
+	1    4950 10900
+	0    1    1    0   
+$EndComp
+Text GLabel 8200 21950 2    50   Input ~ 0
+MUX5_0
+Text GLabel 8200 22050 2    50   Input ~ 0
+MUX5_3
+Text GLabel 9000 22350 2    50   Input ~ 0
+MUX5_3
+Text GLabel 8300 22350 2    50   Input ~ 0
+MUX5_0
+Text GLabel 14000 1400 1    50   Input ~ 0
+LED1
+Text GLabel 14350 1400 1    50   Input ~ 0
+LED2
+Text GLabel 13000 5150 0    50   Input ~ 0
+LED1
+Text GLabel 13000 5350 0    50   Input ~ 0
+LED2
+Text GLabel 13000 5550 0    50   Input ~ 0
+D28
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP16
+U 1 1 62B794CB
+P 17700 650
+F 0 "JP16" H 17778 703 59  0000 L CNN
+F 1 "PINHD-1X1" H 17778 598 59  0000 L CNN
+F 2 "classchip:1X01" H 17700 650 50  0001 C CNN
+F 3 "" H 17700 650 50  0001 C CNN
+	1    17700 650 
+	1    0    0    -1  
+$EndComp
+Text GLabel 900  10850 0    50   Input ~ 0
+DAC1
+Text GLabel 900  10950 0    50   Input ~ 0
+DAC2
+Text GLabel 900  11050 0    50   Input ~ 0
+DAC3
+Text GLabel 900  11150 0    50   Input ~ 0
+DAC4
+Text GLabel 17350 800  0    50   Input ~ 0
+DAC1
+Text GLabel 17350 900  0    50   Input ~ 0
+DAC2
+Text GLabel 17350 1000 0    50   Input ~ 0
+DAC3
+Text GLabel 17350 1100 0    50   Input ~ 0
+DAC4
+Text GLabel 14800 4250 2    50   Input ~ 0
+D17
+Text GLabel 14800 4350 2    50   Input ~ 0
+D16
+Text GLabel 14800 4450 2    50   Input ~ 0
+D15
+Text GLabel 14800 4550 2    50   Input ~ 0
+D14
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP17
+U 1 1 62C3BABB
+P 17700 850
+F 0 "JP17" H 17778 903 59  0000 L CNN
+F 1 "PINHD-1X1" H 17778 798 59  0000 L CNN
+F 2 "classchip:1X01" H 17700 850 50  0001 C CNN
+F 3 "" H 17700 850 50  0001 C CNN
+	1    17700 850 
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP18
+U 1 1 62C3BE52
+P 17700 1050
+F 0 "JP18" H 17778 1103 59  0000 L CNN
+F 1 "PINHD-1X1" H 17778 998 59  0000 L CNN
+F 2 "classchip:1X01" H 17700 1050 50  0001 C CNN
+F 3 "" H 17700 1050 50  0001 C CNN
+	1    17700 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP19
+U 1 1 62C3C119
+P 17700 1250
+F 0 "JP19" H 17778 1303 59  0000 L CNN
+F 1 "PINHD-1X1" H 17778 1198 59  0000 L CNN
+F 2 "classchip:1X01" H 17700 1250 50  0001 C CNN
+F 3 "" H 17700 1250 50  0001 C CNN
+	1    17700 1250
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP20
+U 1 1 62C3C423
+P 18100 650
+F 0 "JP20" H 18178 703 59  0000 L CNN
+F 1 "PINHD-1X1" H 18178 598 59  0000 L CNN
+F 2 "classchip:1X01" H 18100 650 50  0001 C CNN
+F 3 "" H 18100 650 50  0001 C CNN
+	1    18100 650 
+	-1   0    0    1   
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP21
+U 1 1 62C3CEB4
+P 18100 850
+F 0 "JP21" H 18178 903 59  0000 L CNN
+F 1 "PINHD-1X1" H 18178 798 59  0000 L CNN
+F 2 "classchip:1X01" H 18100 850 50  0001 C CNN
+F 3 "" H 18100 850 50  0001 C CNN
+	1    18100 850 
+	-1   0    0    1   
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP22
+U 1 1 62C3D1E0
+P 18100 1050
+F 0 "JP22" H 18178 1103 59  0000 L CNN
+F 1 "PINHD-1X1" H 18178 998 59  0000 L CNN
+F 2 "classchip:1X01" H 18100 1050 50  0001 C CNN
+F 3 "" H 18100 1050 50  0001 C CNN
+	1    18100 1050
+	-1   0    0    1   
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP23
+U 1 1 62C3D4CD
+P 18100 1250
+F 0 "JP23" H 18178 1303 59  0000 L CNN
+F 1 "PINHD-1X1" H 18178 1198 59  0000 L CNN
+F 2 "classchip:1X01" H 18100 1250 50  0001 C CNN
+F 3 "" H 18100 1250 50  0001 C CNN
+	1    18100 1250
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	17350 900  17600 900 
+Wire Wire Line
+	17600 900  17600 850 
+Wire Wire Line
+	17350 1000 17600 1000
+Wire Wire Line
+	17600 1000 17600 1050
+Wire Wire Line
+	17350 1100 17600 1100
+Wire Wire Line
+	17600 1100 17600 1250
+Wire Wire Line
+	18450 1100 18200 1100
+Wire Wire Line
+	18200 1100 18200 1250
+Wire Wire Line
+	17350 800  17600 800 
+Wire Wire Line
+	17600 800  17600 650 
+Wire Wire Line
+	18450 800  18200 800 
+Wire Wire Line
+	18200 800  18200 650 
+Wire Wire Line
+	18450 900  18200 900 
+Wire Wire Line
+	18200 900  18200 850 
+Wire Wire Line
+	18200 1000 18200 1050
+Wire Wire Line
+	18200 1000 18450 1000
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP24
+U 1 1 62E3A951
+P 17700 1600
+F 0 "JP24" H 17778 1653 59  0000 L CNN
+F 1 "PINHD-1X1" H 17778 1548 59  0000 L CNN
+F 2 "classchip:1X01" H 17700 1600 50  0001 C CNN
+F 3 "" H 17700 1600 50  0001 C CNN
+	1    17700 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP25
+U 1 1 62E3AD69
+P 18100 1600
+F 0 "JP25" H 18178 1653 59  0000 L CNN
+F 1 "PINHD-1X1" H 18178 1548 59  0000 L CNN
+F 2 "classchip:1X01" H 18100 1600 50  0001 C CNN
+F 3 "" H 18100 1600 50  0001 C CNN
+	1    18100 1600
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR0180
+U 1 1 62E3C796
+P 17600 1600
+F 0 "#PWR0180" H 17600 1350 50  0001 C CNN
+F 1 "GND" H 17605 1427 50  0000 C CNN
+F 2 "" H 17600 1600 50  0001 C CNN
+F 3 "" H 17600 1600 50  0001 C CNN
+	1    17600 1600
+	1    0    0    -1  
+$EndComp
+Text GLabel 18400 1600 2    50   Input ~ 0
+3V3
+Wire Wire Line
+	18400 1600 18200 1600
+Text GLabel 18450 800  2    50   Input ~ 0
+D17
+Text GLabel 18450 900  2    50   Input ~ 0
+D16
+Text GLabel 18450 1000 2    50   Input ~ 0
+D15
+Text GLabel 18450 1100 2    50   Input ~ 0
+D14
+$Comp
+L power:GND #PWR0177
+U 1 1 60944BE0
+P 8650 23150
+F 0 "#PWR0177" H 8650 22900 50  0001 C CNN
+F 1 "GND" H 8655 22977 50  0000 C CNN
+F 2 "" H 8650 23150 50  0001 C CNN
+F 3 "" H 8650 23150 50  0001 C CNN
+	1    8650 23150
+	1    0    0    -1  
+$EndComp
+Connection ~ 8650 23150
+Wire Wire Line
+	8650 23150 9000 23150
+$Comp
+L power:GND #PWR0181
+U 1 1 60946F0D
+P 6800 21950
+F 0 "#PWR0181" H 6800 21700 50  0001 C CNN
+F 1 "GND" H 6805 21777 50  0000 C CNN
+F 2 "" H 6800 21950 50  0001 C CNN
+F 3 "" H 6800 21950 50  0001 C CNN
+	1    6800 21950
+	0    1    1    0   
+$EndComp
+Connection ~ 6800 21950
+$Comp
+L power:GND #PWR0182
+U 1 1 609B32A6
+P 8650 21100
+F 0 "#PWR0182" H 8650 20850 50  0001 C CNN
+F 1 "GND" H 8655 20927 50  0000 C CNN
+F 2 "" H 8650 21100 50  0001 C CNN
+F 3 "" H 8650 21100 50  0001 C CNN
+	1    8650 21100
+	1    0    0    -1  
+$EndComp
+Connection ~ 8650 21100
+Wire Wire Line
+	8650 21100 9000 21100
+$Comp
+L power:GND #PWR0183
+U 1 1 609C14A8
+P 8650 19050
+F 0 "#PWR0183" H 8650 18800 50  0001 C CNN
+F 1 "GND" H 8655 18877 50  0000 C CNN
+F 2 "" H 8650 19050 50  0001 C CNN
+F 3 "" H 8650 19050 50  0001 C CNN
+	1    8650 19050
+	1    0    0    -1  
+$EndComp
+Connection ~ 8650 19050
+Wire Wire Line
+	8650 19050 9000 19050
+$Comp
+L power:GND #PWR0184
+U 1 1 609C20EB
+P 8650 16950
+F 0 "#PWR0184" H 8650 16700 50  0001 C CNN
+F 1 "GND" H 8655 16777 50  0000 C CNN
+F 2 "" H 8650 16950 50  0001 C CNN
+F 3 "" H 8650 16950 50  0001 C CNN
+	1    8650 16950
+	1    0    0    -1  
+$EndComp
+Connection ~ 8650 16950
+Wire Wire Line
+	8650 16950 9000 16950
+$Comp
+L power:GND #PWR0185
+U 1 1 609C71D8
+P 8700 14900
+F 0 "#PWR0185" H 8700 14650 50  0001 C CNN
+F 1 "GND" H 8705 14727 50  0000 C CNN
+F 2 "" H 8700 14900 50  0001 C CNN
+F 3 "" H 8700 14900 50  0001 C CNN
+	1    8700 14900
+	1    0    0    -1  
+$EndComp
+Connection ~ 8700 14900
+Wire Wire Line
+	8700 14900 9000 14900
+$Comp
+L power:GND #PWR0186
+U 1 1 609C8647
+P 6800 15750
+F 0 "#PWR0186" H 6800 15500 50  0001 C CNN
+F 1 "GND" H 6805 15577 50  0000 C CNN
+F 2 "" H 6800 15750 50  0001 C CNN
+F 3 "" H 6800 15750 50  0001 C CNN
+	1    6800 15750
+	0    1    1    0   
+$EndComp
+Connection ~ 6800 15750
+$Comp
+L power:GND #PWR0187
+U 1 1 609C92A3
+P 6800 17850
+F 0 "#PWR0187" H 6800 17600 50  0001 C CNN
+F 1 "GND" H 6805 17677 50  0000 C CNN
+F 2 "" H 6800 17850 50  0001 C CNN
+F 3 "" H 6800 17850 50  0001 C CNN
+	1    6800 17850
+	0    1    1    0   
+$EndComp
+Connection ~ 6800 17850
+$Comp
+L power:GND #PWR0188
+U 1 1 609C9CFD
+P 6800 19900
+F 0 "#PWR0188" H 6800 19650 50  0001 C CNN
+F 1 "GND" H 6805 19727 50  0000 C CNN
+F 2 "" H 6800 19900 50  0001 C CNN
+F 3 "" H 6800 19900 50  0001 C CNN
+	1    6800 19900
+	0    1    1    0   
+$EndComp
+Connection ~ 6800 19900
+$Comp
+L power:GND #PWR0189
+U 1 1 609D4BE4
+P 6800 13700
+F 0 "#PWR0189" H 6800 13450 50  0001 C CNN
+F 1 "GND" H 6805 13527 50  0000 C CNN
+F 2 "" H 6800 13700 50  0001 C CNN
+F 3 "" H 6800 13700 50  0001 C CNN
+	1    6800 13700
+	0    1    1    0   
+$EndComp
+Connection ~ 6800 13700
+Text GLabel 12550 450  0    50   Input ~ 0
+D28
+Wire Wire Line
+	6050 14400 6050 14600
+Wire Wire Line
+	6050 14600 5500 14600
+Wire Wire Line
+	5500 14600 5500 14000
+Wire Wire Line
+	5500 14000 5800 14000
+Wire Wire Line
+	5800 14000 5800 14100
+Connection ~ 5800 14100
+Wire Wire Line
+	6800 14200 6800 14300
+Connection ~ 6800 14300
+Wire Wire Line
+	6800 16250 6800 16350
+Connection ~ 6800 16350
+Wire Wire Line
+	6050 16450 6050 16650
+Wire Wire Line
+	6050 16650 5450 16650
+Wire Wire Line
+	5450 16650 5450 16000
+Wire Wire Line
+	5450 16000 5800 16000
+Wire Wire Line
+	5800 16000 5800 16150
+Connection ~ 5800 16150
+Text GLabel 1650 10950 2    50   Input ~ 0
+AVDD
+Text GLabel 1650 11950 2    50   Input ~ 0
+AVDD
+Text GLabel 2450 12950 2    50   Input ~ 0
+AVDD
+Text GLabel 2450 13950 2    50   Input ~ 0
+AVDD
+Text GLabel 2950 10500 0    50   Input ~ 0
+AVDD
+$Comp
+L Connector:TestPoint_Small TP43
+U 1 1 60D91454
+P 50 10750
+F 0 "TP43" H 98  10796 50  0000 L CNN
+F 1 "TestPoint_Small" H 98  10705 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 250 10750 50  0001 C CNN
+F 3 "~" H 250 10750 50  0001 C CNN
+	1    50   10750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	900  10750 50   10750
+Text Notes 16800 100  0    50   ~ 0
+Extra sockets
+Wire Notes Line
+	4150 12550 10400 12550
+Wire Notes Line
+	10400 12550 10400 23550
+Wire Notes Line
+	4150 10400 7150 10400
+Wire Notes Line
+	7150 10400 7150 12550
+Wire Notes Line
+	5450 9300 5450 10400
+Wire Notes Line
+	10400 20800 20350 20800
+Wire Notes Line
+	20350 20800 20350 23550
+Wire Notes Line
+	16800 2050 19000 2050
+Wire Notes Line
+	19000 2050 19000 0   
+Text Notes 4200 10550 0    50   ~ 0
+Current range selector
+$Comp
+L Mechanical:MountingHole_Pad H2
+U 1 1 6146D96D
+P 24600 200
+F 0 "H2" H 24700 249 50  0000 L CNN
+F 1 "MountingHole_Pad" H 24700 158 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.3mm_M4_ISO14580" H 24600 200 50  0001 C CNN
+F 3 "~" H 24600 200 50  0001 C CNN
+	1    24600 200 
+	1    0    0    -1  
+$EndComp
+$Comp
+L 78G01T:78G01T S1
+U 1 1 60BFA4BD
+P 4950 10700
+F 0 "S1" H 5550 10965 50  0000 C CNN
+F 1 "78G01T" H 5550 10874 50  0000 C CNN
+F 2 "78G01T" H 6000 10800 50  0001 L CNN
+F 3 "http://www.grayhill.com/assets/1/7/DIP_Series_78_SPST-4PST.pdf" H 6000 10700 50  0001 L CNN
+F 4 "DIP Switches/SIP Switches DIP Switch 3PST Raised Slide 1 Pos" H 6000 10600 50  0001 L CNN "Description"
+F 5 "8.05" H 6000 10500 50  0001 L CNN "Height"
+F 6 "Grayhill" H 6000 10400 50  0001 L CNN "Manufacturer_Name"
+F 7 "78G01T" H 6000 10300 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "706-78G01T" H 6000 10200 50  0001 L CNN "Mouser Part Number"
+F 9 "https://www.mouser.co.uk/ProductDetail/Grayhill/78G01T?qs=ls7QRyWmRk7bEcquOthgxw%3D%3D" H 6000 10100 50  0001 L CNN "Mouser Price/Stock"
+F 10 "" H 6000 10000 50  0001 L CNN "Arrow Part Number"
+F 11 "" H 6000 9900 50  0001 L CNN "Arrow Price/Stock"
+	1    4950 10700
+	1    0    0    -1  
+$EndComp
+$Comp
+L 78G01T:78G01T S2
+U 1 1 60C005CD
+P 4950 11850
+F 0 "S2" H 5550 12115 50  0000 C CNN
+F 1 "78G01T" H 5550 12024 50  0000 C CNN
+F 2 "78G01T" H 6000 11950 50  0001 L CNN
+F 3 "http://www.grayhill.com/assets/1/7/DIP_Series_78_SPST-4PST.pdf" H 6000 11850 50  0001 L CNN
+F 4 "DIP Switches/SIP Switches DIP Switch 3PST Raised Slide 1 Pos" H 6000 11750 50  0001 L CNN "Description"
+F 5 "8.05" H 6000 11650 50  0001 L CNN "Height"
+F 6 "Grayhill" H 6000 11550 50  0001 L CNN "Manufacturer_Name"
+F 7 "78G01T" H 6000 11450 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "706-78G01T" H 6000 11350 50  0001 L CNN "Mouser Part Number"
+F 9 "https://www.mouser.co.uk/ProductDetail/Grayhill/78G01T?qs=ls7QRyWmRk7bEcquOthgxw%3D%3D" H 6000 11250 50  0001 L CNN "Mouser Price/Stock"
+F 10 "" H 6000 11150 50  0001 L CNN "Arrow Part Number"
+F 11 "" H 6000 11050 50  0001 L CNN "Arrow Price/Stock"
+	1    4950 11850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0138
+U 1 1 60C63B69
+P 4950 12050
+F 0 "#PWR0138" H 4950 11800 50  0001 C CNN
+F 1 "GND" H 4955 11877 50  0000 C CNN
+F 2 "" H 4950 12050 50  0001 C CNN
+F 3 "" H 4950 12050 50  0001 C CNN
+	1    4950 12050
+	0    1    1    0   
+$EndComp
+Text GLabel 6150 12050 2    50   Input ~ 0
+D12
+Text GLabel 13000 4850 0    50   Input ~ 0
+D12
+$Comp
+L Transistor_BJT:BC547 Q1
+U 1 1 60AFFE1F
+P 19800 3800
+F 0 "Q1" H 19991 3846 50  0000 L CNN
+F 1 "BC547" H 19991 3755 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-92_Inline" H 20000 3725 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC550-D.pdf" H 19800 3800 50  0001 L CNN
+	1    19800 3800
+	1    0    0    -1  
+$EndComp
+Text GLabel 13000 4250 0    50   Input ~ 0
+D6
+Text GLabel 19200 3800 0    50   Input ~ 0
+D6
+$Comp
+L classchip-eagle-import:R R66
+U 1 1 60B794F1
+P 19900 3400
+F 0 "R66" H 19750 3459 59  0000 L BNN
+F 1 "1k" H 19750 3270 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 19900 3400 50  0001 C CNN
+F 3 "" H 19900 3400 50  0001 C CNN
+	1    19900 3400
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	19900 3600 20200 3600
+$Comp
+L power:GND #PWR0191
+U 1 1 60BD4C77
+P 19900 4000
+F 0 "#PWR0191" H 19900 3750 50  0001 C CNN
+F 1 "GND" H 19905 3827 50  0000 C CNN
+F 2 "" H 19900 4000 50  0001 C CNN
+F 3 "" H 19900 4000 50  0001 C CNN
+	1    19900 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L classchip-eagle-import:R R29
+U 1 1 60B78964
+P 19400 3800
+F 0 "R29" H 19250 3859 59  0000 L BNN
+F 1 "1k" H 19250 3670 59  0000 L BNN
+F 2 "Resistor_SMD:R_0603_1608Metric" H 19400 3800 50  0001 C CNN
+F 3 "" H 19400 3800 50  0001 C CNN
+	1    19400 3800
+	1    0    0    -1  
+$EndComp
+Connection ~ 19900 3600
+Text GLabel 19900 3200 1    50   Input ~ 0
+3V3
+$Comp
+L classchip-eagle-import:PINHD-1X1 JP3
+U 1 1 60E19A1F
+P 20300 3600
+F 0 "JP3" H 20378 3653 59  0000 L CNN
+F 1 "PINHD-1X1" H 20378 3548 59  0000 L CNN
+F 2 "classchip:1X01" H 20300 3600 50  0001 C CNN
+F 3 "" H 20300 3600 50  0001 C CNN
+	1    20300 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L NTS0102DP_125:NTS0102DP,125 U9
+U 1 1 612B784F
+P 17600 21250
+F 0 "U9" H 17600 21817 50  0000 C CNN
+F 1 "NTS0102DP,125" H 17600 21726 50  0000 C CNN
+F 2 "SOP8P65_300X400X110L40X30N" H 17600 21250 50  0001 L BNN
+F 3 "" H 17600 21250 50  0001 L BNN
+F 4 "NXP SEMICONDUCTORS" H 17600 21250 50  0001 L BNN "MANUFACTURER"
+	1    17600 21250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0178
+U 1 1 612DDDCD
+P 18100 21550
+F 0 "#PWR0178" H 18100 21300 50  0001 C CNN
+F 1 "GND" H 18105 21377 50  0000 C CNN
+F 2 "" H 18100 21550 50  0001 C CNN
+F 3 "" H 18100 21550 50  0001 C CNN
+	1    18100 21550
+	1    0    0    -1  
+$EndComp
+Text GLabel 18100 21050 2    50   Input ~ 0
+3V3
+Text GLabel 18100 20950 2    50   Input ~ 0
+DVDD
+Text GLabel 18100 21350 2    50   Input ~ 0
+SCL_3V3
+Text GLabel 18100 21250 2    50   Input ~ 0
+SDA_3V3
+Text GLabel 17100 21350 0    50   Input ~ 0
+SCL_1V8
+Text GLabel 17100 21150 0    50   Input ~ 0
+SDA_1V8
+Text GLabel 17100 20950 0    50   Input ~ 0
+DVDD
+$EndSCHEMATC

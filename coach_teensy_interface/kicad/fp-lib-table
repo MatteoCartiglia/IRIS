@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name classchip)(type KiCad)(uri "$(KIPRJMOD)/classchip.pretty")(options "")(descr ""))
+)

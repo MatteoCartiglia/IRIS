@@ -39,3 +39,9 @@ This code is compiled and uploaded using "PlatformIO" plugin on Visual Studio Co
 
 - Fix bug with BiasGen initialisation
 - Save & load new bias values
+- Fix make file: launch only one thread and make the arduino thread a slave
+- make code more generalizable. Right now its ok with ALIVE but not ok with other chips
+- heartbeat signal
+
+
+

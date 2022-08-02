@@ -93,10 +93,10 @@ void getBiasGenValues(BIASGEN_command biasGen[])
         }
         
         biasGen[i].name = biasGen_BiasName;
-        biasGen[i].currentValue_uV = std::stof(parseCSVoutput[i][1]);
+        biasGen[i].currentValue_uA = std::stof(parseCSVoutput[i][1]);
         biasGen[i].transistorType = std::stoi(parseCSVoutput[i][2]);
         biasGen[i].biasNo = std::stoi(parseCSVoutput[i][3]);
-        biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uV, biasGen[i].transistorType);
+        biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uA, biasGen[i].transistorType);
 
         // printf("%s : ", biasGen_BiasName.c_str());
         // printBinaryValue(biasGen[i].currentValue_binary, BIASGEN_PACKET_SIZE);

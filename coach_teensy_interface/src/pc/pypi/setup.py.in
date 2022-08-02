@@ -1,0 +1,45 @@
+from setuptools import setup, dist
+from setuptools.command.install import install
+import os
+import sys
+
+# force setuptools to recognize that this is
+# actually a binary distribution
+class BinaryDistribution(dist.Distribution):
+    def has_ext_modules(foo):
+        return True
+
+# Because we will be packaging each python version separately
+# the easiest thing to do is provide the different library names
+# as an argument.
+if "--soname" in sys.argv:
+    index = sys.argv.index("--soname")
+    sys.argv.pop(index)
+    soname = sys.argv.pop(index)
+    print(soname)
+else:
+    raise Exception("--soname not provided")
+
+setup(
+    # this package is called mymodule
+    name='pyplane',
+
+    # this package contains one module,
+    # which resides in the subdirectory mymodule
+    packages=['pyplane'],
+
+    # make sure the shared library is included
+    package_data={'pyplane': [soname]},
+    include_package_data=True,
+
+    description="Interface to INI's CoACH class-chip via Teensy based PLANE (Platform for Learning About Neuromorphic Engineering).",
+
+    # See class BinaryDistribution that was defined earlier
+    distclass=BinaryDistribution,
+
+    version='@PROJECT_VERSION@',
+    url='http://www.ini.uzh.ch/',
+    author='INI NCS',
+    author_email='something@unsupported.com',
+    # ...
+)

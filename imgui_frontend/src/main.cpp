@@ -46,7 +46,9 @@ int main(int, char**)
     bool show_AER_config = true;
     bool show_Serial_output = true;
     bool show_PlotData = true;
-    bool powerOnReset = true;
+
+    bool powerOnReset_dac = true;
+
 
     auto time = std::time(nullptr);
     auto time_tm = *std::localtime(&time);
@@ -174,10 +176,10 @@ int main(int, char**)
             }
         }
 
-        // Setup digital-to-analogue convertor configuration window
+        // Setup digital-to-analogue convertor configuration window - ok!
         if (show_DAC_config)
         {
-            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset);
+            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset_dac);
 
             if(expectedResponses > 0)
             {
@@ -189,7 +191,7 @@ int main(int, char**)
         // Setup the bias generation configuration window 
         if (show_BiasGen_config)
         {
-            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, powerOnReset);
+            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows);
 
             if(expectedResponses > 0)
             {
@@ -207,7 +209,8 @@ int main(int, char**)
 
         // Render the window       
         renderImGui(window);
-        powerOnReset = false;    
+        powerOnReset_dac = false;    
+   
         sleep(0.25);  
     }
 
@@ -261,7 +264,7 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
         }
         else
         {
-            printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+        //    printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
         }
 
         expectedResponses--;

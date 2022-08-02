@@ -50,10 +50,10 @@ int setupAerWindow(bool show_AER_config, int serialPort);
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
+    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[]);
 #else
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
+        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[]);
 #endif
 
 

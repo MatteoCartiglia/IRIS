@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name classchip-eagle-import)(type Legacy)(uri ${KIPRJMOD}/classchip-eagle-import.lib)(options "")(descr ""))
+)

@@ -12,6 +12,11 @@
 // #define BIASGEN_SEND_POR                1
 // #define BIASGEN_SET_TRANSISTOR_TYPE     1
 
+// Configurations of the interface - Uncomment what is needed
+#define exists_biasgen                   
+//#define exists_SPI1                      
+//#define exists_SPI2                     
+
 // GUI CONSTANTS
 #define BUTTON_HEIGHT                   20
 #define BUTTON_UPDATE_WIDTH             100
@@ -30,7 +35,7 @@
 // PC <-> TEENSY SERIAL COMMUNICATION
 #define SERIAL_COMMS_SHIFT              8
 #define SERIAL_COMMS_MAX_PKT_LEN        6           // Clarify
-#define SERIAl_PORT_NAME                "/dev/ttyACM0"
+#define SERIAl_PORT_NAME                "/dev/cu.usbmodem105661701"
 #define SERIAL_BUFFER_SIZE_BIAS         62
 #define SERIAL_BUFFER_SIZE_DAC          44
 #define SERIAL_BUFFER_SIZE_PORT_OPEN    34
@@ -44,11 +49,22 @@
 #define TEENSY_OUTPUT_HANDSHAKE_TIMEOUT 10          // microseconds
 
 // BIASGEN 
-#define BIASGEN_SLAVE_SPI0              9
 #define BIASGEN_MOSI_PIN                11
 #define BIASGEN_SCK_PIN                 13
 #define BIASGEN_ENABLE_PIN              10
 #define BIASGEN_RESET_PIN               41
+
+// SPI1 
+#define SPI1_MOSI_PIN                11
+#define SPI1_SCK_PIN                 13
+#define SPI1_ENABLE_PIN              10
+#define SPI1_RESET_PIN               41
+
+// SPI2 
+#define SPI2_MOSI_PIN                11
+#define SPI2_SCK_PIN                 13
+#define SPI2_ENABLE_PIN              10
+#define SPI2_RESET_PIN               41
 
 #define BIASGEN_BIASFILE                "data/biasValues_BIASGEN.csv"
 #define BIASGEN_CHANNELS                54

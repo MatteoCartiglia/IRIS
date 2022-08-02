@@ -43,7 +43,8 @@ enum class P2tPktType
     P2t_setBiasGen                  = 2U,
     P2t_reqOutputDecoder            = 3U,
     P2t_reqInputEncoder             = 4U,
-    P2t_reqInputC2F                 = 5U
+    P2t_reqInputC2F                 = 5U,
+    P2t_setSPI                      = 6U,
 };
 
 
@@ -72,23 +73,27 @@ struct P2TPkt
 struct DAC_command
 {
     DAC_command() {};
-    DAC_command (const P2TPkt& pkt) : command_address(pkt.body[0]), data((pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]) {};
+    DAC_command (const P2TPkt& pkt) : dac_number(pkt.body[0]), command_address(pkt.body[1]), data( pkt.body[2] << SERIAL_COMMS_SHIFT | pkt.body[3] ) {};
 
-    std::string name;
+
+    std::uint8_t dac_number;
     std::uint8_t command_address; 
     std::uint16_t data;
+    std::string name;
+
 };
+
 
 // ------------------------------------------ Struct for PC -> Teensy -> BIASGEN communication ------------------------------------------
 struct BIASGEN_command
 { 
     BIASGEN_command() {};
-    BIASGEN_command ( const P2TPkt& pkt) : biasNo(pkt.body[0]), currentValue_binary(( pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]) {};
+    BIASGEN_command ( const P2TPkt& pkt) : biasNo((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), currentValue_binary(( pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]) {};
 
-    std::uint8_t biasNo;
+    std::uint16_t biasNo;
     std::uint16_t currentValue_binary;
     std::string name;
-    double currentValue_uV;
+    double currentValue_uA;
     bool transistorType;
 };
 
