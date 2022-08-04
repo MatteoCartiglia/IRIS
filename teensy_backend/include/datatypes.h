@@ -21,6 +21,7 @@ struct AER_DECODER_OUTPUT_command;
 struct AER_ENCODER_INPUT_command;
 struct ENCODER_INPUT_command;
 struct C2F_INPUT_command;
+struct SPI_INPUT_command;
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ enum class P2tPktType
     P2t_reqOutputDecoder            = 3U,
     P2t_reqInputEncoder             = 4U,
     P2t_reqInputC2F                 = 5U,
-    P2t_setSPI                      = 6U,
+    P2t_setSPI                      = 6U
 };
 
 
@@ -62,6 +63,8 @@ struct P2TPkt
     P2TPkt(const AER_DECODER_OUTPUT_command& outputDecoder);
     P2TPkt(const ENCODER_INPUT_command& inputEncoder);
     P2TPkt(const C2F_INPUT_command& inputC2F);
+    P2TPkt(const SPI_INPUT_command& spi);
+
 
     std::uint8_t header;                          // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
@@ -117,5 +120,17 @@ struct C2F_INPUT_command
 {
     C2F_INPUT_command() {};
 };
+
+struct SPI_INPUT_command{
+    SPI_INPUT_command()  {};
+    SPI_INPUT_command ( const P2TPkt& pkt) : spi_number(pkt.body[0]), address((pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]),   value((pkt.body[3] << SERIAL_COMMS_SHIFT) | pkt.body[4]) {};
+
+    uint8_t spi_number;
+    uint16_t address;
+    uint16_t value;
+
+};
+
+
 
 #endif

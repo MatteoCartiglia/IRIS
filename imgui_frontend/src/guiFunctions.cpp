@@ -32,6 +32,8 @@ bool selectionChange_synapseType  = 0;
 bool selectionChange_neuronNumber = 0;
 bool selectionChange_synapseNumber = 0;
 bool valueChange_DACbias[DAC_CHANNELS_USED] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+bool valueChange_SPIbias_1[2] = {0, 0};
+bool valueChange_SPIbias_2[2] = {0, 0};
 
 std::vector<double> inputEncoder_xValues;
 std::vector<int> inputEncoder_yValues;
@@ -131,7 +133,6 @@ void renderImGui(GLFWwindow* window)
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     glfwSwapBuffers(window);
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
@@ -351,6 +352,91 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
     ImGui::End();
     return serialDataSent;
 }
+// SPI CONTROL WINDOW
+
+int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
+{
+    int serialDataSent = 0;  
+   
+    ImGui::Begin("Configurations of SPI 1:", &show_SPI_config);
+    
+    ImGui::Text("Value: ");
+    ImGui::SameLine();
+    
+    // Setting an invisible label for the input field
+    std::string emptylabel_str_v1 = "##_value1";
+    const char *emptylabel_v1 = emptylabel_str_v1.c_str();
+
+    ImGui::PushItemWidth(120);
+    int inputField_value = static_cast <int>(spi[0].value);
+    inputField_value,valueChange_SPIbias_1[0] = ImGui::InputInt(emptylabel_v1, &inputField_value);
+    spi[0].value = static_cast <std::uint16_t>(checkLimits(inputField_value, resolution));
+    
+    ImGui::Text(" Address:");
+    ImGui::SameLine();
+
+    // Setting an invisible label for the input field
+    std::string emptylabel_str_a1 = "##_";
+    const char *emptylabel_a1 = emptylabel_str_a1.c_str();
+
+    ImGui::PushItemWidth(120);
+    int inputField_add = static_cast <int>(spi[0].address);
+    inputField_add,valueChange_SPIbias_1[1] = ImGui::InputInt(emptylabel_a1, &inputField_add);
+    spi[0].address = static_cast <std::uint16_t>(checkLimits(inputField_add, resolution));
+    ImGui::SameLine();
+    
+    if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
+    {
+        P2TPkt p2t_pk(spi[0]); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        serialDataSent++;
+    }
+    ImGui::End();
+    return serialDataSent;
+}
+
+
+int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
+{
+    int serialDataSent = 0;  
+   
+    ImGui::Begin("Configurations of SPI 2", &show_SPI_config);
+    
+    ImGui::Text("Value: ");
+    ImGui::SameLine();
+    
+    // Setting an invisible label for the input field
+    std::string emptylabel_str_v2 = "##_3";
+    const char *emptylabel_v2 = emptylabel_str_v2.c_str();
+
+    ImGui::PushItemWidth(120);
+    int inputField_value = static_cast <int>(spi[0].value);
+    inputField_value,valueChange_SPIbias_2[0] = ImGui::InputInt(emptylabel_v2, &inputField_value);
+    spi[0].value = static_cast <std::uint16_t>(checkLimits(inputField_value, resolution));
+    
+    ImGui::Text(" Address:");
+    ImGui::SameLine();
+
+    // Setting an invisible label for the input field
+    std::string emptylabels_str_a2 = "##_4";
+    const char *emptylabels_a2 = emptylabels_str_a2.c_str();
+
+    ImGui::PushItemWidth(120);
+
+    int inputField_add = static_cast <int>(spi[0].address);
+    inputField_add,valueChange_SPIbias_2[1] = ImGui::InputInt(emptylabels_a2, &inputField_add);
+    spi[0].address = static_cast <std::uint16_t>(checkLimits(inputField_add, resolution));
+    ImGui::SameLine();
+    
+    if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
+    {
+        P2TPkt p2t_pk(spi[0]); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        serialDataSent++;
+    }
+    ImGui::End();
+    return serialDataSent;
+}
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -449,7 +535,6 @@ void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputTy
 //---------------------------------------------------------------------------------------------------------------------------------------
 // checkLimits: Checks the user input values do not go out of range 
 //---------------------------------------------------------------------------------------------------------------------------------------
-
 float checkLimits(float value, float maxLimit, float minValue)
 {
     if(value > maxLimit)

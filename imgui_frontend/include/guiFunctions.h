@@ -39,6 +39,7 @@ void renderImGui(GLFWwindow* window);
 //---------------------------------------------------------------------------------------------------------------------------------------
 int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -55,6 +56,11 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[]);
 #endif
+
+
+
+int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi_command[], int resolution);
+int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi_command[], int resolution);
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------

@@ -46,6 +46,7 @@ bool TeensyOut::dataWrite(unsigned int data)
   }
 
   reqWrite(0);
+
   return handshakeStatus;
 }
 
@@ -114,6 +115,12 @@ void TeensyOut::setOutputData(unsigned int data)
 {
   for (int i=0; i<_outputNumDataPins; i++) 
   {
-    digitalWriteFast(_outputDataPins[i], bitRead(data, i)^_outputActiveLow);
+
+      bool bit =bitRead(data, i)^_outputActiveLow;
+
+      Serial.print(bit);
+      Serial.print(" ");
+
+    digitalWriteFast(_outputDataPins[i], bit);
   }
 }

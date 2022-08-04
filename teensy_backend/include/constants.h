@@ -16,6 +16,10 @@
 #define exists_biasgen                   
 //#define exists_SPI1                      
 //#define exists_SPI2                     
+#define exists_input_encoder                     
+#define exists_input_c2f                     
+#define exists_output_decoder                    
+#define exists_dac                   
 
 // GUI CONSTANTS
 #define BUTTON_HEIGHT                   20
@@ -49,22 +53,11 @@
 #define TEENSY_OUTPUT_HANDSHAKE_TIMEOUT 10          // microseconds
 
 // BIASGEN 
+#ifdef exists_biasgen
 #define BIASGEN_MOSI_PIN                11
 #define BIASGEN_SCK_PIN                 13
 #define BIASGEN_ENABLE_PIN              10
 #define BIASGEN_RESET_PIN               41
-
-// SPI1 
-#define SPI1_MOSI_PIN                11
-#define SPI1_SCK_PIN                 13
-#define SPI1_ENABLE_PIN              10
-#define SPI1_RESET_PIN               41
-
-// SPI2 
-#define SPI2_MOSI_PIN                11
-#define SPI2_SCK_PIN                 13
-#define SPI2_ENABLE_PIN              10
-#define SPI2_RESET_PIN               41
 
 #define BIASGEN_BIASFILE                "data/biasValues_BIASGEN.csv"
 #define BIASGEN_CHANNELS                54
@@ -81,6 +74,28 @@
 #define BIASGEN_COURSE_SHIFT            9
 #define BIASGEN_FINE_SHIFT              1
 #define BIASGEN_PACKET_SIZE             12
+
+#endif
+
+// SPI1 
+#ifdef exists_SPI1
+#define SPI1_MOSI_PIN                11
+#define SPI1_SCK_PIN                 13
+#define SPI1_ENABLE_PIN              10
+#define SPI1_RESET_PIN               41
+#define SPI1_RESOLUTION              255
+
+#endif
+
+// SPI2 
+#ifdef exists_SPI2
+#define SPI2_MOSI_PIN                11
+#define SPI2_SCK_PIN                 13
+#define SPI2_ENABLE_PIN              10
+#define SPI2_RESET_PIN               41
+#define SPI2_RESOLUTION              255
+#endif
+
 
 // ALIVE
 #define ALIVE_NO_CORES                  2
@@ -101,6 +116,7 @@
 #define ALIVE_PACKET_SIZE               9
 
 // C2F COMMUNICATION
+#ifdef exists_input_c2f
 #define C2F_ACK                         0
 #define C2F_REQ                         35
 #define C2F_INPUT_NO_PIN                5
@@ -113,7 +129,13 @@
 #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/outputC2F.csv"
 #define C2F_INPUT_SAVE_FILENAME         "../imgui_frontend/data/outputC2F"
 
+#define C2F_ACTIVE_LOW                  true
+#define C2F_DELAY                        10000
+
+#endif
+
 // ENCODER COMMUNICATION
+#ifdef exists_input_encoder
 #define ENCODER_ACK                     30
 #define ENCODER_REQ                     29
 #define ENCODER_INPUT_NO_PIN            3  
@@ -122,21 +144,28 @@
 #define ENCODER_INPUT_BIT_2_PIN         28
 #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/outputEncoder.csv"
 #define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/outputEncoder"
+#endif
 
 
-// DECODER COMMUNICATION
+// DECODER COMMUNICATION -- INPUT INTERFACE
+#ifdef exists_output_decoder
 #define DECODER_ACK                     34
 #define DECODER_REQ                     1
 #define DECODER_OUTPUT_NO_PIN           9  
-#define DECODER_OUTPUT_BIT_0_PIN        18
-#define DECODER_OUTPUT_BIT_1_PIN        19
-#define DECODER_OUTPUT_BIT_2_PIN        20
-#define DECODER_OUTPUT_BIT_3_PIN        21
-#define DECODER_OUTPUT_BIT_4_PIN        22
-#define DECODER_OUTPUT_BIT_5_PIN        23
-#define DECODER_OUTPUT_BIT_6_PIN        24
-#define DECODER_OUTPUT_BIT_7_PIN        25
-#define DECODER_OUTPUT_BIT_8_PIN        26
+#define DECODER_OUTPUT_BIT_0_PIN        4
+#define DECODER_OUTPUT_BIT_1_PIN        5
+#define DECODER_OUTPUT_BIT_2_PIN        6
+#define DECODER_OUTPUT_BIT_3_PIN        7
+#define DECODER_OUTPUT_BIT_4_PIN        8
+#define DECODER_OUTPUT_BIT_5_PIN        9
+#define DECODER_OUTPUT_BIT_6_PIN        14
+#define DECODER_OUTPUT_BIT_7_PIN        15
+#define DECODER_OUTPUT_BIT_8_PIN        16
+
+#define DECODER_ACTIVE_LOW              false // ALIVE is ACTIVE HIGH
+#define DECODER_DELAY                   10
+
+#endif
 
 // RESET PINS
 #define P_RST_PIN                       2 
@@ -149,15 +178,19 @@
 #define LB_LFSR_CLK                     32
 
 // DAC CONFIGURATION
+#ifdef exists_dac
 #define DAC_RESET                       33    
 #define DAC_A1                          36    
 #define DAC_A0                          37    
-#define DAC_BINARY_RANGE                65536
+#define DAC_BINARY_RANGE                65536 
 #define DAC_REFERENCE                   2500
-
 #define DAC_BIASFILE                    "data/biasValues_DAC.csv"
 #define DAC_CHANNELS_USED               11
-#define DAC_COMMAND_WRITE_UPDATE        48      // 0011 0000
+#define DAC_COMMAND_WRITE_UPDATE        3      // 0011 
+#define DAC_COMMAND_WRITE_SHIFT         4     
+
 #define DAC_MAX_VOLTAGE                 1800    // mV
+#endif
+
 
 #endif 

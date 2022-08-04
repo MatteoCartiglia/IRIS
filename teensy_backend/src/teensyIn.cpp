@@ -12,7 +12,7 @@
 // TeensyIn constructor
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputType, byte inputBuffer[], 
+TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, byte inputBuffer[], 
         int inputDelay, bool inputActiveLow)
 {
   _inputReqPin = inputReqPin;
@@ -26,20 +26,12 @@ TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPi
   pinMode(_inputAckPin, OUTPUT);
   pinMode(_inputReqPin, INPUT);
 
-  if(inputType == TEENSY_INPUT_C2F)
-  {
-    setupC2FComms();
-  }
-  else if(inputType == TEENSY_INPUT_ENCODER)
-  {
-    setupEncoderComms();
-  }
-  else
-  {
-    printf("Teensy input setup unsuccessful. Unknown input type.");
-  }
-}
 
+    setupC2FComms();
+
+  //  setupEncoderComms();
+ 
+}
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // dataRead: Executes REQ/ACK handshake and retrieves input from ALIVE

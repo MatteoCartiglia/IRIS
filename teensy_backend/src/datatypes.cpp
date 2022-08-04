@@ -53,3 +53,14 @@ P2TPkt::P2TPkt(const ENCODER_INPUT_command& inputEncoder) : header(static_cast<s
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 P2TPkt::P2TPkt(const C2F_INPUT_command& inputC2F) : header(static_cast<std::underlying_type<P2tPktType>::type>(P2tPktType::P2t_reqInputC2F)) {};
+
+
+P2TPkt::P2TPkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::underlying_type<P2tPktType>::type>(P2tPktType::P2t_setSPI)) 
+{ 
+    body[0] = spi_command.spi_number; 
+    body[1] = spi_command.address >> SERIAL_COMMS_SHIFT; 
+    body[2] = spi_command.address & BINARY_255;
+    body[3] = spi_command.value >> SERIAL_COMMS_SHIFT; 
+    body[4] = spi_command.value & BINARY_255;
+
+};

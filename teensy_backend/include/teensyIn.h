@@ -19,7 +19,7 @@ class TeensyIn
     //-----------------------------------------------------------------------------------------------------------------------------------
     // Class constructor; initialises the TeensyIn object and sets up the relevant pins on Teensy
     //-----------------------------------------------------------------------------------------------------------------------------------
-    TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputType, byte inputBuffer[] = NULL, 
+    TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, byte inputBuffer[] = NULL, 
         int inputDelay = 0, bool inputActiveLow = false);
 
     //----------------------------------------------------------------------------------------------------------------------------------

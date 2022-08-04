@@ -69,7 +69,7 @@ void getDACvalues(DAC_command dac[])
 
         dac[i].name = dacBiasName;
         dac[i].data = (uint16_t) std::stoi(parseCSVoutput[i][1]);
-        dac[i].command_address = DAC_COMMAND_WRITE_UPDATE | (int) std::stoi(parseCSVoutput[i][2]);
+        dac[i].command_address = (DAC_COMMAND_WRITE_UPDATE << DAC_COMMAND_WRITE_SHIFT) | (int) std::stoi(parseCSVoutput[i][2]);
     }
 }
 

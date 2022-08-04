@@ -40,16 +40,60 @@ void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType);
 int main(int, char**)
 {
     //-------------------------------------------------- Defining & Initialising Variables ---------------------------------------------- 
-
-    bool show_BiasGen_config = true;
-    bool show_DAC_config = true;
-    bool show_AER_config = true;
     bool show_Serial_output = true;
-    bool show_PlotData = true;
+    bool show_PlotData = false;
 
+#ifdef exists_biasgen
+    bool show_BiasGen_config = true;
+    BIASGEN_command biasGen[BIASGEN_CHANNELS];
+    getBiasGenValues(biasGen);
+
+    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
+    bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
+    int noRelevantFileRows[BIASGEN_CATEGORIES];
+
+#else    
+    bool show_BiasGen_config = false;
+#endif
+
+#ifdef exists_SPI1
+    bool show_SPI1_config = true;
+    SPI_INPUT_command spi_command[1];
+    spi_command[0].spi_number =1;
+    spi_command[0].value = 100;
+    spi_command[0].address = 200;
+
+#else    
+    bool show_SPI1_config = false;
+#endif
+
+#ifdef exists_SPI2
+    bool show_SPI2_config = true;
+    SPI_INPUT_command spi2_command[1];
+    spi2_command[0].spi_number =2;
+    spi2_command[0].value = 1;
+    spi2_command[0].address = 200;
+#else    
+    bool show_SPI2_config = false;
+#endif
+
+
+#ifdef exists_input_encoder
+#endif
+#ifdef exists_input_c2f
+#endif
+#ifdef exists_output_decoder
+    bool show_AER_config = true;
+#endif
+#ifdef exists_dac
+    bool show_DAC_config = true;
     bool powerOnReset_dac = true;
 
+    DAC_command dac[DAC_CHANNELS_USED];
+    getDACvalues(dac);
+#endif
 
+                      
     auto time = std::time(nullptr);
     auto time_tm = *std::localtime(&time);
     std::ostringstream outputTimeString;
@@ -64,15 +108,6 @@ int main(int, char**)
     int expectedResponses = 0;
     struct termios SerialPortSettings;
 
-    BIASGEN_command biasGen[BIASGEN_CHANNELS];
-    DAC_command dac[DAC_CHANNELS_USED];
-
-    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
-    bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
-    int noRelevantFileRows[BIASGEN_CATEGORIES];
-
-    getDACvalues(dac);
-    getBiasGenValues(biasGen);
 
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
     std::vector<std::vector<std::vector<int>>> valueChange_BiasGen;
@@ -158,7 +193,7 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Setup the window to show ALIVE output values
+        // Setup the window to show output values
         if(show_Serial_output)
         {
             logEntry = updateSerialOutputWindow(show_Serial_output, logEntry, logString);      
@@ -177,6 +212,7 @@ int main(int, char**)
         }
 
         // Setup digital-to-analogue convertor configuration window - ok!
+#ifdef exists_dac
         if (show_DAC_config)
         {
             expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset_dac);
@@ -187,8 +223,9 @@ int main(int, char**)
                 expectedResponses = 0;
             }
         }
-
+#endif
         // Setup the bias generation configuration window 
+#ifdef exists_biasgen
         if (show_BiasGen_config)
         {
             expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows);
@@ -199,6 +236,36 @@ int main(int, char**)
                 expectedResponses = 0;
             }
         }
+#endif
+       // Setup the SPI1 configuration window 
+#ifdef exists_SPI1
+        if (show_SPI1_config)
+        {
+            expectedResponses = setupSPI1Window(show_SPI1_config, serialPort, spi_command, SPI1_RESOLUTION);
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
+            }
+        }
+#endif
+
+       // Setup the SPI2 configuration window 
+#ifdef exists_SPI2
+
+        if (show_SPI2_config)
+        {
+            expectedResponses = setupSPI2Window(show_SPI2_config, serialPort, spi2_command, SPI2_RESOLUTION);
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
+            }
+        }
+#endif
+
 
         // Plot C2F and Encoder outputs
         if(show_PlotData)
