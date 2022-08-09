@@ -68,6 +68,7 @@ be a .csv with 2 columns: ISI(inter-spike-interval) (in ms), input bit patten
   should be easy to debug. Viceversa for active-low.
   - Add a button to manually force a handshake. This helps get it started if it is hung
 
+- test all possibilities of exists_XXX statements
 - Include a heartbeat signal
 - Make reset button to reset the whole chip
 - Remove redundancy in SPI windows
