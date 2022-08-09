@@ -6,6 +6,9 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include "../include/dataFunctions.h"
+#include "../include/guiFunctions.h"
+#include <chrono>
+#include <thread>
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
 
@@ -40,7 +43,6 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
             {
                 parsedRow.push_back(cellValue);
             }
-
             parsedCSV.push_back(parsedRow);
         }
     }
@@ -52,10 +54,11 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getDACvalues: Initialises DAC_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
-
-void getDACvalues(DAC_command dac[])
-{  
-    std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(DAC_BIASFILE);
+// Something is wrong with the loading of the 10-11TH bias
+void getDACvalues(DAC_command dac[], const std::string filename = DAC_BIASFILE )
+{
+    
+    std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
 
     for (int i = 0; i < (int) parseCSVoutput.size(); i++)
     {
@@ -66,19 +69,36 @@ void getDACvalues(DAC_command dac[])
         {
             dacBiasName[j] = parseCSVoutput[i][0][j];
         }
-
         dac[i].name = dacBiasName;
         dac[i].data = (uint16_t) std::stoi(parseCSVoutput[i][1]);
-        dac[i].command_address = (DAC_COMMAND_WRITE_UPDATE << DAC_COMMAND_WRITE_SHIFT) | (int) std::stoi(parseCSVoutput[i][2]);
+        dac[i].command_address =DAC_COMMAND_WRITE_UPDATE << DAC_COMMAND_WRITE_SHIFT| (int) std::stoi(parseCSVoutput[i][2]);
+    
+    //    std::cout << (int) std::stoi(parseCSVoutput[i][2]) ;
+    //    std::cout << '\n' ;
+    //    std::cout << dac[i].command_address ;
+    //    std::cout << '\n' ;
+
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// loadDACvalues: Initialises DAC_command array with values from CSV file
+//---------------------------------------------------------------------------------------------------------------------------------------
+int loadDACvalues(DAC_command dac[], int serialPort )
+{
+    for (int i = 0; i< DAC_CHANNELS_USED; i++)
+    {
+        P2TPkt p2t_pk(dac[i]); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
 
+    }
+}
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getBiasGenValues: Initialises BIASGEN_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void getBiasGenValues(BIASGEN_command biasGen[])
+void getBiasGenValues(BIASGEN_command biasGen[], const std::string filename  )
 {
     std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(BIASGEN_BIASFILE);
 
@@ -103,6 +123,20 @@ void getBiasGenValues(BIASGEN_command biasGen[])
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// loadBiasGenValues: load the bg array to the uC
+//---------------------------------------------------------------------------------------------------------------------------------------
+int loadBiasGenValues(BIASGEN_command bg[], int serialPort )
+{
+    for (int i = 0; i< BIASGEN_CHANNELS; i++)
+    {
+        P2TPkt p2t_pk(bg[i]); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        std::cout << i << " ";
+    }
+    std::cout << "end ";
+
+}
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getFileLines: Retrieves the number of lines in a given file
@@ -299,3 +333,6 @@ void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename)
     
     file.close();
 }
+
+
+

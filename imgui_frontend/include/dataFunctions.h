@@ -25,12 +25,14 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path);
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getDACvalues: Initialises DAC_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getDACvalues(DAC_command dac[]);
+void getDACvalues(DAC_command dac[], const std::string filename);
+int loadDACvalues(DAC_command dac[], int serialport);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getBiasGenValues: Initialises BIASGEN_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getBiasGenValues(BIASGEN_command biasGen[]);
+void getBiasGenValues(BIASGEN_command biasGen[], const std::string filename );
+int loadBiasGenValues(BIASGEN_command biasGen[], int serialport);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getFileLines: Retrieves the number of lines in a given file

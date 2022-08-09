@@ -46,12 +46,12 @@ int main(int, char**)
 #ifdef exists_biasgen
     bool show_BiasGen_config = true;
     BIASGEN_command biasGen[BIASGEN_CHANNELS];
-    getBiasGenValues(biasGen);
+    getBiasGenValues(biasGen,  BIASGEN_BIASFILE);
 
     std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
     bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
     int noRelevantFileRows[BIASGEN_CATEGORIES];
-
+    bool powerOnReset = false;
 #else    
     bool show_BiasGen_config = false;
 #endif
@@ -90,7 +90,7 @@ int main(int, char**)
     bool powerOnReset_dac = true;
 
     DAC_command dac[DAC_CHANNELS_USED];
-    getDACvalues(dac);
+    getDACvalues(dac, DAC_BIASFILE);
 #endif
 
                       
@@ -216,7 +216,6 @@ int main(int, char**)
         if (show_DAC_config)
         {
             expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset_dac);
-
             if(expectedResponses > 0)
             {
                 getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
@@ -228,7 +227,7 @@ int main(int, char**)
 #ifdef exists_biasgen
         if (show_BiasGen_config)
         {
-            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows);
+            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, powerOnReset);
 
             if(expectedResponses > 0)
             {
@@ -276,7 +275,8 @@ int main(int, char**)
 
         // Render the window       
         renderImGui(window);
-        powerOnReset_dac = false;    
+        powerOnReset_dac = false;  
+        powerOnReset  = false;  
    
         sleep(0.25);  
     }
