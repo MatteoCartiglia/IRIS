@@ -8,7 +8,10 @@
 #include <iostream>
 #include "../include/guiFunctions.h"
 #include "../include/dataFunctions.h"
-
+#include "../../teensy_backend/include/constants.h"
+#include <experimental/filesystem>
+#include <chrono>
+#include <thread>
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
 
 const char *options_chipCore[ALIVE_NO_CORES] = {"Cortical Circuit", "Neural Network"};
@@ -32,12 +35,64 @@ bool selectionChange_synapseType  = 0;
 bool selectionChange_neuronNumber = 0;
 bool selectionChange_synapseNumber = 0;
 bool valueChange_DACbias[DAC_CHANNELS_USED] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+bool valueChange_SPIbias_1[2] = {0, 0};
+bool valueChange_SPIbias_2[2] = {0, 0};
 
 std::vector<double> inputEncoder_xValues;
 std::vector<int> inputEncoder_yValues;
 
 std::vector<double> inputC2F_xValues;
 std::vector<int> inputC2F_yValues;
+
+namespace fs = std::experimental::filesystem;
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// saveBiases_dac: Helper fuction to save dac biases
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+bool saveBiases_dac(char *filename, DAC_command dac[]){
+    std::ofstream fout(filename);
+    if(fout.is_open())
+    {
+        fout << "biasName, value_(mV), address" << '\n'; 
+        for (int i = 0; i < DAC_CHANNELS_USED; i++) 
+        {
+            fout << dac[i].name << ','; 
+            fout << dac[i].data << ','; 
+            fout << dac[i].command_address; 
+            // Not saving correctly. 4 bits command+ 4 bits address?
+            fout << '\n'; 
+
+        }
+        return true;
+    }
+    else 
+        return false;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------
+// saveBiases_bg: Helper fuction to save BG biases
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+bool saveBiases_bg(char *filename, BIASGEN_command bg []){
+    std::ofstream fout(filename);
+    if(fout.is_open())
+    {
+        fout << "biasName, value_uA, transistorType, biasNo" << '\n'; 
+        for (int i = 0; i < BIASGEN_CHANNELS; i++) 
+        {
+            fout << bg[i].name << ','; 
+            fout << bg[i].currentValue_uA << ','; 
+            fout << bg[i].transistorType <<',';
+            fout << bg[i].biasNo; 
+            fout << '\n'; 
+
+        }
+        return true;
+    }
+    else 
+        return false;
+}
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -132,7 +187,6 @@ void renderImGui(GLFWwindow* window)
     glfwSwapBuffers(window);
 }
 
-
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -141,6 +195,68 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
 {
     int serialDataSent = 0;      
     ImGui::Begin("Test Structure Biases [DAC Values]", &show_DAC_config);
+
+    if (ImGui::Button("Save", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
+    {
+        saveButton(true);
+    }
+    
+    ImGui::SameLine();
+
+    // Loading DAC biases
+    if (ImGui::Button("Load", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
+            ImGui::OpenPopup("Loading DAC Menu" );
+    std::string path = "data/DAC_biases/";
+    bool opened_load = true;
+    if (ImGui::BeginPopupModal("Loading DAC Menu", &opened_load))
+    {
+        ImGui::Text("Select biases to load ");  
+        /// See how many files are in the directory
+        int n_files = 0; 
+        for (const auto& dirEntry: fs::directory_iterator(path))
+        {
+            std::string filename_with_path = dirEntry.path();
+            n_files++;
+        }
+        //// Put filenames into array of chars.
+        char* biases_filenames_no_path [n_files];
+        char* biases_filenames_with_path [n_files];
+        int iter = 0;
+        for (const auto& dirEntry: fs::directory_iterator(path))
+        {
+            std::string filename_with_path = dirEntry.path();
+            std::string filename_no_path = filename_with_path.substr(filename_with_path.find('/') + 1, filename_with_path.length() - filename_with_path.find('/'));
+            
+            biases_filenames_with_path[iter] = new char[filename_with_path.length() + 1];
+            strcpy(biases_filenames_with_path[iter], filename_with_path.c_str());
+            
+            biases_filenames_no_path[iter] = new char[filename_no_path.length() + 1];
+            strcpy(biases_filenames_no_path[iter], filename_no_path.c_str());
+
+            iter++;
+        }
+        for (int i = 0; i < n_files; i++)
+        {
+            ImGui::PushID(i);
+
+            if (i % 3 != 0)
+                ImGui::SameLine();
+            if (ImGui::Button(biases_filenames_no_path[i])){
+                getDACvalues(dac, (const std::string) biases_filenames_with_path[i]);
+                powerOnReset= true;
+//                loadDACvalues(dac, serialPort);
+                ImGui::CloseCurrentPopup;
+            }
+            ImGui::PopID();
+        }    
+        ImGui::NewLine();
+        ImGui::NewLine();
+        if (ImGui::Button("Close"))
+            (ImGui::CloseCurrentPopup());
+        ImGui::EndPopup(); 
+    }
+
+
 
     for(int i=0; i<DAC_CHANNELS_USED; i++)
     {
@@ -172,16 +288,16 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
             P2TPkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
             serialDataSent++;
+
         }
-        
         ImGui::PopID();
     }
 
+    
     ImGui::End();
     return serialDataSent;
 }
-
-
+       
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -263,7 +379,7 @@ int setupAerWindow(bool show_AER_config, int serialPort)
 
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
+    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[],bool powerOnReset)
 #else
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
@@ -271,6 +387,81 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 {
     int serialDataSent = 0;      
     ImGui::Begin("Bias Generator Configuration", &show_biasGen_config);
+
+
+    // Save and Load new biases 
+    if (ImGui::Button("Save", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
+        ImGui::OpenPopup("Saving biasgen Menu");
+    bool opened_save = true;
+    if (ImGui::BeginPopupModal("Saving biasgen Menu", &opened_save))
+        {
+            ImGui::Text("Name of biases");
+            static char filename[128] = "data/BIASGEN_biases/NAME_dac.csv";
+            ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
+            ImGui::SameLine();
+            if (ImGui::Button("Save BIASGEN values", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
+            {
+                int saved_biases = saveBiases_bg(filename, biasGen);
+                ImGui::CloseCurrentPopup();
+            } 
+        if (ImGui::Button("Close"))
+            (ImGui::CloseCurrentPopup());
+        ImGui::EndPopup(); 
+        }
+    ImGui::SameLine();
+    // Loading DAC biases
+    if (ImGui::Button("Load", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
+            ImGui::OpenPopup("Loading BG Menu" );
+    std::string path = "data/BIASGEN_biases/";
+    bool opened_load = true;
+        if (ImGui::BeginPopupModal("Loading BG Menu", &opened_load))
+        {
+            ImGui::Text("Select biases to load ");  
+            /// See how many files are in the directory
+            int n_files = 0; 
+            for (const auto& dirEntry: fs::directory_iterator(path))
+            {
+                std::string filename_with_path = dirEntry.path();
+                n_files++;
+            }
+            //// Put filenames into array of chars.
+            char* biases_filenames_no_path [n_files];
+            char* biases_filenames_with_path [n_files];
+            int iter = 0;
+            for (const auto& dirEntry: fs::directory_iterator(path))
+            {
+                std::string filename_with_path = dirEntry.path();
+                std::string filename_no_path = filename_with_path.substr(filename_with_path.find('/') + 1, filename_with_path.length() - filename_with_path.find('/'));
+                biases_filenames_with_path[iter] = new char[filename_with_path.length() + 1];
+                strcpy(biases_filenames_with_path[iter], filename_with_path.c_str());
+                biases_filenames_no_path[iter] = new char[filename_no_path.length() + 1];
+                strcpy(biases_filenames_no_path[iter], filename_no_path.c_str());
+                iter++;
+            }
+            for (int i = 0; i < n_files; i++)
+            {
+                ImGui::PushID(i);
+
+                if (i % 3 != 0)
+                    ImGui::SameLine();
+                if (ImGui::Button(biases_filenames_no_path[i]))
+                {
+
+                    getBiasGenValues(biasGen, biases_filenames_no_path[i]);
+                    powerOnReset = true;
+                   // loadBiasGenValues(biasGen, serialPort);
+                    ImGui::CloseCurrentPopup;
+
+                }
+                ImGui::PopID();
+            }    
+            ImGui::NewLine();
+            ImGui::NewLine();
+
+            if (ImGui::Button("Close"))
+                (ImGui::CloseCurrentPopup());
+            ImGui::EndPopup(); 
+        }    
 
     for(int i = 0; i < BIASGEN_CATEGORIES; i++)
     {
@@ -310,9 +501,10 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 #else
                     // Adding an input field for changing bias value
                     ImGui::PushItemWidth(260);
-                    float inputField_BiasGenValue = biasGen[j].currentValue_uV;
+                    float inputField_BiasGenValue = biasGen[j].currentValue_uA;
                     inputField_BiasGenValue, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &inputField_BiasGenValue, 0.000001, 0, "%.6f", 0);
-                    biasGen[j].currentValue_uV = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT); 
+                    biasGen[j].currentValue_uA = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT); 
+                    biasGen[j].currentValue_binary = getBiasGenPacket(biasGen[j].currentValue_uA, biasGen[j].transistorType);
                     ImGui::SameLine();
 #endif
                     // Including units
@@ -333,9 +525,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
         }
     }
 
-#ifdef BIASGEN_SEND_POR
-
-    // Initialising values at POR
+  // Initialising values at POR
     if(powerOnReset)
     {
         for(int k=0; k<BIASGEN_CHANNELS; k++)
@@ -345,11 +535,132 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
             serialDataSent++;
         }
     }
-#endif
 
     ImGui::End();
     return serialDataSent;
 }
+
+
+// SPI CONTROL WINDOW
+
+int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
+{
+    int serialDataSent = 0;  
+   
+    ImGui::Begin("Configurations of SPI 1:", &show_SPI_config);
+    
+    ImGui::Text("Value: ");
+    ImGui::SameLine();
+    
+    // Setting an invisible label for the input field
+    std::string emptylabel_str_v1 = "##_value1";
+    const char *emptylabel_v1 = emptylabel_str_v1.c_str();
+
+    ImGui::PushItemWidth(120);
+    int inputField_value = static_cast <int>(spi[0].value);
+    inputField_value,valueChange_SPIbias_1[0] = ImGui::InputInt(emptylabel_v1, &inputField_value);
+    spi[0].value = static_cast <std::uint16_t>(checkLimits(inputField_value, resolution));
+    
+    ImGui::Text(" Address:");
+    ImGui::SameLine();
+
+    // Setting an invisible label for the input field
+    std::string emptylabel_str_a1 = "##_";
+    const char *emptylabel_a1 = emptylabel_str_a1.c_str();
+
+    ImGui::PushItemWidth(120);
+    int inputField_add = static_cast <int>(spi[0].address);
+    inputField_add,valueChange_SPIbias_1[1] = ImGui::InputInt(emptylabel_a1, &inputField_add);
+    spi[0].address = static_cast <std::uint16_t>(checkLimits(inputField_add, resolution));
+    ImGui::SameLine();
+    
+    if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
+    {
+        P2TPkt p2t_pk(spi[0]); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        serialDataSent++;
+    }
+    ImGui::End();
+    return serialDataSent;
+}
+
+
+int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
+{
+    int serialDataSent = 0;  
+   
+    ImGui::Begin("Configurations of SPI 2", &show_SPI_config);
+    
+    ImGui::Text("Value: ");
+    ImGui::SameLine();
+    
+    // Setting an invisible label for the input field
+    std::string emptylabel_str_v2 = "##_3";
+    const char *emptylabel_v2 = emptylabel_str_v2.c_str();
+
+    ImGui::PushItemWidth(120);
+    int inputField_value = static_cast <int>(spi[0].value);
+    inputField_value,valueChange_SPIbias_2[0] = ImGui::InputInt(emptylabel_v2, &inputField_value);
+    spi[0].value = static_cast <std::uint16_t>(checkLimits(inputField_value, resolution));
+    
+    ImGui::Text(" Address:");
+    ImGui::SameLine();
+
+    // Setting an invisible label for the input field
+    std::string emptylabels_str_a2 = "##_4";
+    const char *emptylabels_a2 = emptylabels_str_a2.c_str();
+
+    ImGui::PushItemWidth(120);
+
+    int inputField_add = static_cast <int>(spi[0].address);
+    inputField_add,valueChange_SPIbias_2[1] = ImGui::InputInt(emptylabels_a2, &inputField_add);
+    spi[0].address = static_cast <std::uint16_t>(checkLimits(inputField_add, resolution));
+    ImGui::SameLine();
+    
+    if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
+    {
+        P2TPkt p2t_pk(spi[0]); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        serialDataSent++;
+    }
+    ImGui::End();
+    return serialDataSent;
+}
+
+
+bool saveButton(bool openPopup)
+{
+
+    if (ImGui::BeginPopupModal("Saving DAC Menu", &openPopup))
+    {
+        printf("Popup created. \n");
+
+        ImGui::Text("Filename: ");
+        static char filename[128] = "data/DAC_biases/NAME_dac.csv";
+        ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
+        ImGui::SameLine();
+
+        // if (ImGui::Button("Save DAC values", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
+        // {
+        //     int saved_biases = saveBiases_dac(filename, dac);
+        //     ImGui::CloseCurrentPopup();
+        // } 
+
+        if (ImGui::Button("Close"))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+        
+        ImGui::EndPopup(); 
+    }
+    else
+    {
+        printf("Error.\n");
+    }   
+}
+
+
+bool loadButton();
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -448,7 +759,6 @@ void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputTy
 //---------------------------------------------------------------------------------------------------------------------------------------
 // checkLimits: Checks the user input values do not go out of range 
 //---------------------------------------------------------------------------------------------------------------------------------------
-
 float checkLimits(float value, float maxLimit, float minValue)
 {
     if(value > maxLimit)
@@ -501,3 +811,4 @@ void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
+

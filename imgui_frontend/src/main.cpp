@@ -39,15 +39,111 @@ void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType);
 
 int main(int, char**)
 {
-    //-------------------------------------------------- Defining & Initialising Variables ---------------------------------------------- 
+    //----------------------------------------------- Defining & Initialising BiasGen Variables -----------------------------------------
 
+#ifdef EXISTS_BIASGEN
     bool show_BiasGen_config = true;
-    bool show_DAC_config = true;
-    bool show_AER_config = true;
-    bool show_Serial_output = true;
-    bool show_PlotData = true;
-    bool powerOnReset = true;
 
+    BIASGEN_command biasGen[BIASGEN_CHANNELS];
+    getBiasGenValues(biasGen,  BIASGEN_BIASFILE);
+
+    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
+    bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
+    int noRelevantFileRows[BIASGEN_CATEGORIES];
+    bool powerOnReset_BiasGen = false;
+
+    #ifdef BIASGEN_SET_TRANSISTOR_TYPE
+        std::vector<std::vector<std::vector<int>>> valueChange_BiasGen;
+        int biasGenNoValueChanges = 2;
+
+        for(int i = 0; i < BIASGEN_CATEGORIES; i++)
+        {
+            std::vector<int> valueChange_currentTransistorType;
+
+            // Resizing the vector to prevent malloc errors
+            valueChange_currentTransistorType.resize(biasGenNoValueChanges);
+
+            noRelevantFileRows[i] = getRelevantFileRows_BiasGen(substring[i], biasGen, relevantFileRows[i], BIASGEN_CHANNELS);
+            std::vector<std::vector<int>> valueChange_BiasGen_Category;
+            valueChange_BiasGen_Category.resize(noRelevantFileRows[i]);
+
+            for(int j = 0; j <= noRelevantFileRows[i]; j++)
+            {
+                for(int k = 0; k < biasGenNoValueChanges; k++)
+                {
+                    valueChange_currentTransistorType.push_back(0);
+                }
+
+                valueChange_BiasGen_Category.push_back(valueChange_currentTransistorType);
+            }
+            
+            valueChange_BiasGen.push_back(valueChange_BiasGen_Category);
+        }
+    #else
+        std::vector<std::vector<int>> valueChange_BiasGen;
+
+        // Creating a vector of boolean vectors to hold the bias value change variables for each bias per category
+        for(int i = 0; i < BIASGEN_CATEGORIES; i++)
+        {
+            std::vector<int> valueChange_BiasGen_Category;
+            noRelevantFileRows[i] = getRelevantFileRows_BiasGen(substring[i], biasGen, relevantFileRows[i], BIASGEN_CHANNELS);
+            
+            // Resizing the vector to prevent malloc errors
+            valueChange_BiasGen_Category.resize(noRelevantFileRows[i]);
+
+            for(int j = 0; j <= noRelevantFileRows[i]; j++)
+            {
+                valueChange_BiasGen_Category.push_back(0);
+            }
+            
+            valueChange_BiasGen.push_back(valueChange_BiasGen_Category);
+        }
+    #endif
+#else    
+    bool show_BiasGen_config = false;
+#endif
+
+    //------------------------------------------------ Defining & Initialising SPI Variables ------------------------------------------
+#ifdef EXISTS_SPI1
+    bool show_SPI1_config = true;
+    SPI_INPUT_command spi_command[1];
+    spi_command[0].spi_number =1;
+    spi_command[0].value = 100;
+    spi_command[0].address = 200;
+#else    
+    bool show_SPI1_config = false;
+#endif
+
+#ifdef EXISTS_SPI2
+    bool show_SPI2_config = true;
+    SPI_INPUT_command spi2_command[1];
+    spi2_command[0].spi_number =2;
+    spi2_command[0].value = 1;
+    spi2_command[0].address = 200;
+#else    
+    bool show_SPI2_config = false;
+#endif
+
+    //--------------------------------------------- Defining & Initialising Decoder Variables -----------------------------------------
+
+#ifdef EXISTS_OUTPUT_DECODER
+    bool show_AER_config = true;
+#endif
+
+    //------------------------------------------------ Defining & Initialising DAC Variables ------------------------------------------
+
+#ifdef EXISTS_DAC
+    bool show_DAC_config = true;
+    bool powerOnReset_DAC = true;
+    DAC_command dac[DAC_CHANNELS_USED];
+    getDACvalues(dac, DAC_BIASFILE);
+#endif
+    
+    //--------------------------------------------- Defining & Initialising All Other Variables -------------------------------------- 
+    
+    bool show_Serial_output = true;
+    bool show_PlotData = false;
+                      
     auto time = std::time(nullptr);
     auto time_tm = *std::localtime(&time);
     std::ostringstream outputTimeString;
@@ -62,64 +158,6 @@ int main(int, char**)
     int expectedResponses = 0;
     struct termios SerialPortSettings;
 
-    BIASGEN_command biasGen[BIASGEN_CHANNELS];
-    DAC_command dac[DAC_CHANNELS_USED];
-
-    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
-    bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
-    int noRelevantFileRows[BIASGEN_CATEGORIES];
-
-    getDACvalues(dac);
-    getBiasGenValues(biasGen);
-
-#ifdef BIASGEN_SET_TRANSISTOR_TYPE
-    std::vector<std::vector<std::vector<int>>> valueChange_BiasGen;
-    int biasGenNoValueChanges = 2;
-
-    for(int i = 0; i < BIASGEN_CATEGORIES; i++)
-    {
-        std::vector<int> valueChange_currentTransistorType;
-
-        // Resizing the vector to prevent malloc errors
-        valueChange_currentTransistorType.resize(biasGenNoValueChanges);
-
-        noRelevantFileRows[i] = getRelevantFileRows_BiasGen(substring[i], biasGen, relevantFileRows[i], BIASGEN_CHANNELS);
-        std::vector<std::vector<int>> valueChange_BiasGen_Category;
-        valueChange_BiasGen_Category.resize(noRelevantFileRows[i]);
-
-        for(int j = 0; j <= noRelevantFileRows[i]; j++)
-        {
-            for(int k = 0; k < biasGenNoValueChanges; k++)
-            {
-                valueChange_currentTransistorType.push_back(0);
-            }
-
-            valueChange_BiasGen_Category.push_back(valueChange_currentTransistorType);
-        }
-        
-        valueChange_BiasGen.push_back(valueChange_BiasGen_Category);
-    }
-
-#else
-    std::vector<std::vector<int>> valueChange_BiasGen;
-
-    // Creating a vector of boolean vectors to hold the bias value change variables for each bias per category
-    for(int i = 0; i < BIASGEN_CATEGORIES; i++)
-    {
-        std::vector<int> valueChange_BiasGen_Category;
-        noRelevantFileRows[i] = getRelevantFileRows_BiasGen(substring[i], biasGen, relevantFileRows[i], BIASGEN_CHANNELS);
-        
-        // Resizing the vector to prevent malloc errors
-        valueChange_BiasGen_Category.resize(noRelevantFileRows[i]);
-
-        for(int j = 0; j <= noRelevantFileRows[i]; j++)
-        {
-            valueChange_BiasGen_Category.push_back(0);
-        }
-        
-        valueChange_BiasGen.push_back(valueChange_BiasGen_Category);
-    }
- #endif
 
     //--------------------------------------------------------- Opening Serial Port ------------------------------------------------------
     
@@ -156,7 +194,7 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Setup the window to show ALIVE output values
+        // Setup the window to show output values
         if(show_Serial_output)
         {
             logEntry = updateSerialOutputWindow(show_Serial_output, logEntry, logString);      
@@ -174,22 +212,24 @@ int main(int, char**)
             }
         }
 
-        // Setup digital-to-analogue convertor configuration window
+        // Setup digital-to-analogue convertor configuration window - ok!
+#ifdef EXISTS_DAC
         if (show_DAC_config)
         {
-            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset);
-
+            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset_DAC);
             if(expectedResponses > 0)
             {
                 getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
                 expectedResponses = 0;
             }
         }
+#endif
 
         // Setup the bias generation configuration window 
+#ifdef EXISTS_BIASGEN
         if (show_BiasGen_config)
         {
-            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, powerOnReset);
+            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, powerOnReset_BiasGen);
 
             if(expectedResponses > 0)
             {
@@ -197,6 +237,36 @@ int main(int, char**)
                 expectedResponses = 0;
             }
         }
+#endif
+
+       // Setup the SPI1 configuration window 
+#ifdef EXISTS_SPI1
+        if (show_SPI1_config)
+        {
+            expectedResponses = setupSPI1Window(show_SPI1_config, serialPort, spi_command, SPI1_RESOLUTION);
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
+            }
+        }
+#endif
+
+       // Setup the SPI2 configuration window 
+#ifdef EXISTS_SPI2
+
+        if (show_SPI2_config)
+        {
+            expectedResponses = setupSPI2Window(show_SPI2_config, serialPort, spi2_command, SPI2_RESOLUTION);
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
+            }
+        }
+#endif
 
         // Plot C2F and Encoder outputs
         if(show_PlotData)
@@ -207,7 +277,9 @@ int main(int, char**)
 
         // Render the window       
         renderImGui(window);
-        powerOnReset = false;    
+        powerOnReset_DAC = false;  
+        powerOnReset_BiasGen  = false;  
+   
         sleep(0.25);  
     }
 
@@ -261,7 +333,7 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
         }
         else
         {
-            printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+        //    printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
         }
 
         expectedResponses--;

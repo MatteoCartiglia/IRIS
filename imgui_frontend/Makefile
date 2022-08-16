@@ -46,7 +46,7 @@ OBJS = $(addprefix $(ODIR_PATH), $(notdir $(SOURCES:.cpp=.o)))
 # COMMON BUILD FLAGS
 #---------------------------------------------------------------------
 
-CXXFLAGS = -std=c++17 -I/imgui -I/backends -g -Wall -Wformat
+CXXFLAGS = -std=c++17 -I/imgui -I/backends -g -Wall -Wformat -lstdc++fs
 
 #---------------------------------------------------------------------
 # BUILD FLAGS PER PLATFORM

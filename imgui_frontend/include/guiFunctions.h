@@ -34,28 +34,54 @@ GLFWwindow* setupWindow();
 //---------------------------------------------------------------------------------------------------------------------------------------
 void renderImGui(GLFWwindow* window);
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// setupDacWindow: Initialises and updates GUI window displaying DAC values to send
-//---------------------------------------------------------------------------------------------------------------------------------------
-int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
+#ifdef EXISTS_DAC
+    //---------------------------------------------------------------------------------------------------------------------------------------
+    // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
+    //---------------------------------------------------------------------------------------------------------------------------------------
+    int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 int setupAerWindow(bool show_AER_config, int serialPort);
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 
-//                     #ifdef condition used to define different definition if transistor type option to be displayed and handled
-//---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef BIASGEN_SET_TRANSISTOR_TYPE
-int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
-#else
-int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
+
+#ifdef EXISTS_BIASGEN
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    // setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 
+    //                     #ifdef condition used to define different definition if transistor type option to be displayed and handled
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    #ifdef BIASGEN_SET_TRANSISTOR_TYPE
+        int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+            std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[]);
+    #else
+        int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+                std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
+    #endif
 #endif
 
+
+#ifdef EXISTS_SPI1
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send. 
+    //                  #ifdef condition used to define different definition if transistor type option to be displayed and handled
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi_command[], int resolution);
+#endif
+
+#ifdef EXISTS_SPI2
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    // setupSPI2Window: Initialises and updates GUI window displaying SPI2 values to send. 
+    //                  #ifdef condition used to define different definition if transistor type option to be displayed and handled
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi_command[], int resolution);
+#endif
+
+#if defined(EXISTS_BIASGEN) || defined(EXISTS_DAC)
+    bool saveButton(bool openPopup);
+    bool loadButton();
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // updateSerialOutputWindow: Writes serial input to Log window in GUI
