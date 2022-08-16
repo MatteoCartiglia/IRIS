@@ -5,6 +5,12 @@
 # Last updated: 
 #---------------------------------------------------------------------------------------------------------------------------------------
 
+# Ignore files and directories created by frontend
+imgui_frontend/src/.obj/*
+imgui_frontend/alive_interface
+imgui_frontend/data/output*
+imgui_frontend/.vscode
+
 # Ignore directories created by PlatformIO
-.pio
-.vscode
+teensy_backend/.pio
+teensy_backend/.vscode

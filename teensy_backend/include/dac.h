@@ -9,6 +9,7 @@
 #define DAC_H
 
 #include "Arduino.h"
+#include <Wire.h>
 
 class DAC 
 {

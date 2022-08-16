@@ -32,9 +32,9 @@ class TeensyOut
     private:
 
     //----------------------------------------------------------------------------------------------------------------------------------
-    // setupDecoderComms: Sets up the relevant pins for Decoder comms on Teensy
+    // setupPins: Sets up the relevant pins for communication
     //----------------------------------------------------------------------------------------------------------------------------------
-    void setupDecoderComms();
+    void setupPins();
 
     //----------------------------------------------------------------------------------------------------------------------------------
     // ackRead: Reads ACK pin state

@@ -12,7 +12,7 @@
 // TeensyIn constructor
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputType, byte inputBuffer[], 
+TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, byte inputBuffer[], 
         int inputDelay, bool inputActiveLow)
 {
   _inputReqPin = inputReqPin;
@@ -26,20 +26,8 @@ TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPi
   pinMode(_inputAckPin, OUTPUT);
   pinMode(_inputReqPin, INPUT);
 
-  if(inputType == TEENSY_INPUT_C2F)
-  {
-    setupC2FComms();
-  }
-  else if(inputType == TEENSY_INPUT_ENCODER)
-  {
-    setupEncoderComms();
-  }
-  else
-  {
-    printf("Teensy input setup unsuccessful. Unknown input type.");
-  }
+  setupPins();
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // dataRead: Executes REQ/ACK handshake and retrieves input from ALIVE
@@ -89,37 +77,19 @@ void TeensyIn::ackWrite(bool val)
 }
 
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// setupEncoderComms: Sets up the relevant pins for Encoder comms on Teensy
-//---------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------
+// setupPins: Sets up the relevant pins for communication
+//----------------------------------------------------------------------------------------------------------------------------------
 
-void TeensyIn::setupEncoderComms()
+void TeensyIn::setupPins()
 {
+  pinMode(_inputReqPin, INPUT);
+  pinMode(_inputAckPin, OUTPUT);
+
   for(int i = 0; i < _inputNumDataPins; i++)
   {
     pinMode(_inputDataPins[i], INPUT);
   }
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// setupC2FComms: Sets up the relevant pins for C2F comms on Teensy
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-void TeensyIn::setupC2FComms()
-{
-  pinMode(P_RST_PIN, OUTPUT);
-  pinMode(S_RST_PIN, OUTPUT);
-  delay(5);
-
-  digitalWrite(P_RST_PIN, LOW);
-  delay(1);
-  digitalWrite(S_RST_PIN, LOW);
-  delay(1);
-  digitalWrite(P_RST_PIN, HIGH);
-  delay(1);
-  digitalWrite(S_RST_PIN, HIGH);
-  delay(1);
 }
 
 

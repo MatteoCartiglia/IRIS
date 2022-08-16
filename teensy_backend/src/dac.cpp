@@ -5,10 +5,8 @@
 // Last updated: 15 JUL 2022 (Ciara Giles-Doran)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-#include <Wire.h>
-
-#include "constants.h"
 #include "dac.h"
+#include "constants.h"
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // Class constructor; initialises the BiasGen object and sets up the relevant pins on Teensy
@@ -64,7 +62,7 @@ void DAC::join_I2C_bus()
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// writeDAC: Writes valuse to the DAC
+// writeDAC: Writes values to the DAC
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void DAC::writeDAC(uint8_t command_addess, uint16_t value)

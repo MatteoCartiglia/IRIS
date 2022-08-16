@@ -2,7 +2,7 @@
 // Header file defining enumerated and structured datatypes
 //
 // Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
-// Last updated: 15 JUL 2022 (Ciara Giles-Doran <gciara@student.ethz.ch>)
+// Last updated: 16 AUG 2022 (Ciara Giles-Doran)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #ifndef DATATYPES_H
@@ -21,6 +21,7 @@ struct AER_DECODER_OUTPUT_command;
 struct AER_ENCODER_INPUT_command;
 struct ENCODER_INPUT_command;
 struct C2F_INPUT_command;
+struct SPI_INPUT_command;
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -43,7 +44,8 @@ enum class P2tPktType
     P2t_setBiasGen                  = 2U,
     P2t_reqOutputDecoder            = 3U,
     P2t_reqInputEncoder             = 4U,
-    P2t_reqInputC2F                 = 5U
+    P2t_reqInputC2F                 = 5U,
+    P2t_setSPI                      = 6U
 };
 
 
@@ -53,6 +55,7 @@ enum class P2tPktType
 
 
 // -------------------------------------------------- PC -> Teensy Comm Packet Struct ---------------------------------------------------
+
 struct P2TPkt 
 {
     P2TPkt(){};
@@ -61,6 +64,7 @@ struct P2TPkt
     P2TPkt(const AER_DECODER_OUTPUT_command& outputDecoder);
     P2TPkt(const ENCODER_INPUT_command& inputEncoder);
     P2TPkt(const C2F_INPUT_command& inputC2F);
+    P2TPkt(const SPI_INPUT_command& spi);
 
     std::uint8_t header;                          // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
@@ -69,30 +73,50 @@ struct P2TPkt
 
 
 // -------------------------------------------- Struct for PC -> Teensy -> DAC communication --------------------------------------------
+
 struct DAC_command
 {
     DAC_command() {};
-    DAC_command (const P2TPkt& pkt) : command_address(pkt.body[0]), data((pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]) {};
+    DAC_command (const P2TPkt& pkt) : dac_number(pkt.body[0]), command_address(pkt.body[1]), data( pkt.body[2] << SERIAL_COMMS_SHIFT | pkt.body[3] ) {};
 
-    std::string name;
+    std::uint8_t dac_number;
     std::uint8_t command_address; 
     std::uint16_t data;
+    std::string name;
+
 };
 
+
 // ------------------------------------------ Struct for PC -> Teensy -> BIASGEN communication ------------------------------------------
+
 struct BIASGEN_command
 { 
     BIASGEN_command() {};
-    BIASGEN_command ( const P2TPkt& pkt) : biasNo(pkt.body[0]), currentValue_binary(( pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]) {};
+    BIASGEN_command ( const P2TPkt& pkt) : biasNo((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), currentValue_binary(( pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]) {};
 
-    std::uint8_t biasNo;
+    std::uint16_t biasNo;
     std::uint16_t currentValue_binary;
     std::string name;
-    double currentValue_uV;
+    double currentValue_uA;
     bool transistorType;
 };
 
+
+// --------------------------------------------- Struct for PC -> Teensy -> SPI communication -------------------------------------------
+
+struct SPI_INPUT_command
+{
+    SPI_INPUT_command()  {};
+    SPI_INPUT_command ( const P2TPkt& pkt) : spi_number(pkt.body[0]), address((pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]), value((pkt.body[3] << SERIAL_COMMS_SHIFT) | pkt.body[4]) {};
+
+    uint8_t spi_number;
+    uint16_t address;
+    uint16_t value;
+};
+
+
 // --------------------------- Struct for PC -> Teensy -> ALIVE communication [DECODER: Teensy output, ALIVE input] ---------------------
+
 struct AER_DECODER_OUTPUT_command
 {
     AER_DECODER_OUTPUT_command() {};
@@ -101,13 +125,17 @@ struct AER_DECODER_OUTPUT_command
     std::uint16_t data;
 };
 
+
 // --------------------------- Struct for PC -> Teensy <- ALIVE communication [ENCODER: Teensy input, ALIVE output] ---------------------
+
 struct ENCODER_INPUT_command
 {
     ENCODER_INPUT_command() {};
 };
 
+
 // ----------------------------- Struct for PC -> Teensy <- ALIVE communication [C2F: Teensy input, ALIVE output] -----------------------
+
 struct C2F_INPUT_command
 {
     C2F_INPUT_command() {};
