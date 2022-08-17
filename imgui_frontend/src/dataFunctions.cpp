@@ -335,4 +335,60 @@ void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename)
 }
 
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// saveBiases: Helper fuction to save current bias values for DAC (overloaded function)
+//---------------------------------------------------------------------------------------------------------------------------------------
 
+bool saveBiases(const char *filename, DAC_command* command)
+{
+    std::ofstream fout(filename);
+    
+    if(fout.is_open())
+    {
+        fout << "biasName, value_(mV), address" << '\n'; 
+
+        for (int i = 0; i < DAC_CHANNELS_USED; i++) 
+        {
+            fout << command[i].name << ','; 
+            fout << command[i].data << ','; 
+            fout << command[i].command_address; 
+            fout << '\n'; 
+        }
+        
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// saveBiases: Helper fuction to save current bias values for BIASGEN (overloaded function)
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+bool saveBiases(const char *filename, BIASGEN_command* command)
+{
+    std::ofstream fout(filename);
+
+    if(fout.is_open())
+    {
+        fout << "biasName, value_uA, transistorType, biasNo" << '\n'; 
+
+        for (int i = 0; i < BIASGEN_CHANNELS; i++) 
+        {
+            fout << command[i].name << ','; 
+            fout << command[i].currentValue_uA << ','; 
+            fout << command[i].transistorType <<',';
+            fout << command[i].biasNo; 
+            fout << '\n'; 
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

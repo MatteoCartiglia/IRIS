@@ -79,8 +79,8 @@ int setupAerWindow(bool show_AER_config, int serialPort);
 #endif
 
 #if defined(EXISTS_BIASGEN) || defined(EXISTS_DAC)
-    bool saveButton(bool openPopup);
-    bool loadButton();
+    template <typename T> void savePopup(bool openPopup, const char *popupLabel, T commandType);
+    bool loadPopup();
 #endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------

@@ -71,3 +71,15 @@ void printBinaryValue(int decimalVal, int size);
 // saveToCSV: Creates, writes and appends the give values to the specified CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
 void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename);
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// saveBiases: Helper fuction to save current bias values for DAC (overloaded function)
+//---------------------------------------------------------------------------------------------------------------------------------------
+bool saveBiases(const char *filename, DAC_command* command);
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// saveBiases: Helper fuction to save current bias values for BIASGEN (overloaded function)
+//---------------------------------------------------------------------------------------------------------------------------------------
+bool saveBiases(const char *filename, BIASGEN_command* command);
+
+
