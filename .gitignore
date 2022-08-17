@@ -9,8 +9,11 @@
 imgui_frontend/src/.obj/*
 imgui_frontend/alive_interface
 imgui_frontend/data/output*
-imgui_frontend/.vscode
 
 # Ignore directories created by PlatformIO
 teensy_backend/.pio
+
+# Ignore all vscode directories
+.vscode
+imgui_frontend/.vscode
 teensy_backend/.vscode

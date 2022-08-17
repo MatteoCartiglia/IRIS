@@ -21,15 +21,15 @@
 #define BUTTON_HEIGHT                       20
 #define BUTTON_UPDATE_WIDTH                 100
 #define BUTTON_AER_WIDTH                    285
-#define BUTTON_SAVE_WIDTH                   200
-#define WINDOW_HEIGHT                       655
+#define BUTTON_SAVE_WIDTH                   220
+#define BUTTON_SAVE_WIDTH_SMALL             205
+#define BUTTON_SAVE_WIDTH_LARGE             275
+#define WINDOW_HEIGHT                       680
 #define WINDOW_WIDTH                        1670
 #define CLEAR_COLOUR_X                      0.45f
 #define CLEAR_COLOUR_Y                      0.55f
 #define CLEAR_COLOUR_Z                      0.60f
 #define CLEAR_COLOUR_W                      1.00f
-#define SAVE_FILENAME_DAC                   "data/DAC_biases/NAME_dac.csv"
-#define SAVE_FILENAME_BIASGEN
 
 // UNIVERSAL CONSTANTS
 #define BINARY_8_BIT_SHIFT                  8
@@ -58,7 +58,10 @@
     #define BIASGEN_ENABLE_PIN              10
     #define BIASGEN_RESET_PIN               41
     
-    #define BIASGEN_BIASFILE                "data/biasValues_BIASGEN.csv"
+    #define BIASGEN_BIASFILE                "data/defaultBiasValues_BIASGEN.csv"
+    #define BIASGEN_FILENAME_SAVE           "data/BIASGEN_biases/untitled.csv"
+    #define BIASGEN_FILENAME_LOAD           "data/BIASGEN_biases/"
+
     #define BIASGEN_CHANNELS                54
     #define BIASGEN_CATEGORIES              9
     #define BIASGEN_MAX_CURRENT             1.9         // uA
@@ -182,11 +185,14 @@
     #define DAC_A0                          37    
     #define DAC_BINARY_RANGE                65536 
     #define DAC_REFERENCE                   2500
-    #define DAC_BIASFILE                    "data/biasValues_DAC.csv"
     #define DAC_CHANNELS_USED               11
     #define DAC_COMMAND_WRITE_UPDATE        3      // 0011 
     #define DAC_COMMAND_WRITE_SHIFT         4     
     #define DAC_MAX_VOLTAGE                 1800    // mV
+
+    #define DAC_BIASFILE                    "data/defaultBiasValues_DAC.csv"
+    #define DAC_FILENAME_SAVE               "data/DAC_biases/untitled.csv"
+    #define DAC_FILENAME_LOAD               "data/DAC_biases/"
 #endif
 
 #endif 
