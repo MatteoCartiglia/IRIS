@@ -45,7 +45,7 @@ int main(int, char**)
     bool show_BiasGen_config = true;
 
     BIASGEN_command biasGen[BIASGEN_CHANNELS];
-    getBiasGenValues(biasGen,  BIASGEN_BIASFILE);
+    getBiasValues(biasGen,  BIASGEN_BIASFILE);
 
     std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
     bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
@@ -136,7 +136,7 @@ int main(int, char**)
     bool show_DAC_config = true;
     bool powerOnReset_DAC = true;
     DAC_command dac[DAC_CHANNELS_USED];
-    getDACvalues(dac, DAC_BIASFILE);
+    getBiasValues(dac, DAC_BIASFILE);
 #endif
     
     //--------------------------------------------- Defining & Initialising All Other Variables -------------------------------------- 

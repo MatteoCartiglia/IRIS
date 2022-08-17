@@ -30,11 +30,13 @@ int selection_synapseType = 0;
 int selection_neuronNumber = 0;
 int value_synapseNumber = 0;
 int selection_transistorType = 0;
+int selection_file = 0;
 
 bool selectionChange_chipCore = 0;
 bool selectionChange_synapseType  = 0;
 bool selectionChange_neuronNumber = 0;
 bool selectionChange_synapseNumber = 0;
+bool selectionChange_file = 0;
 bool valueChange_DACbias[DAC_CHANNELS_USED] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 bool valueChange_SPIbias_1[2] = {0, 0};
 bool valueChange_SPIbias_2[2] = {0, 0};
@@ -45,14 +47,14 @@ std::vector<int> inputEncoder_yValues;
 std::vector<double> inputC2F_xValues;
 std::vector<int> inputC2F_yValues;
 
-std::string emptylabelPopupSave_str = "##PopupLabelSave";
-const char *emptylabelPopupSave = emptylabelPopupSave_str.c_str(); 
-std::string emptylabelPopupLoad_str = "##PopupLabelLoad";
-const char *emptylabelPopupLoad = emptylabelPopupLoad_str.c_str(); 
+std::string popupSave_str = "Save Bias Values";
+const char *popupSave = popupSave_str.c_str(); 
+std::string popupLoad_str = "Load Bias Values";
+const char *popupLoad = popupLoad_str.c_str(); 
 bool openSavePopup = true;
+bool openLoadPopup = true;
 
 namespace fs = std::experimental::filesystem;
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupWindow: Defines platform-specific variables, creates GUI window, initialises ImGui and ImPlot contexts and sets up 
@@ -146,6 +148,7 @@ void renderImGui(GLFWwindow* window)
     glfwSwapBuffers(window);
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -155,78 +158,6 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
     int serialDataSent = 0;
 
     ImGui::Begin("Test Structure Biases [DAC Values]", &show_DAC_config);
-
-    // Save new biases values
-
-    if (ImGui::Button("Save", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
-    {
-        ImGui::OpenPopup(emptylabelPopupSave);
-    }
-
-    if(openSavePopup)
-    {
-        savePopup(openSavePopup, emptylabelPopupSave, dac);
-    }   
-
-    ImGui::SameLine();
-
-    
-
-    // Loading DAC biases
-    if (ImGui::Button("Load", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
-            ImGui::OpenPopup("Loading DAC Menu" );
-    std::string path = "data/DAC_biases/";
-    bool opened_load = true;
-    if (ImGui::BeginPopupModal("Loading DAC Menu", &opened_load))
-    {
-        ImGui::Text("Select biases to load ");  
-        /// See how many files are in the directory
-        int n_files = 0; 
-        for (const auto& dirEntry: fs::directory_iterator(path))
-        {
-            std::string filename_with_path = dirEntry.path();
-            n_files++;
-        }
-        //// Put filenames into array of chars.
-        char* biases_filenames_no_path [n_files];
-        char* biases_filenames_with_path [n_files];
-        int iter = 0;
-        for (const auto& dirEntry: fs::directory_iterator(path))
-        {
-            std::string filename_with_path = dirEntry.path();
-            std::string filename_no_path = filename_with_path.substr(filename_with_path.find('/') + 1, filename_with_path.length() - filename_with_path.find('/'));
-            
-            biases_filenames_with_path[iter] = new char[filename_with_path.length() + 1];
-            strcpy(biases_filenames_with_path[iter], filename_with_path.c_str());
-            
-            biases_filenames_no_path[iter] = new char[filename_no_path.length() + 1];
-            strcpy(biases_filenames_no_path[iter], filename_no_path.c_str());
-
-            iter++;
-        }
-        for (int i = 0; i < n_files; i++)
-        {
-            ImGui::PushID(i);
-
-            if (i % 3 != 0)
-                ImGui::SameLine();
-            if (ImGui::Button(biases_filenames_no_path[i])){
-                getDACvalues(dac, (const std::string) biases_filenames_with_path[i]);
-                powerOnReset= true;
-//                loadDACvalues(dac, serialPort);
-                ImGui::CloseCurrentPopup;
-            }
-            ImGui::PopID();
-        }    
-        ImGui::NewLine();
-        ImGui::NewLine();
-        if (ImGui::Button("Close"))
-            (ImGui::CloseCurrentPopup());
-        ImGui::EndPopup(); 
-    }
-
-
-
 
     for(int i=0; i<DAC_CHANNELS_USED; i++)
     {
@@ -258,17 +189,38 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
             P2TPkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
             serialDataSent++;
-
         }
+
         ImGui::PopID();
     }
 
-    
+    ImGui::NewLine();
+
+    // Loading saved DAC biases
+
+    if (ImGui::Button("Load", ImVec2(BUTTON_SAVE_WIDTH_SMALL, BUTTON_HEIGHT)))
+    {
+        ImGui::OpenPopup(popupLoad);
+    }
+
+    ImGui::SameLine();
+
+    // Save new biases values
+
+    if (ImGui::Button("Save", ImVec2(BUTTON_SAVE_WIDTH_SMALL, BUTTON_HEIGHT)))
+    {
+        ImGui::OpenPopup(popupSave);
+    }
+
+    savePopup(openSavePopup, popupSave, dac);
+    loadPopup(openLoadPopup, popupLoad, dac, serialPort);
+
     ImGui::End();
     
     return serialDataSent;
 }
        
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -323,6 +275,8 @@ int setupAerWindow(bool show_AER_config, int serialPort)
     value_synapseNumber, selectionChange_synapseNumber = ImGui::InputInt(comboLabel_synapseNumber, &value_synapseNumber);
     value_synapseNumber = checkLimits_Synapse(value_synapseNumber, selection_synapseType);   
 
+    ImGui::NewLine();
+
     // Adding a "Send" button to write to serial port
     if(ImGui::Button("Send Packet to Teensy", ImVec2(BUTTON_AER_WIDTH, BUTTON_HEIGHT)))
     {
@@ -357,73 +311,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 #endif
 {
     int serialDataSent = 0;
-
     ImGui::Begin("Bias Generator Configuration", &show_biasGen_config);
-
-    if (ImGui::Button("Save", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
-    {
-        ImGui::OpenPopup(emptylabelPopupSave);
-    }
-
-    if(openSavePopup)
-    {
-        savePopup(openSavePopup, emptylabelPopupSave, biasGen);
-    }   
-
-    ImGui::SameLine();
-    // Loading DAC biases
-    if (ImGui::Button("Load", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
-            ImGui::OpenPopup("Loading BG Menu" );
-    std::string path = "data/BIASGEN_biases/";
-    bool opened_load = true;
-        if (ImGui::BeginPopupModal("Loading BG Menu", &opened_load))
-        {
-            ImGui::Text("Select biases to load ");  
-            /// See how many files are in the directory
-            int n_files = 0; 
-            for (const auto& dirEntry: fs::directory_iterator(path))
-            {
-                std::string filename_with_path = dirEntry.path();
-                n_files++;
-            }
-            //// Put filenames into array of chars.
-            char* biases_filenames_no_path [n_files];
-            char* biases_filenames_with_path [n_files];
-            int iter = 0;
-            for (const auto& dirEntry: fs::directory_iterator(path))
-            {
-                std::string filename_with_path = dirEntry.path();
-                std::string filename_no_path = filename_with_path.substr(filename_with_path.find('/') + 1, filename_with_path.length() - filename_with_path.find('/'));
-                biases_filenames_with_path[iter] = new char[filename_with_path.length() + 1];
-                strcpy(biases_filenames_with_path[iter], filename_with_path.c_str());
-                biases_filenames_no_path[iter] = new char[filename_no_path.length() + 1];
-                strcpy(biases_filenames_no_path[iter], filename_no_path.c_str());
-                iter++;
-            }
-            for (int i = 0; i < n_files; i++)
-            {
-                ImGui::PushID(i);
-
-                if (i % 3 != 0)
-                    ImGui::SameLine();
-                if (ImGui::Button(biases_filenames_no_path[i]))
-                {
-
-                    getBiasGenValues(biasGen, biases_filenames_no_path[i]);
-                    powerOnReset = true;
-                   // loadBiasGenValues(biasGen, serialPort);
-                    ImGui::CloseCurrentPopup;
-
-                }
-                ImGui::PopID();
-            }    
-            ImGui::NewLine();
-            ImGui::NewLine();
-
-            if (ImGui::Button("Close"))
-                (ImGui::CloseCurrentPopup());
-            ImGui::EndPopup(); 
-        }    
 
     for(int i = 0; i < BIASGEN_CATEGORIES; i++)
     {
@@ -487,7 +375,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
         }
     }
 
-  // Initialising values at POR
+    // Initialising values at POR
     if(powerOnReset)
     {
         for(int k=0; k<BIASGEN_CHANNELS; k++)
@@ -498,12 +386,31 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
         }
     }
 
+    ImGui::NewLine();
+
+    if (ImGui::Button("Load", ImVec2(BUTTON_SAVE_WIDTH_LARGE, BUTTON_HEIGHT)))
+    {
+        ImGui::OpenPopup(popupLoad);
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Save", ImVec2(BUTTON_SAVE_WIDTH_LARGE, BUTTON_HEIGHT)))
+    {
+        ImGui::OpenPopup(popupSave);
+    }
+
+    savePopup(openSavePopup, popupSave, biasGen);
+    loadPopup(openSavePopup, popupLoad, biasGen, serialPort);
+
     ImGui::End();
     return serialDataSent;
 }
 
 
-// SPI CONTROL WINDOW
+//---------------------------------------------------------------------------------------------------------------------------------------
+// setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send
+//---------------------------------------------------------------------------------------------------------------------------------------
 
 int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
 {
@@ -546,6 +453,10 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     return serialDataSent;
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// setupSPI2Window: Initialises and updates GUI window displaying SPI2 values to send
+//---------------------------------------------------------------------------------------------------------------------------------------
 
 int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
 {
@@ -590,36 +501,42 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 }
 
 
+//--------------------------------------------------------------------------------------------------------------------------------------
+// loadPopup: Generic popup to handle bias value saving operations
+//--------------------------------------------------------------------------------------------------------------------------------------
 template <typename T> void savePopup(bool openPopup, const char *popupLabel, T command)
 {
     char *filename;
 
     if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
     {
-        filename = SAVE_FILENAME_DAC;
+        filename = DAC_FILENAME_SAVE;
     }
     else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
     {
-        filename = SAVE_FILENAME_BIASGEN;
+        filename = BIASGEN_FILENAME_SAVE;
     }
 
     if (ImGui::BeginPopupModal(popupLabel, &openPopup))
     {
+        ImGui::NewLine();
         ImGui::Text("Filename: ");
+        ImGui::SameLine();
         ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
-               
-        if (ImGui::Button("Save", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
+        ImGui::NewLine();
+
+        if (ImGui::Button("Close", ImVec2(BUTTON_SAVE_WIDTH, BUTTON_HEIGHT)))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+        
+        ImGui::SameLine();
+
+        if (ImGui::Button("Save", ImVec2(BUTTON_SAVE_WIDTH, BUTTON_HEIGHT)))
         {
             std::cout << typeid(command).hash_code();
             saveBiases(filename, command);
             ImGui::CloseCurrentPopup();   
-        }
-
-        ImGui::SameLine();
-
-        if (ImGui::Button("Close"))
-        {
-            ImGui::CloseCurrentPopup();
         }
 
         ImGui::EndPopup(); 
@@ -627,7 +544,58 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
 }
 
 
-bool loadPopup();
+//--------------------------------------------------------------------------------------------------------------------------------------
+// loadPopup: Generic popup to handle bias value loading operations
+//--------------------------------------------------------------------------------------------------------------------------------------
+template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, int serialPort)
+{
+    char *filepath;
+    std::string comboLabel_loadFiles_str = "##";
+    const char *comboLabel_loadFiles = comboLabel_loadFiles_str.c_str();
+
+    if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
+    {
+        filepath = DAC_FILENAME_LOAD;
+    }
+    else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
+    {
+        filepath = BIASGEN_FILENAME_LOAD;
+    }
+
+    if (ImGui::BeginPopupModal(popupLabel, &openLoadPopup))
+    {
+        // Get the files in the specified directory 
+
+        int noFiles = getNoFiles(filepath);
+        char* biases_filenames[noFiles];
+        getFilepathArray(noFiles, filepath, biases_filenames);
+
+        // Select file from comboBox
+        
+        ImGui::NewLine();
+        ImGui::Text("Select file: ");  
+        ImGui::SameLine();
+        selection_file, selectionChange_file = ImGui::Combo(comboLabel_loadFiles, &selection_file, biases_filenames, noFiles);
+
+        ImGui::NewLine();
+
+        if (ImGui::Button("Close", ImVec2(BUTTON_SAVE_WIDTH, BUTTON_HEIGHT)))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Load", ImVec2(BUTTON_SAVE_WIDTH, BUTTON_HEIGHT)))
+        {
+            getBiasValues(command, (const std::string) biases_filenames[selection_file]);
+            loadBiasValues(command, serialPort);
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup(); 
+    }
+}
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------

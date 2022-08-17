@@ -79,8 +79,15 @@ int setupAerWindow(bool show_AER_config, int serialPort);
 #endif
 
 #if defined(EXISTS_BIASGEN) || defined(EXISTS_DAC)
-    template <typename T> void savePopup(bool openPopup, const char *popupLabel, T commandType);
-    bool loadPopup();
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    // savePopup: Generic popup to handle bias value saving operations
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    template <typename T> void savePopup(bool openPopup, const char *popupLabel, T command);
+
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    // loadPopup: Generic popup to handle bias value loading operations
+    //-----------------------------------------------------------------------------------------------------------------------------------
+    template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, int serialPort);
 #endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------

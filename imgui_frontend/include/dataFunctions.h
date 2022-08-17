@@ -23,24 +23,24 @@
 std::vector<std::vector<std::string>> parseCSV(const std::string& path);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getDACvalues: Initialises DAC_command array with values from CSV file
+// getBiasValues: Initialises DAC_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getDACvalues(DAC_command dac[], const std::string filename);
+void getBiasValues(DAC_command dac[], const std::string filename);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// loadDACvalues: 
+// getBiasValues: Initialises BIASGEN_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
-int loadDACvalues(DAC_command dac[], int serialport);
+void getBiasValues(BIASGEN_command biasGen[], const std::string filename );
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getBiasGenValues: Initialises BIASGEN_command array with values from CSV file
+// loadBiasValues: Sends the new DAC values to the Teensy 
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getBiasGenValues(BIASGEN_command biasGen[], const std::string filename );
+int loadBiasValues(DAC_command dac[], int serialport);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasGenValues: 
+// loadBiasValues: Sends the new BIASGEN values to the Teensy 
 //---------------------------------------------------------------------------------------------------------------------------------------
-int loadBiasGenValues(BIASGEN_command biasGen[], int serialport);
+int loadBiasValues(BIASGEN_command biasGen[], int serialport);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getFileLines: Retrieves the number of lines in a given file
@@ -73,13 +73,22 @@ void printBinaryValue(int decimalVal, int size);
 void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// saveBiases: Helper fuction to save current bias values for DAC (overloaded function)
+// saveBiases: Writes current bias values for DAC to a local file (overloaded function)
 //---------------------------------------------------------------------------------------------------------------------------------------
 bool saveBiases(const char *filename, DAC_command* command);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// saveBiases: Helper fuction to save current bias values for BIASGEN (overloaded function)
+// saveBiases: Writes current bias values for BIASGEN to a local file (overloaded function)
 //---------------------------------------------------------------------------------------------------------------------------------------
 bool saveBiases(const char *filename, BIASGEN_command* command);
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getNoFiles: Returns the number of files in the specified directory
+//---------------------------------------------------------------------------------------------------------------------------------------
+int getNoFiles(char *filepath);
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getFilepathArray: Returns an array containing the files in the specified directory
+//---------------------------------------------------------------------------------------------------------------------------------------
+void getFilepathArray(int noFiles, char *filepath, char* biases_filenames[]);
 
