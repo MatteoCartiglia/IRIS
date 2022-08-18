@@ -53,6 +53,12 @@ enum class P2tPktType
 // STRUCTURED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
 
+// ------------------------------------------------- ALIVE -> Teensy -> PC data struct --------------------------------------------------
+struct outputALIVE
+{
+    uint8_t data;
+    uint16_t timestamp;
+};
 
 // -------------------------------------------------- PC -> Teensy Comm Packet Struct ---------------------------------------------------
 
@@ -66,7 +72,7 @@ struct P2TPkt
     P2TPkt(const C2F_INPUT_command& inputC2F);
     P2TPkt(const SPI_INPUT_command& spi);
 
-    std::uint8_t header;                          // Packet length encoded in header excludes size of header
+    std::uint8_t header;                                        // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
 
 }__attribute__ ((packed));

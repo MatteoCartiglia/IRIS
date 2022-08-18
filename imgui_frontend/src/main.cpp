@@ -8,7 +8,6 @@
 #include <GLFW/glfw3.h>     // Will drag system OpenGL headers
 #include <unistd.h>         // UNIX standard function definitions
 #include <errno.h>          // Error number definitions
-#include <termios.h>        // POSIX terminal control definitions
 #include <fcntl.h>          // File control definitions
 #include <filesystem>
 #include <stdio.h>
@@ -17,6 +16,7 @@
 #include <cstddef>
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 #include "../imgui/imgui_backend/imgui_impl_opengl3.h"
 #include "../imgui/imgui_backend/imgui_impl_glfw.h"
@@ -26,12 +26,9 @@
 
 #include "../include/guiFunctions.h"
 #include "../include/dataFunctions.h"
+#include "../include/serial.h"
 #include "../../teensy_backend/include/constants.h"
 
-//----------------------------------------------------- Defining Function Prototypes ---------------------------------------------------- 
-
-void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize);
-void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // main: program execution starts here
@@ -50,7 +47,7 @@ int main(int, char**)
     std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
     bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
     int noRelevantFileRows[BIASGEN_CATEGORIES];
-    bool powerOnReset_BiasGen = false;
+    bool updateValues_BiasGen = false;
 
     #ifdef BIASGEN_SET_TRANSISTOR_TYPE
         std::vector<std::vector<std::vector<int>>> valueChange_BiasGen;
@@ -107,7 +104,7 @@ int main(int, char**)
 #ifdef EXISTS_SPI1
     bool show_SPI1_config = true;
     SPI_INPUT_command spi_command[1];
-    spi_command[0].spi_number =1;
+    spi_command[0].spi_number = 1;
     spi_command[0].value = 100;
     spi_command[0].address = 200;
 #else    
@@ -117,7 +114,7 @@ int main(int, char**)
 #ifdef EXISTS_SPI2
     bool show_SPI2_config = true;
     SPI_INPUT_command spi2_command[1];
-    spi2_command[0].spi_number =2;
+    spi2_command[0].spi_number = 2;
     spi2_command[0].value = 1;
     spi2_command[0].address = 200;
 #else    
@@ -134,7 +131,7 @@ int main(int, char**)
 
 #ifdef EXISTS_DAC
     bool show_DAC_config = true;
-    bool powerOnReset_DAC = true;
+    bool updateValues_DAC = true;
     DAC_command dac[DAC_CHANNELS_USED];
     getBiasValues(dac, DAC_BIASFILE);
 #endif
@@ -142,7 +139,7 @@ int main(int, char**)
     //--------------------------------------------- Defining & Initialising All Other Variables -------------------------------------- 
     
     bool show_Serial_output = true;
-    bool show_PlotData = false;
+    bool show_PlotData = true;
                       
     auto time = std::time(nullptr);
     auto time_tm = *std::localtime(&time);
@@ -156,20 +153,23 @@ int main(int, char**)
     int serialPort;
     char serialPortOpenStr[SERIAL_BUFFER_SIZE_PORT_OPEN] = {"Serial port opened successfully.\n"};
     int expectedResponses = 0;
-    struct termios SerialPortSettings;
+    struct termios serialPortSettings;
 
 
     //--------------------------------------------------------- Opening Serial Port ------------------------------------------------------
     
     serialPort = open(SERIAl_PORT_NAME, O_RDWR);
-    tcgetattr(serialPort, &SerialPortSettings);         // Get the current attributes of the Serial port 
-    cfsetispeed(&SerialPortSettings,B19200);            // Set Read Speed as 19200                     
-    cfsetospeed(&SerialPortSettings,B19200);            // Set Write Speed as 19200
+    tcgetattr(serialPort, &serialPortSettings);         // Get the current attributes of the Serial port 
+    cfsetispeed(&serialPortSettings,B19200);            // Set Read Speed as 19200                     
+    cfsetospeed(&serialPortSettings,B19200);            // Set Write Speed as 19200
+    // serialPortSettings.c_cc[VTIME] = 0;                 // 
+    // serialPortSettings.c_cc[VMIN] = 0;
 
 
     if (serialPort < 0) 
     {
         printf("Error opening serial port. Error: %i %s\n", errno, strerror(errno));
+        // std::thread aerCommThread(readSerialPort);
     }
     else 
     {
@@ -216,7 +216,7 @@ int main(int, char**)
 #ifdef EXISTS_DAC
         if (show_DAC_config)
         {
-            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, powerOnReset_DAC);
+            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, updateValues_DAC);
             if(expectedResponses > 0)
             {
                 getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
@@ -229,7 +229,7 @@ int main(int, char**)
 #ifdef EXISTS_BIASGEN
         if (show_BiasGen_config)
         {
-            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, powerOnReset_BiasGen);
+            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, updateValues_BiasGen);
 
             if(expectedResponses > 0)
             {
@@ -277,8 +277,8 @@ int main(int, char**)
 
         // Render the window       
         renderImGui(window);
-        powerOnReset_DAC = false;  
-        powerOnReset_BiasGen  = false;  
+        updateValues_DAC = false;  
+        updateValues_BiasGen  = false;  
    
         sleep(0.25);  
     }
@@ -310,90 +310,3 @@ int main(int, char**)
 
     return 0;
 } 
-
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData: Reads data in serial port and writes entry to Log window
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize)
-{
-    int serialReadBytes = 0;
-
-    while(expectedResponses > 0)
-    {
-        char serialReadBuffer[bufferSize];
-        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
-
-        serialReadBytes = read(serialPort, &serialReadBuffer, bufferSize);
-        
-        if((serialReadBytes != 0) && (serialReadBytes != -1))
-        {
-            updateSerialOutputWindow(show_Serial_output, true, serialReadBuffer);
-        }
-        else
-        {
-        //    printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
-        }
-
-        expectedResponses--;
-    }
-    
-    tcflush(serialPort, TCIFLUSH);
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData_Plots: Reads data in serial port and updates plots displayed
-//---------------------------------------------------------------------------------------------------------------------------------------
-void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
-{
-    long time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    int serialReadBytes = 0;
-
-    // Read encoder output
-    if(inputType == TEENSY_INPUT_ENCODER)
-    {
-        ENCODER_INPUT_command inputEncoder;
-        P2TPkt p2t_pkEncoder(inputEncoder); 
-        write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
-
-        double outputEncoder;
-        serialReadBytes = read(serialPort, &outputEncoder, 1);
-        
-        if((serialReadBytes != 0) && (serialReadBytes != -1))
-        {
-            updatePlotWindow(show_PlotData, time_ms, outputEncoder, TEENSY_INPUT_ENCODER);
-        }
-        else
-        {
-            printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
-        }
-    }
-
-    // Read C2F output
-    else if(inputType == TEENSY_INPUT_C2F)
-    {
-        C2F_INPUT_command inputC2F;
-        P2TPkt p2t_pkC2F(inputC2F); 
-        write(serialPort, (void *) &p2t_pkC2F, sizeof(p2t_pkC2F));
-
-        double outputC2F;
-        serialReadBytes = read(serialPort, &outputC2F, 1);
-
-        if((serialReadBytes != 0) && (serialReadBytes != -1))
-        {
-            updatePlotWindow(show_PlotData, time_ms, outputC2F, TEENSY_INPUT_C2F);
-        }
-        else
-        {
-            printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
-        }
-    }
-
-    else
-    {
-        printf("Error: Input type not recognised.\n");
-    }
-   
-    tcflush(serialPort, TCIFLUSH);
-}

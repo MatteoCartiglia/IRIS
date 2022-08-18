@@ -9,6 +9,7 @@
 #define TEENSYIN_H
 
 #include <Arduino.h>
+#include "../include/datatypes.h"
 
 class TeensyIn 
 {
@@ -19,8 +20,8 @@ class TeensyIn
     //-----------------------------------------------------------------------------------------------------------------------------------
     // Class constructor; initialises the TeensyIn object and sets up the relevant pins on Teensy
     //-----------------------------------------------------------------------------------------------------------------------------------
-    TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, byte inputBuffer[] = NULL, 
-        int inputDelay = 0, bool inputActiveLow = false);
+    TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay = 0, 
+                bool inputActiveLow = false);
 
     //----------------------------------------------------------------------------------------------------------------------------------
     // dataRead: Executes REQ/ACK handshake and retrieves input from ALIVE
@@ -37,6 +38,21 @@ class TeensyIn
     //----------------------------------------------------------------------------------------------------------------------------------
     void ackWrite(bool val);
 
+    //----------------------------------------------------------------------------------------------------------------------------------
+    // getBufferIndex: Retreives the current index of the buffer
+    //----------------------------------------------------------------------------------------------------------------------------------
+    int getBufferIndex();
+
+    //----------------------------------------------------------------------------------------------------------------------------------
+    // recordEvent: Records ALIVE output events as they occur
+    //----------------------------------------------------------------------------------------------------------------------------------
+    void recordEvent();
+
+    //----------------------------------------------------------------------------------------------------------------------------------
+    // sendEventBuffer: Sends ALIVE output data saved in buffer to Teensy
+    //----------------------------------------------------------------------------------------------------------------------------------
+    void sendEventBuffer();
+
 
     // ---------------------------------------------------- Declaring private methods --------------------------------------------------
     private:
@@ -51,6 +67,11 @@ class TeensyIn
     //----------------------------------------------------------------------------------------------------------------------------------
     unsigned int getInputData();
 
+    //----------------------------------------------------------------------------------------------------------------------------------
+    // resetBuffer: (Re)Initialises the ALIVE output buffer and (re)sets buffer index counter variable
+    //----------------------------------------------------------------------------------------------------------------------------------
+    void resetBuffer();
+
 
     // --------------------------------------------------- Declaring private variables -------------------------------------------------
 
@@ -58,10 +79,11 @@ class TeensyIn
     int _inputAckPin;
     int* _inputDataPins;
     int _inputNumDataPins;
-    byte* _inputBuffer;
     int _inputDelay;
     bool _inputActiveLow;
 
+    int _inputBufferIndex;
+    outputALIVE _inputEventBuffer[EVENT_BUFFER_SIZE];
 };
 
 #endif

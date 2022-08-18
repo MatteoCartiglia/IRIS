@@ -8,7 +8,8 @@
 # Ignore files and directories created by frontend
 imgui_frontend/src/.obj/*
 imgui_frontend/alive_interface
-imgui_frontend/data/output*
+imgui_frontend/data/customBiasValues/*
+imgui_frontend/data/savedOutput/*
 
 # Ignore directories created by PlatformIO
 teensy_backend/.pio

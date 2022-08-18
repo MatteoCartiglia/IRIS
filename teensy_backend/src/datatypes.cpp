@@ -63,5 +63,4 @@ P2TPkt::P2TPkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::u
     body[2] = spi_command.address & BINARY_255;
     body[3] = spi_command.value >> SERIAL_COMMS_SHIFT; 
     body[4] = spi_command.value & BINARY_255;
-
 };

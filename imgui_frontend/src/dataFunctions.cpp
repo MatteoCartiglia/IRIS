@@ -9,7 +9,6 @@
 #include "../include/guiFunctions.h"
 #include <experimental/filesystem>
 #include <chrono>
-#include <thread>
 
 namespace fs = std::experimental::filesystem;
 
@@ -110,33 +109,6 @@ void getBiasValues(BIASGEN_command biasGen[], const std::string filename  )
 
         // printf("%s : ", biasGen_BiasName.c_str());
         // printBinaryValue(biasGen[i].currentValue_binary, BIASGEN_PACKET_SIZE);
-    }
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasValues: Sends the new DAC values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-int loadBiasValues(DAC_command dac[], int serialPort )
-{
-    for (int i = 0; i< DAC_CHANNELS_USED; i++)
-    {
-        P2TPkt p2t_pk(dac[i]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasGenValues: Sends the new BIASGEN values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-int loadBiasValues(BIASGEN_command bg[], int serialPort)
-{
-    for (int i = 0; i< BIASGEN_CHANNELS; i++)
-    {
-        P2TPkt p2t_pk(bg[i]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
     }
 }
 

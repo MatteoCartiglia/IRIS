@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <vector>
+#include <iostream>
 
 #include "constants.h"
 #include "datatypes.h"
@@ -31,13 +32,11 @@ static P2TPkt inputBuffer; // missnomer. Input command would be more appropriate
 #ifdef EXISTS_INPUT_ENCODER
     int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
     TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, TEENSY_INPUT_ENCODER);
-    std::int8_t inputBinEncoder;
 #endif
 
 #ifdef EXISTS_INPUT_C2F
     int inputC2F_dataPins[C2F_INPUT_NO_PIN] = {C2F_INPUT_BIT_0_PIN, C2F_INPUT_BIT_1_PIN, C2F_INPUT_BIT_2_PIN, C2F_INPUT_BIT_3_PIN, C2F_INPUT_BIT_4_PIN};
     TeensyIn inputC2F(C2F_REQ, C2F_ACK, inputC2F_dataPins, C2F_INPUT_NO_PIN, C2F_DELAY, C2F_ACTIVE_LOW);
-    std::int8_t inputBinC2F;
 #endif
 
 #ifdef EXISTS_OUTPUT_DECODER
@@ -197,15 +196,15 @@ void loop()
             // Get encoder input value
             case P2tPktType::P2t_reqInputEncoder:
             {
-                inputBinEncoder = inputEncoder.dataRead();
-                Serial.print(inputBinEncoder);
+                inputEncoder.sendEventBuffer();
+                break;
             }
                 
             // Get C2F input value
             case P2tPktType::P2t_reqInputC2F:
             {
-                inputBinC2F = inputC2F.dataRead();
-                Serial.print(inputBinC2F);
+                inputC2F.sendEventBuffer();
+                break;
             }
 
             default: 
@@ -278,6 +277,11 @@ static void aerInputEncoder_ISR()
 {
     if (!inputEncoder.reqRead()) 
     {
+        if(inputEncoder.getBufferIndex() < EVENT_BUFFER_SIZE)
+        {
+            inputEncoder.recordEvent();
+        }
+
         inputEncoder.ackWrite(0);
 
         if (inputEncoder.reqRead())
@@ -296,6 +300,11 @@ static void aerInputC2F_ISR()
 {
     if (!inputC2F.reqRead()) 
     {
+        if(inputC2F.getBufferIndex() < EVENT_BUFFER_SIZE)
+        {
+            inputC2F.recordEvent();
+        }
+
         inputC2F.ackWrite(0);
 
         if (inputC2F.reqRead())

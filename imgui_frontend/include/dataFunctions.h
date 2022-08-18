@@ -35,12 +35,17 @@ void getBiasValues(BIASGEN_command biasGen[], const std::string filename );
 //---------------------------------------------------------------------------------------------------------------------------------------
 // loadBiasValues: Sends the new DAC values to the Teensy 
 //---------------------------------------------------------------------------------------------------------------------------------------
-int loadBiasValues(DAC_command dac[], int serialport);
+void loadBiasValues(DAC_command dac[], int serialport);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // loadBiasValues: Sends the new BIASGEN values to the Teensy 
 //---------------------------------------------------------------------------------------------------------------------------------------
-int loadBiasValues(BIASGEN_command biasGen[], int serialport);
+void loadBiasValues(BIASGEN_command biasGen[], int serialport);
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// readSerialPort: Reads data available at the serial port
+//---------------------------------------------------------------------------------------------------------------------------------------
+void readSerialPort();
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getFileLines: Retrieves the number of lines in a given file

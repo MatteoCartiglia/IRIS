@@ -8,11 +8,12 @@
 #include <iostream>
 #include "../include/guiFunctions.h"
 #include "../include/dataFunctions.h"
+#include "../include/serial.h"
 #include "../../teensy_backend/include/constants.h"
 #include <experimental/filesystem>
 #include <chrono>
-#include <thread>
 #include <typeinfo>
+
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
 
 const char *options_chipCore[ALIVE_NO_CORES] = {"Cortical Circuit", "Neural Network"};
@@ -40,6 +41,7 @@ bool selectionChange_file = 0;
 bool valueChange_DACbias[DAC_CHANNELS_USED] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 bool valueChange_SPIbias_1[2] = {0, 0};
 bool valueChange_SPIbias_2[2] = {0, 0};
+bool enableAERcomms = false;
 
 std::vector<double> inputEncoder_xValues;
 std::vector<int> inputEncoder_yValues;
@@ -153,7 +155,7 @@ void renderImGui(GLFWwindow* window)
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset)
+int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
 {
     int serialDataSent = 0;
 
@@ -184,7 +186,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
         ImGui::SameLine();
 
         // Adding a update button to write to serial port
-        if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) || powerOnReset)
+        if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) || updateValues)
         {
             P2TPkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
@@ -198,7 +200,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
 
     // Loading saved DAC biases
 
-    if (ImGui::Button("Load", ImVec2(BUTTON_SAVE_WIDTH_SMALL, BUTTON_HEIGHT)))
+    if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
     {
         ImGui::OpenPopup(popupLoad);
     }
@@ -207,7 +209,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
 
     // Save new biases values
 
-    if (ImGui::Button("Save", ImVec2(BUTTON_SAVE_WIDTH_SMALL, BUTTON_HEIGHT)))
+    if (ImGui::Button("Save", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
     {
         ImGui::OpenPopup(popupSave);
     }
@@ -278,7 +280,7 @@ int setupAerWindow(bool show_AER_config, int serialPort)
     ImGui::NewLine();
 
     // Adding a "Send" button to write to serial port
-    if(ImGui::Button("Send Packet to Teensy", ImVec2(BUTTON_AER_WIDTH, BUTTON_HEIGHT)))
+    if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*1, BUTTON_HEIGHT)))
     {
         // Creating the AER packet
         AER_DECODER_OUTPUT_command decoderOutput;
@@ -304,10 +306,10 @@ int setupAerWindow(bool show_AER_config, int serialPort)
 
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[],bool powerOnReset)
+    std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[],bool updateValues)
 #else
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset)
+        std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool updateValues)
 #endif
 {
     int serialDataSent = 0;
@@ -376,7 +378,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
     }
 
     // Initialising values at POR
-    if(powerOnReset)
+    if(updateValues)
     {
         for(int k=0; k<BIASGEN_CHANNELS; k++)
         {
@@ -388,14 +390,14 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 
     ImGui::NewLine();
 
-    if (ImGui::Button("Load", ImVec2(BUTTON_SAVE_WIDTH_LARGE, BUTTON_HEIGHT)))
+    if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
     {
         ImGui::OpenPopup(popupLoad);
     }
 
     ImGui::SameLine();
 
-    if (ImGui::Button("Save", ImVec2(BUTTON_SAVE_WIDTH_LARGE, BUTTON_HEIGHT)))
+    if (ImGui::Button("Save", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
     {
         ImGui::OpenPopup(popupSave);
     }
@@ -525,14 +527,14 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
         ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
         ImGui::NewLine();
 
-        if (ImGui::Button("Close", ImVec2(BUTTON_SAVE_WIDTH, BUTTON_HEIGHT)))
+        if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
             ImGui::CloseCurrentPopup();
         }
         
         ImGui::SameLine();
 
-        if (ImGui::Button("Save", ImVec2(BUTTON_SAVE_WIDTH, BUTTON_HEIGHT)))
+        if (ImGui::Button("Save", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
             std::cout << typeid(command).hash_code();
             saveBiases(filename, command);
@@ -579,14 +581,14 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
 
         ImGui::NewLine();
 
-        if (ImGui::Button("Close", ImVec2(BUTTON_SAVE_WIDTH, BUTTON_HEIGHT)))
+        if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
             ImGui::CloseCurrentPopup();
         }
 
         ImGui::SameLine();
 
-        if (ImGui::Button("Load", ImVec2(BUTTON_SAVE_WIDTH, BUTTON_HEIGHT)))
+        if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
             getBiasValues(command, (const std::string) biases_filenames[selection_file]);
             loadBiasValues(command, serialPort);
@@ -685,6 +687,26 @@ void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputTy
         ImPlot::PlotScatter("###", xArray, yArray, inputEncoder_yValues.size());
         ImPlot::EndPlot();
         saveToCSV(valuesToSave, 2, C2F_INPUT_SAVE_FILENAME_CSV);
+
+        ImGui::NewLine();
+
+        if(ImGui::Button("Handshake", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
+        {
+            printf("handshake\n");
+        }
+
+        ImGui::SameLine();
+        ImGui::Text("               AER Communication ");  
+        ImGui::SameLine();
+
+        std::string toggleID_str = "Toggle";
+        const char *toggleID = toggleID_str.c_str();
+        toggleButton(toggleID, &enableAERcomms);
+
+        // if(enableAERcomms)
+        // {
+
+        // }
     }
 
     ImGui::End();
@@ -745,4 +767,42 @@ int checkLimits_Synapse(int value, int synapseType)
 void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// toggleButton: Implementation of toggle button directly copied from ImGui user forum (https://github.com/ocornut/imgui/issues/1537)
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void toggleButton(const char* str_id, bool* v)
+{
+    ImVec2 p = ImGui::GetCursorScreenPos();
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+    float height = BUTTON_HEIGHT; //ImGui::GetFrameHeight();
+    float width = BUTTON_TOGGLE_WIDTH;
+    float radius = height * 0.50f;
+
+    ImGui::InvisibleButton(str_id, ImVec2(width, height));
+    if (ImGui::IsItemClicked())
+        *v = !*v;
+
+    float t = *v ? 1.0f : 0.0f;
+
+    ImGuiContext& g = *GImGui;
+    float ANIM_SPEED = 0.08f;
+    if (g.LastActiveId == g.CurrentWindow->GetID(str_id))// && g.LastActiveIdTimer < ANIM_SPEED)
+    {
+        float t_anim = ImSaturate(g.LastActiveIdTimer / ANIM_SPEED);
+        t = *v ? (t_anim) : (1.0f - t_anim);
+    }
+
+    ImU32 col_bg;
+    if (ImGui::IsItemHovered())
+        col_bg = ImGui::GetColorU32(ImLerp(ImVec4(0.78f, 0.78f, 0.78f, 1.0f), ImVec4(0.64f, 0.83f, 0.34f, 1.0f), t));
+    else
+        col_bg = ImGui::GetColorU32(ImLerp(ImVec4(0.85f, 0.85f, 0.85f, 1.0f), ImVec4(0.56f, 0.83f, 0.26f, 1.0f), t));
+
+    draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), col_bg, height * 0.5f);
+    draw_list->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255));
 }

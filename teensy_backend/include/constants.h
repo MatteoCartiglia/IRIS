@@ -20,11 +20,8 @@
 // GUI CONSTANTS
 #define BUTTON_HEIGHT                       20
 #define BUTTON_UPDATE_WIDTH                 100
-#define BUTTON_AER_WIDTH                    285
-#define BUTTON_SAVE_WIDTH                   220
-#define BUTTON_SAVE_WIDTH_SMALL             205
-#define BUTTON_SAVE_WIDTH_LARGE             275
-#define WINDOW_HEIGHT                       680
+#define BUTTON_TOGGLE_WIDTH                 50
+#define WINDOW_HEIGHT                       700
 #define WINDOW_WIDTH                        1670
 #define CLEAR_COLOUR_X                      0.45f
 #define CLEAR_COLOUR_Y                      0.55f
@@ -38,7 +35,7 @@
 // PC <-> TEENSY SERIAL COMMUNICATION
 #define SERIAL_COMMS_SHIFT                  8
 #define SERIAL_COMMS_MAX_PKT_LEN            6           // Clarify
-#define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105661701"
+#define SERIAl_PORT_NAME                    "/dev/ttyACM0"
 #define SERIAL_BUFFER_SIZE_BIAS             62
 #define SERIAL_BUFFER_SIZE_DAC              44
 #define SERIAL_BUFFER_SIZE_PORT_OPEN        34
@@ -58,9 +55,9 @@
     #define BIASGEN_ENABLE_PIN              10
     #define BIASGEN_RESET_PIN               41
     
-    #define BIASGEN_BIASFILE                "data/defaultBiasValues_BIASGEN.csv"
-    #define BIASGEN_FILENAME_SAVE           "data/BIASGEN_biases/untitled.csv"
-    #define BIASGEN_FILENAME_LOAD           "data/BIASGEN_biases/"
+    #define BIASGEN_BIASFILE                "data/defaultBiasValues/defaultBiasValues_BIASGEN.csv"
+    #define BIASGEN_FILENAME_SAVE           "data/customBiasValues/BIASGEN/untitled.csv"
+    #define BIASGEN_FILENAME_LOAD           "data/customBiasValues/BIASGEN/"
 
     #define BIASGEN_CHANNELS                54
     #define BIASGEN_CATEGORIES              9
@@ -129,11 +126,11 @@
     #define C2F_INPUT_BIT_3_PIN             22
     #define C2F_INPUT_BIT_4_PIN             23
     #define C2F_INPUT_RANGE                 32
-    #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/outputC2F.csv"
-    #define C2F_INPUT_SAVE_FILENAME         "../imgui_frontend/data/outputC2F"
+    #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
+    #define C2F_INPUT_SAVE_FILENAME         "../imgui_frontend/data/savedOutput/C2F/C2F"
 
     #define C2F_ACTIVE_LOW                  true
-    #define C2F_DELAY                        10000
+    #define C2F_DELAY                       10000
 #endif
 
 // ENCODER COMMUNICATION
@@ -144,10 +141,13 @@
     #define ENCODER_INPUT_BIT_0_PIN         26
     #define ENCODER_INPUT_BIT_1_PIN         27
     #define ENCODER_INPUT_BIT_2_PIN         28
-    #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/outputEncoder.csv"
-    #define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/outputEncoder"
+    #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/Encoder/outputEncoder.csv"
+    #define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/savedOutput/Encoder/outputEncoder"
 #endif
 
+#if defined(EXISTS_INPUT_ENCODER) || defined(EXISTS_INPUT_C2F)
+    #define EVENT_BUFFER_SIZE               25
+#endif
 
 // DECODER COMMUNICATION -- INPUT INTERFACE
 #ifdef EXISTS_OUTPUT_DECODER
@@ -190,9 +190,9 @@
     #define DAC_COMMAND_WRITE_SHIFT         4     
     #define DAC_MAX_VOLTAGE                 1800    // mV
 
-    #define DAC_BIASFILE                    "data/defaultBiasValues_DAC.csv"
-    #define DAC_FILENAME_SAVE               "data/DAC_biases/untitled.csv"
-    #define DAC_FILENAME_LOAD               "data/DAC_biases/"
+    #define DAC_BIASFILE                    "data/defaultBiasValues/defaultBiasValues_DAC.csv"
+    #define DAC_FILENAME_SAVE               "data/customBiasValues/DAC/untitled.csv"
+    #define DAC_FILENAME_LOAD               "data/customBiasValues/DAC/"
 #endif
 
 #endif 

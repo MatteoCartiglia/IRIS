@@ -27,6 +27,7 @@ LINUX_GL_LIBS = -lGL
 SOURCES +=  $(SOURCE_DIR)/main.cpp \
 			$(SOURCE_DIR)/guiFunctions.cpp \
 			$(SOURCE_DIR)/dataFunctions.cpp \
+			$(SOURCE_DIR)/serial.cpp \
 			$(IMGUI_DIR)/imgui.cpp \
 			$(IMGUI_DIR)/imgui_demo.cpp \
 			$(IMGUI_DIR)/imgui_draw.cpp \

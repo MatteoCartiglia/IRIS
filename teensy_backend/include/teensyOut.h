@@ -9,6 +9,7 @@
 #define TEENSYOUT_H
 
 #include <Arduino.h>
+#include "../../teensy_backend/include/constants.h"
 
 class TeensyOut
 {
@@ -60,7 +61,6 @@ class TeensyOut
     int _outputNumDataPins;
     int _outputDelay;
     bool _outputActiveLow;
-
 };
 
 #endif

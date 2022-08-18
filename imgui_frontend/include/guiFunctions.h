@@ -38,7 +38,7 @@ void renderImGui(GLFWwindow* window);
     //---------------------------------------------------------------------------------------------------------------------------------------
     // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
     //---------------------------------------------------------------------------------------------------------------------------------------
-    int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool powerOnReset);
+    int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues);
 #endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ int setupAerWindow(bool show_AER_config, int serialPort);
             std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[]);
     #else
         int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-                std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool powerOnReset);
+                std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool updateValues);
     #endif
 #endif
 
@@ -115,6 +115,10 @@ int checkLimits_Synapse(int value, int synapseType);
 //---------------------------------------------------------------------------------------------------------------------------------------
 void glfw_error_callback(int error, const char* description);
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// toggleButton: Implementation of toggle button mostly copied from ImGui user forum (https://github.com/ocornut/imgui/issues/1537)
+//---------------------------------------------------------------------------------------------------------------------------------------
+void toggleButton(const char* str_id, bool* v);
 
 //-----------------------------------------------------------------------------
 // Log struct directly copied from imgui_demo.cpp - CLEANUP NEEDED
