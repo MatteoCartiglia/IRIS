@@ -21,7 +21,7 @@
 #define BUTTON_HEIGHT                       20
 #define BUTTON_UPDATE_WIDTH                 100
 #define BUTTON_TOGGLE_WIDTH                 50
-#define WINDOW_HEIGHT                       700
+#define WINDOW_HEIGHT                       750
 #define WINDOW_WIDTH                        1670
 #define CLEAR_COLOUR_X                      0.45f
 #define CLEAR_COLOUR_Y                      0.55f
@@ -146,7 +146,7 @@
 #endif
 
 #if defined(EXISTS_INPUT_ENCODER) || defined(EXISTS_INPUT_C2F)
-    #define EVENT_BUFFER_SIZE               25
+    #define EVENT_BUFFER_SIZE               100
 #endif
 
 // DECODER COMMUNICATION -- INPUT INTERFACE

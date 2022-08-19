@@ -98,7 +98,9 @@ bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry = false, co
 //---------------------------------------------------------------------------------------------------------------------------------------
 // updatePlotWindow: Initialises and updates GUI window displaying live output from ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
-void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputType);
+void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int serialPort);
+void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int serialPort);
+bool getHandshakeStatus(int inputType);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // checkLimits: Checks the user input values do not go out of range and updates the value accordingly

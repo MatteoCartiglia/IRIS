@@ -8,6 +8,9 @@
 #include "teensyIn.h"
 #include "constants.h"
 #include "datatypes.h"
+#include <chrono>
+
+bool startRecording = false;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // TeensyIn constructor
@@ -89,11 +92,17 @@ int TeensyIn::getBufferIndex()
 //----------------------------------------------------------------------------------------------------------------------------------
 void TeensyIn::recordEvent()
 {
-  outputALIVE newEvent;
-  newEvent.data = dataRead();
-  newEvent.timestamp = 0;
+  if(startRecording)
+  {
+    outputALIVE newEvent;
+    newEvent.data = dataRead();
+    newEvent.timestamp = 0;
 
-  _inputEventBuffer[1 + _inputBufferIndex++] = newEvent;
+    _inputEventBuffer[0].data = _inputBufferIndex;
+    _inputEventBuffer[1 + _inputBufferIndex++] = newEvent;
+  }
+
+  Serial.print(startRecording);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -101,15 +110,36 @@ void TeensyIn::recordEvent()
 //----------------------------------------------------------------------------------------------------------------------------------
 void TeensyIn::sendEventBuffer()
 {
-  _inputEventBuffer[0].data = _inputBufferIndex - 1;
+  // for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
+  // {
+  //   Serial.print(_inputEventBuffer[i].data);
+  //   Serial.print("\n");
+  //   Serial.print(_inputEventBuffer[i].timestamp);
+  // }
+  resetBuffer();
+}
 
-  for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
+//----------------------------------------------------------------------------------------------------------------------------------
+// handshake: Executes REQ/ACK handshake between Teensy and ALIVE
+//----------------------------------------------------------------------------------------------------------------------------------
+void TeensyIn::handshake()
+{
+  if (!reqRead()) 
   {
-    Serial.print(_inputEventBuffer[i].data);
-    Serial.print(_inputEventBuffer[i].timestamp);
+    ackWrite(0);
+
+    if (reqRead())
+    {
+      ackWrite(1);
+      startRecording = true;
+    }
   }
 
-  resetBuffer();
+  else if(reqRead())
+  {
+    ackWrite(1);
+    startRecording = true;
+  }
 }
 
 

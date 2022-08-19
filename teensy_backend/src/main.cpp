@@ -206,6 +206,18 @@ void loop()
                 inputC2F.sendEventBuffer();
                 break;
             }
+            
+            case P2tPktType::P2t_handshakeEncoder:
+            {
+                inputEncoder.handshake();
+                break;
+            }
+
+            case P2tPktType::P2t_handshakeC2F:
+            {
+                inputC2F.handshake();
+                break;
+            }
 
             default: 
             {

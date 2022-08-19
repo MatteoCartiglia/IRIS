@@ -22,7 +22,8 @@ struct AER_ENCODER_INPUT_command;
 struct ENCODER_INPUT_command;
 struct C2F_INPUT_command;
 struct SPI_INPUT_command;
-
+struct HANDSHAKE_ENCODER_command;
+struct HANDSHAKE_C2F_command;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
@@ -45,7 +46,9 @@ enum class P2tPktType
     P2t_reqOutputDecoder            = 3U,
     P2t_reqInputEncoder             = 4U,
     P2t_reqInputC2F                 = 5U,
-    P2t_setSPI                      = 6U
+    P2t_setSPI                      = 6U,
+    P2t_handshakeEncoder            = 7U,
+    P2t_handshakeC2F                = 8U
 };
 
 
@@ -71,6 +74,8 @@ struct P2TPkt
     P2TPkt(const ENCODER_INPUT_command& inputEncoder);
     P2TPkt(const C2F_INPUT_command& inputC2F);
     P2TPkt(const SPI_INPUT_command& spi);
+    P2TPkt(const HANDSHAKE_ENCODER_command& handshakeEncoder);
+    P2TPkt(const HANDSHAKE_C2F_command& handshakeC2F);
 
     std::uint8_t header;                                        // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
@@ -145,6 +150,16 @@ struct ENCODER_INPUT_command
 struct C2F_INPUT_command
 {
     C2F_INPUT_command() {};
+};
+
+struct HANDSHAKE_ENCODER_command
+{
+    HANDSHAKE_ENCODER_command() {};
+};
+
+struct HANDSHAKE_C2F_command
+{
+    HANDSHAKE_C2F_command() {};
 };
 
 #endif

@@ -55,6 +55,9 @@ P2TPkt::P2TPkt(const ENCODER_INPUT_command& inputEncoder) : header(static_cast<s
 
 P2TPkt::P2TPkt(const C2F_INPUT_command& inputC2F) : header(static_cast<std::underlying_type<P2tPktType>::type>(P2tPktType::P2t_reqInputC2F)) {};
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// SPI Command Packet
+//---------------------------------------------------------------------------------------------------------------------------------------
 
 P2TPkt::P2TPkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::underlying_type<P2tPktType>::type>(P2tPktType::P2t_setSPI)) 
 { 
@@ -64,3 +67,16 @@ P2TPkt::P2TPkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::u
     body[3] = spi_command.value >> SERIAL_COMMS_SHIFT; 
     body[4] = spi_command.value & BINARY_255;
 };
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// SPI Command Packet
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+P2TPkt::P2TPkt(const HANDSHAKE_ENCODER_command& handshakeEncoder) : header(static_cast<std::underlying_type<P2tPktType>::type>(P2tPktType::P2t_handshakeEncoder)) {};
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// SPI Command Packet
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+P2TPkt::P2TPkt(const HANDSHAKE_C2F_command& handshakeC2F) : header(static_cast<std::underlying_type<P2tPktType>::type>(P2tPktType::P2t_handshakeC2F)) {};
+

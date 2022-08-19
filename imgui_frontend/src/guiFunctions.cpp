@@ -41,7 +41,12 @@ bool selectionChange_file = 0;
 bool valueChange_DACbias[DAC_CHANNELS_USED] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 bool valueChange_SPIbias_1[2] = {0, 0};
 bool valueChange_SPIbias_2[2] = {0, 0};
-bool enableAERcomms = false;
+
+bool enableCommsEncoder = false;
+bool enableCommsC2F = false;
+bool handshakeStatusEncoder = false;
+bool handshakeStatusC2F = false;
+
 
 std::vector<double> inputEncoder_xValues;
 std::vector<int> inputEncoder_yValues;
@@ -634,24 +639,76 @@ bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char
 // updatePlotWindow: Initialises and updates GUI window displaying live output from ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputType)
+void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int serialPort)
+{
+    long valuesToSave[2] = {timeStamp, long(value)};
+    double timeStamp_s = timeStamp/1000;
+        
+    ImGui::Begin("ALIVE Output", &updatePlot);  
+
+    inputC2F_xValues.push_back(timeStamp_s);
+    inputC2F_yValues.push_back(value);
+
+    // Converting the data vectors to arrays
+    double yArray[inputC2F_yValues.size()];
+    double xArray[inputC2F_xValues.size()];
+
+    for(int i = 0; i < int(inputC2F_xValues.size()); i++)
+    {
+        xArray[i] = inputC2F_xValues[i];
+        yArray[i] = inputC2F_yValues[i];
+    }
+
+    if(ImPlot::BeginPlot("C2F Output: Current Number"))
+    {
+        ImPlot::GetStyle().UseLocalTime;
+        ImPlot::GetStyle().Use24HourClock;
+
+        ImPlot::SetupAxis(ImAxis_X1, "Time", ImPlotAxisFlags_Time);
+        ImPlot::SetupAxis(ImAxis_Y1, "Current Number");
+        ImPlot::SetupAxisLimits(ImAxis_Y1, 0, C2F_INPUT_RANGE, 1);
+        ImPlot::SetupAxisLimits(ImAxis_X1, timeStamp_s - 25, timeStamp_s + 5, 1);
+        ImPlot::PlotScatter("###", xArray, yArray, inputC2F_yValues.size());
+        ImPlot::EndPlot();
+        saveToCSV(valuesToSave, 2, C2F_INPUT_SAVE_FILENAME_CSV);
+
+        ImGui::NewLine();
+
+        if(ImGui::Button("Handshake: C2F", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
+        {
+            HANDSHAKE_C2F_command handshakeC2F;
+            P2TPkt p2tpk_HandshakeC2F(handshakeC2F); 
+            write(serialPort, (void *) &p2tpk_HandshakeC2F, sizeof(p2tpk_HandshakeC2F));
+            handshakeStatusC2F = true;
+        }
+
+        ImGui::SameLine();
+        ImGui::Text("               ALIVE Output: C2F ");  
+        ImGui::SameLine();
+
+        std::string toggleID_str = "toggleC2F";
+        const char *toggleID = toggleID_str.c_str();
+        toggleButton(toggleID, &enableCommsC2F);
+
+        // if(enableCommsC2F)
+        // {
+
+        // }
+    }
+    
+    ImGui::End();
+}
+
+
+void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int serialPort)
 {
     long valuesToSave[2] = {timeStamp, long(value)};
     double timeStamp_s = timeStamp/1000;
 
     ImGui::Begin("ALIVE Output", &updatePlot);  
 
-    // Updating the data vectors
-    if(inputType == TEENSY_INPUT_ENCODER)
-    {
-        inputEncoder_xValues.push_back(timeStamp_s);
-        inputEncoder_yValues.push_back(value);
-    }
-    else if(inputType == TEENSY_INPUT_C2F)
-    {
-        inputC2F_xValues.push_back(timeStamp_s);
-        inputC2F_yValues.push_back(value);
-    }
+    inputEncoder_xValues.push_back(timeStamp_s);
+    inputEncoder_yValues.push_back(value);
 
     // Converting the data vectors to arrays
     double yArray[inputEncoder_yValues.size()];
@@ -663,8 +720,7 @@ void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputTy
         yArray[i] = inputEncoder_yValues[i];
     }
 
-    //
-    if((inputType == TEENSY_INPUT_ENCODER) && (ImPlot::BeginPlot("Encoder Output: Firing Neuron Number")))
+    if(ImPlot::BeginPlot("Encoder Output: Firing Neuron Number"))
     {
         ImPlot::GetStyle().UseLocalTime;
         ImPlot::GetStyle().Use24HourClock;
@@ -676,40 +732,51 @@ void updatePlotWindow(bool updatePlot, long timeStamp, double value, int inputTy
         ImPlot::PlotScatter("###", xArray, yArray, inputEncoder_yValues.size());
         ImPlot::EndPlot();
         saveToCSV(valuesToSave, 2, ENCODER_INPUT_SAVE_FILENAME_CSV);
-    }
-
-    if((inputType == TEENSY_INPUT_C2F) && (ImPlot::BeginPlot("C2F Output: Current Number")))
-    {
-        ImPlot::SetupAxis(ImAxis_X1, "Time", ImPlotAxisFlags_Time);
-        ImPlot::SetupAxis(ImAxis_Y1, "Current Number");
-        ImPlot::SetupAxisLimits(ImAxis_Y1, 0, C2F_INPUT_RANGE, 1);
-        ImPlot::SetupAxisLimits(ImAxis_X1, timeStamp_s - 25, timeStamp_s + 5, 1);
-        ImPlot::PlotScatter("###", xArray, yArray, inputEncoder_yValues.size());
-        ImPlot::EndPlot();
-        saveToCSV(valuesToSave, 2, C2F_INPUT_SAVE_FILENAME_CSV);
 
         ImGui::NewLine();
 
-        if(ImGui::Button("Handshake", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
+        if(ImGui::Button("Handshake: Encoder", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
-            printf("handshake\n");
+            HANDSHAKE_ENCODER_command handshakeEncoder;
+            P2TPkt p2tpk_HandshakeEncoder(handshakeEncoder); 
+            write(serialPort, (void *) &p2tpk_HandshakeEncoder, sizeof(p2tpk_HandshakeEncoder));
+            handshakeStatusEncoder = true;
         }
 
         ImGui::SameLine();
-        ImGui::Text("               AER Communication ");  
+        ImGui::Text("           ALIVE Output: Encoder ");  
         ImGui::SameLine();
 
-        std::string toggleID_str = "Toggle";
+        std::string toggleID_str = "toggleEncoder";
         const char *toggleID = toggleID_str.c_str();
-        toggleButton(toggleID, &enableAERcomms);
+        toggleButton(toggleID, &enableCommsEncoder);
+        ImGui::NewLine();
 
-        // if(enableAERcomms)
+        // if(enableCommsEncoder)
         // {
 
         // }
-    }
+    }  
 
     ImGui::End();
+}
+
+
+bool getHandshakeStatus(int inputType)
+{
+    if(inputType == TEENSY_INPUT_ENCODER)
+    {
+        return handshakeStatusEncoder;
+    }
+    else if(inputType == TEENSY_INPUT_C2F)
+    {
+        return handshakeStatusC2F;
+    }
+    else
+    {
+        printf("Error: Input type not recognised.\n");
+        return false;
+    }
 }
 
 

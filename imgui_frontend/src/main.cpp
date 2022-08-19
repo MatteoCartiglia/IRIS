@@ -217,6 +217,7 @@ int main(int, char**)
         if (show_DAC_config)
         {
             expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, updateValues_DAC);
+            
             if(expectedResponses > 0)
             {
                 getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
