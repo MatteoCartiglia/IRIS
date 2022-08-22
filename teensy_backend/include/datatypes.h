@@ -21,6 +21,7 @@ struct AER_DECODER_OUTPUT_command;
 struct AER_ENCODER_INPUT_command;
 struct ENCODER_INPUT_command;
 struct C2F_INPUT_command;
+struct C2F_OUTPUT_command;
 struct SPI_INPUT_command;
 struct HANDSHAKE_ENCODER_command;
 struct HANDSHAKE_C2F_command;
@@ -39,16 +40,16 @@ enum class TeensyStatus
 
 
 // --------------------------------------------------- PC -> Teensy Comm Packet Types --------------------------------------------------
-enum class P2tPktType 
+enum class PktType 
 {
-    P2t_setDACvoltage               = 1U,
-    P2t_setBiasGen                  = 2U,
-    P2t_reqOutputDecoder            = 3U,
-    P2t_reqInputEncoder             = 4U,
-    P2t_reqInputC2F                 = 5U,
-    P2t_setSPI                      = 6U,
-    P2t_handshakeEncoder            = 7U,
-    P2t_handshakeC2F                = 8U
+    Pkt_setDACvoltage               = 1U,
+    Pkt_setBiasGen                  = 2U,
+    Pkt_reqOutputDecoder            = 3U,
+    Pkt_reqInputEncoder             = 4U,
+    Pkt_reqInputC2F                 = 5U,
+    Pkt_setSPI                      = 6U,
+    Pkt_handshakeEncoder            = 7U,
+    Pkt_handshakeC2F                = 8U,
 };
 
 
@@ -65,17 +66,17 @@ struct outputALIVE
 
 // -------------------------------------------------- PC -> Teensy Comm Packet Struct ---------------------------------------------------
 
-struct P2TPkt 
+struct Pkt 
 {
-    P2TPkt(){};
-    P2TPkt(const DAC_command& dac);    
-    P2TPkt(const BIASGEN_command& biasGen);
-    P2TPkt(const AER_DECODER_OUTPUT_command& outputDecoder);
-    P2TPkt(const ENCODER_INPUT_command& inputEncoder);
-    P2TPkt(const C2F_INPUT_command& inputC2F);
-    P2TPkt(const SPI_INPUT_command& spi);
-    P2TPkt(const HANDSHAKE_ENCODER_command& handshakeEncoder);
-    P2TPkt(const HANDSHAKE_C2F_command& handshakeC2F);
+    Pkt(){};
+    Pkt(const DAC_command& dac);    
+    Pkt(const BIASGEN_command& biasGen);
+    Pkt(const AER_DECODER_OUTPUT_command& outputDecoder);
+    Pkt(const ENCODER_INPUT_command& inputEncoder);
+    Pkt(const C2F_INPUT_command& inputC2F);
+    Pkt(const SPI_INPUT_command& spi);
+    Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder);
+    Pkt(const HANDSHAKE_C2F_command& handshakeC2F);
 
     std::uint8_t header;                                        // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
@@ -88,7 +89,7 @@ struct P2TPkt
 struct DAC_command
 {
     DAC_command() {};
-    DAC_command (const P2TPkt& pkt) : dac_number(pkt.body[0]), command_address(pkt.body[1]), data( pkt.body[2] << SERIAL_COMMS_SHIFT | pkt.body[3] ) {};
+    DAC_command (const Pkt& pkt) : dac_number(pkt.body[0]), command_address(pkt.body[1]), data( pkt.body[2] << SERIAL_COMMS_SHIFT | pkt.body[3] ) {};
 
     std::uint8_t dac_number;
     std::uint8_t command_address; 
@@ -103,7 +104,7 @@ struct DAC_command
 struct BIASGEN_command
 { 
     BIASGEN_command() {};
-    BIASGEN_command ( const P2TPkt& pkt) : biasNo((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), currentValue_binary(( pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]) {};
+    BIASGEN_command ( const Pkt& pkt) : biasNo((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), currentValue_binary(( pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]) {};
 
     std::uint16_t biasNo;
     std::uint16_t currentValue_binary;
@@ -112,26 +113,12 @@ struct BIASGEN_command
     bool transistorType;
 };
 
-
-// --------------------------------------------- Struct for PC -> Teensy -> SPI communication -------------------------------------------
-
-struct SPI_INPUT_command
-{
-    SPI_INPUT_command()  {};
-    SPI_INPUT_command ( const P2TPkt& pkt) : spi_number(pkt.body[0]), address((pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]), value((pkt.body[3] << SERIAL_COMMS_SHIFT) | pkt.body[4]) {};
-
-    uint8_t spi_number;
-    uint16_t address;
-    uint16_t value;
-};
-
-
 // --------------------------- Struct for PC -> Teensy -> ALIVE communication [DECODER: Teensy output, ALIVE input] ---------------------
 
 struct AER_DECODER_OUTPUT_command
 {
     AER_DECODER_OUTPUT_command() {};
-    AER_DECODER_OUTPUT_command (const P2TPkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]) {};
+    AER_DECODER_OUTPUT_command (const Pkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]) {};
 
     std::uint16_t data;
 };
@@ -151,6 +138,19 @@ struct C2F_INPUT_command
 {
     C2F_INPUT_command() {};
 };
+
+// --------------------------------------------- Struct for PC -> Teensy -> SPI communication -------------------------------------------
+
+struct SPI_INPUT_command
+{
+    SPI_INPUT_command()  {};
+    SPI_INPUT_command ( const Pkt& pkt) : spi_number(pkt.body[0]), address((pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]), value((pkt.body[3] << SERIAL_COMMS_SHIFT) | pkt.body[4]) {};
+
+    uint8_t spi_number;
+    uint16_t address;
+    uint16_t value;
+};
+
 
 struct HANDSHAKE_ENCODER_command
 {

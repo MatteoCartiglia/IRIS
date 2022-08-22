@@ -27,11 +27,12 @@ static void sendTeensyStatus(TeensyStatus status);
 
 //------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
 
-static P2TPkt inputBuffer; // missnomer. Input command would be more appropriate
+static Pkt inputBuffer; // missnomer. Input command would be more appropriate
+
 
 #ifdef EXISTS_INPUT_ENCODER
     int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
-    TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, TEENSY_INPUT_ENCODER);
+    TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_ACTIVE_LOW);
 #endif
 
 #ifdef EXISTS_INPUT_C2F
@@ -115,10 +116,27 @@ void loop()
         usb_serial_read(&inputBuffer, sizeof(inputBuffer));
         
         // Interpret the input data
-        switch ((P2tPktType)inputBuffer.header) 
+        switch ((PktType)inputBuffer.header) 
         {
+            // Setup DAC
+            case PktType::Pkt_setDACvoltage:
+            { 
+                DAC_command DAC(inputBuffer);
+                dac.writeDAC(DAC.command_address, DAC.data); 
+
+                delay(100);
+                sendTeensyStatus(TeensyStatus::Success);
+
+                Serial.print("DAC command received. Pin ");
+                Serial.print(DAC.command_address);
+                Serial.print(" set to ");
+                Serial.print(DAC.data);
+                Serial.print(" mV.");
+                break;   
+            }
+
             // Setup bias generator
-            case P2tPktType::P2t_setBiasGen:
+            case PktType::Pkt_setBiasGen:
             {  
                 BIASGEN_command biasGenCommand(inputBuffer);
                 biasGen.writeSPI(biasGenCommand.biasNo, biasGenCommand.currentValue_binary);
@@ -132,8 +150,33 @@ void loop()
                 break;
             }
 
+            // Request decoder output
+            case PktType::Pkt_reqOutputDecoder:
+            {
+                AER_DECODER_OUTPUT_command decoder(inputBuffer);
+                outputDecoder.dataWrite(decoder.data);            
+
+                Serial.print("AER command received. Binary value: ");
+                Serial.print(decoder.data, BIN);
+                break;
+            }
+
+            // Get encoder input value
+            case PktType::Pkt_reqInputEncoder:
+            {
+                inputEncoder.sendEventBuffer();
+                break;
+            }
+
+            // Get C2F input value
+            case PktType::Pkt_reqInputC2F:
+            {
+                inputC2F.sendEventBuffer();
+                break;
+            }
+
             // Setup SPIs
-            case P2tPktType::P2t_setSPI:
+            case PktType::Pkt_setSPI:
             {
                 // Teensy 4.1 supports 3 SPIs. SPI0 is always for BiasGen. SPI1/2 are optional and user dependant.
                 SPI_INPUT_command spiCommand(inputBuffer);
@@ -164,56 +207,14 @@ void loop()
                 sendTeensyStatus(TeensyStatus::Success);
                 break;
             }
-
-            // Setup DAC
-            case P2tPktType::P2t_setDACvoltage:
-            { 
-                DAC_command DAC(inputBuffer);
-                dac.writeDAC(DAC.command_address, DAC.data); 
-
-                delay(100);
-                sendTeensyStatus(TeensyStatus::Success);
-
-                Serial.print("DAC command received. Pin ");
-                Serial.print(DAC.command_address);
-                Serial.print(" set to ");
-                Serial.print(DAC.data);
-                Serial.print(" mV.");
-                break;   
-            }
-
-            // Request decoder output
-            case P2tPktType::P2t_reqOutputDecoder:
-            {
-                AER_DECODER_OUTPUT_command decoder(inputBuffer);
-                outputDecoder.dataWrite(decoder.data);            
-
-                Serial.print("AER command received. Binary value: ");
-                Serial.print(decoder.data, BIN);
-                break;
-            }
-
-            // Get encoder input value
-            case P2tPktType::P2t_reqInputEncoder:
-            {
-                inputEncoder.sendEventBuffer();
-                break;
-            }
-                
-            // Get C2F input value
-            case P2tPktType::P2t_reqInputC2F:
-            {
-                inputC2F.sendEventBuffer();
-                break;
-            }
-            
-            case P2tPktType::P2t_handshakeEncoder:
+                        
+            case PktType::Pkt_handshakeEncoder:
             {
                 inputEncoder.handshake();
                 break;
             }
 
-            case P2tPktType::P2t_handshakeC2F:
+            case PktType::Pkt_handshakeC2F:
             {
                 inputC2F.handshake();
                 break;
@@ -289,17 +290,17 @@ static void aerInputEncoder_ISR()
 {
     if (!inputEncoder.reqRead()) 
     {
-        if(inputEncoder.getBufferIndex() < EVENT_BUFFER_SIZE)
+        inputEncoder.ackWrite(0);
+    }
+
+    else if (inputEncoder.reqRead())
+    {
+        if(inputEncoder.getBufferIndex() < MAX_PKT_BODY_LEN)
         {
             inputEncoder.recordEvent();
         }
 
-        inputEncoder.ackWrite(0);
-
-        if (inputEncoder.reqRead())
-        {
-            inputEncoder.ackWrite(1);
-        }
+        inputEncoder.ackWrite(1);
     }
 }
 
@@ -311,18 +312,17 @@ static void aerInputEncoder_ISR()
 static void aerInputC2F_ISR()
 {
     if (!inputC2F.reqRead()) 
-    {
-        if(inputC2F.getBufferIndex() < EVENT_BUFFER_SIZE)
+    {        
+        if(inputC2F.getBufferIndex() < MAX_PKT_BODY_LEN)
         {
             inputC2F.recordEvent();
         }
-
         inputC2F.ackWrite(0);
+    }
 
-        if (inputC2F.reqRead())
-        {
-            inputC2F.ackWrite(1);
-        }
+    else if (inputC2F.reqRead())
+    {      
+        inputC2F.ackWrite(1);
     }
 }
 

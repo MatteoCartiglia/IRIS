@@ -18,7 +18,7 @@ void loadBiasValues(DAC_command dac[], int serialPort )
 {
     for (int i = 0; i< DAC_CHANNELS_USED; i++)
     {
-        P2TPkt p2t_pk(dac[i]); 
+        Pkt p2t_pk(dac[i]); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
     }
@@ -31,7 +31,7 @@ void loadBiasValues(BIASGEN_command bg[], int serialPort)
 {
     for (int i = 0; i< BIASGEN_CHANNELS; i++)
     {
-        P2TPkt p2t_pk(bg[i]); 
+        Pkt p2t_pk(bg[i]); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
     }
 }
@@ -57,7 +57,7 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
         }
         else
         {
-           printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+           printf("getSerialData: Error reading serial port. Serial read byte: %d\n", serialReadBytes);
         }
 
         expectedResponses--;
@@ -75,57 +75,60 @@ void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
     int serialReadBytes = 0;
 
     // Read encoder output
-    if(inputType == TEENSY_INPUT_ENCODER && getHandshakeStatus(TEENSY_INPUT_ENCODER))
-    {
-        ENCODER_INPUT_command inputEncoder;
-        P2TPkt p2t_pkEncoder(inputEncoder); 
-        write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
+#ifdef TEST_ENCODER
+    // if(inputType == TEENSY_INPUT_ENCODER && getHandshakeStatus(TEENSY_INPUT_ENCODER))
+    // {
+    //     ENCODER_INPUT_command inputEncoder;
+    //     Pkt p2t_pkEncoder(inputEncoder); 
+    //     write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
 
-        // outputALIVE output[EVENT_BUFFER_SIZE];
-        // uint8_t outputEncoderData;
-        // uint16_t outputEncoderTimestamp;
+    //     outputALIVE output[EVENT_BUFFER_SIZE];
+    //     uint8_t outputEncoderData;
+    //     uint16_t outputEncoderTimestamp;
 
-        // for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
-        // {
-        //     for(int j = 0; i < 2; j++)
-        //     {
-        //         if(j == 0)
-        //         {
-        //             serialReadBytes = read(serialPort, &outputEncoderData, 1);
-        //             output[i].data = outputEncoderData;
-        //             printf("%d\t", outputEncoderData);
-        //         }
-        //         else if(j == 1)
-        //         {
-        //             serialReadBytes = read(serialPort, &outputEncoderTimestamp, 2);
-        //             output[i].timestamp = outputEncoderTimestamp;
-        //             printf("%d\n", outputEncoderTimestamp);
-        //         }
-        //     }
+    //     for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
+    //     {
+    //         for(int j = 0; i < 2; j++)
+    //         {
+    //             if(j == 0)
+    //             {
+    //                 serialReadBytes = read(serialPort, &outputEncoderData, 1);
+    //                 output[i].data = outputEncoderData;
+    //                 printf("%d\t", outputEncoderData);
+    //             }
+    //             else if(j == 1)
+    //             {
+    //                 serialReadBytes = read(serialPort, &outputEncoderTimestamp, 2);
+    //                 output[i].timestamp = outputEncoderTimestamp;
+    //                 printf("%d\n", outputEncoderTimestamp);
+    //             }
+    //         }
 
-            // if((serialReadBytes != 0) && (serialReadBytes != -1))
-            // {
-            //     updatePlotWindow_Encoder(show_PlotData, output[i].timestamp, output[i].data, serialPort);
-            // }
-            // else
-            // {
-            //     printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
-            // }
-        // }
-    }
+    //         if((serialReadBytes != 0) && (serialReadBytes != -1))
+    //         {
+    //             updatePlotWindow_Encoder(show_PlotData, output[i].timestamp, output[i].data, serialPort);
+    //         }
+    //         else
+    //         {
+    //             printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+    //         }
+    //     }
+    // }
+#endif
 
     // Read C2F output
-    else if(inputType == TEENSY_INPUT_C2F && getHandshakeStatus(TEENSY_INPUT_C2F))
+#ifdef TEST_C2F
+    if(inputType == TEENSY_INPUT_C2F && getHandshakeStatus(TEENSY_INPUT_C2F))
     {
         C2F_INPUT_command inputC2F;
-        P2TPkt p2t_pkC2F(inputC2F); 
+        Pkt p2t_pkC2F(inputC2F); 
         write(serialPort, (void *) &p2t_pkC2F, sizeof(p2t_pkC2F));
 
-        // outputALIVE output[EVENT_BUFFER_SIZE];
+        // outputALIVE output[MAX_PKT_BODY_LEN];
         // uint8_t outputC2FData;
         // uint16_t outputC2FTimestamp;
 
-        // for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
+        // for(int i = 0; i < MAX_PKT_BODY_LEN; i++)
         // {
         //     for(int j = 0; i < 2; j++)
         //     {
@@ -153,12 +156,44 @@ void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
         //     }
         // }
     }
-    
+#endif
+
+#if defined(TEST_C2F) || defined(TEST_ENCODER)
     else
     {
+#endif
+
         updatePlotWindow_Encoder(show_PlotData, time_ms, 0, serialPort);
         updatePlotWindow_C2F(show_PlotData, time_ms, 0, serialPort);
+
+#if defined(TEST_C2F) || defined(TEST_ENCODER)
     }
+#endif
   
     tcflush(serialPort, TCIFLUSH);
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getHandshakeReturn: Retrieves forced handshake status
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+bool getHandshakeReturn(int serialPort)
+{
+    int serialReadBytes = 0;
+    int serialRead = false;
+
+    serialReadBytes = read(serialPort, &serialRead, 1);
+    
+    if((serialReadBytes != 0) && (serialReadBytes != -1))
+    {
+        tcflush(serialPort, TCIFLUSH);
+        return serialRead;
+    }
+    else
+    {
+        printf("getHandshakeReturn: Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+        tcflush(serialPort, TCIFLUSH);
+        return false;
+    }
 }

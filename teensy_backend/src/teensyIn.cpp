@@ -102,7 +102,7 @@ void TeensyIn::recordEvent()
     _inputEventBuffer[1 + _inputBufferIndex++] = newEvent;
   }
 
-  Serial.print(startRecording);
+  // Serial.print(_inputBufferIndex);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -110,12 +110,12 @@ void TeensyIn::recordEvent()
 //----------------------------------------------------------------------------------------------------------------------------------
 void TeensyIn::sendEventBuffer()
 {
-  // for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
+  // for(int i = 0; i < MAX_PKT_BODY_LEN; i++)
   // {
   //   Serial.print(_inputEventBuffer[i].data);
-  //   Serial.print("\n");
   //   Serial.print(_inputEventBuffer[i].timestamp);
   // }
+
   resetBuffer();
 }
 
@@ -124,21 +124,37 @@ void TeensyIn::sendEventBuffer()
 //----------------------------------------------------------------------------------------------------------------------------------
 void TeensyIn::handshake()
 {
-  if (!reqRead()) 
+  if(_inputActiveLow)
   {
-    ackWrite(0);
-
-    if (reqRead())
+    if (!reqRead()) 
     {
-      ackWrite(1);
-      startRecording = true;
+      startRecording = 1;    
+      Serial.print(true);
+      ackWrite(0);
     }
+
+    else if (reqRead())
+    {
+      Serial.print(false);
+      ackWrite(1);
+    }
+
   }
 
-  else if(reqRead())
+  else if(!_inputActiveLow)
   {
-    ackWrite(1);
-    startRecording = true;
+    if (!reqRead()) 
+    {
+      Serial.print(false);
+      ackWrite(0);
+    }
+
+    else if (reqRead())
+    {
+      startRecording = 1;    
+      Serial.print(true);
+      ackWrite(1);
+    }
   }
 }
 
@@ -189,7 +205,7 @@ unsigned int TeensyIn::getInputData()
 
 void TeensyIn::resetBuffer()
 {
-  for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
+  for(int i = 0; i < MAX_PKT_BODY_LEN; i++)
   {
     _inputEventBuffer[i].data = 0;
     _inputEventBuffer[i].timestamp = 0;

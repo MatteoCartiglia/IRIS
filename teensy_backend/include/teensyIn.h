@@ -88,7 +88,7 @@ class TeensyIn
     bool _inputActiveLow;
 
     int _inputBufferIndex;
-    outputALIVE _inputEventBuffer[EVENT_BUFFER_SIZE];
+    outputALIVE _inputEventBuffer[MAX_PKT_BODY_LEN];
 };
 
 #endif

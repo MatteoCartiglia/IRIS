@@ -15,7 +15,10 @@
 #define EXISTS_INPUT_ENCODER                  
 #define EXISTS_INPUT_C2F                     
 #define EXISTS_OUTPUT_DECODER                    
-#define EXISTS_DAC                  
+#define EXISTS_DAC     
+
+// #define TEST_C2F    
+// #define TEST_ENCODER        
 
 // GUI CONSTANTS
 #define BUTTON_HEIGHT                       20
@@ -34,7 +37,7 @@
 
 // PC <-> TEENSY SERIAL COMMUNICATION
 #define SERIAL_COMMS_SHIFT                  8
-#define SERIAL_COMMS_MAX_PKT_LEN            6           // Clarify
+#define SERIAL_COMMS_MAX_PKT_LEN            20           // Clarify
 #define SERIAl_PORT_NAME                    "/dev/ttyACM0"
 #define SERIAL_BUFFER_SIZE_BIAS             62
 #define SERIAL_BUFFER_SIZE_DAC              44
@@ -128,7 +131,6 @@
     #define C2F_INPUT_RANGE                 32
     #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
     #define C2F_INPUT_SAVE_FILENAME         "../imgui_frontend/data/savedOutput/C2F/C2F"
-
     #define C2F_ACTIVE_LOW                  true
     #define C2F_DELAY                       10000
 #endif
@@ -143,11 +145,13 @@
     #define ENCODER_INPUT_BIT_2_PIN         28
     #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/Encoder/outputEncoder.csv"
     #define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/savedOutput/Encoder/outputEncoder"
+    #define ENCODER_ACTIVE_LOW              false
+    #define ENCODER_DELAY                   10000
 #endif
 
-#if defined(EXISTS_INPUT_ENCODER) || defined(EXISTS_INPUT_C2F)
-    #define EVENT_BUFFER_SIZE               100
-#endif
+// #if defined(EXISTS_INPUT_ENCODER) || defined(EXISTS_INPUT_C2F)
+//     #define EVENT_BUFFER_SIZE               20
+// #endif
 
 // DECODER COMMUNICATION -- INPUT INTERFACE
 #ifdef EXISTS_OUTPUT_DECODER

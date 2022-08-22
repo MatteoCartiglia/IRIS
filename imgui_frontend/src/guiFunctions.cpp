@@ -193,7 +193,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
         // Adding a update button to write to serial port
         if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) || updateValues)
         {
-            P2TPkt p2t_pk(dac[i]); 
+            Pkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
             serialDataSent++;
         }
@@ -294,7 +294,7 @@ int setupAerWindow(bool show_AER_config, int serialPort)
         // std::cout << "AER packet: ";
         // printBinaryValue(decoderOutput.data, AER_PACKET_SIZE);
 
-        P2TPkt p2t_pk(decoderOutput); 
+        Pkt p2t_pk(decoderOutput); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         serialDataSent++;
     }
@@ -371,7 +371,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
                     // Adding a update button to write to serial port
                     if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
                     {
-                        P2TPkt p2t_pk(biasGen[j]); 
+                        Pkt p2t_pk(biasGen[j]); 
                         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
                         serialDataSent++;
                     }
@@ -387,7 +387,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
     {
         for(int k=0; k<BIASGEN_CHANNELS; k++)
         {
-            P2TPkt p2t_pk(biasGen[k]); 
+            Pkt p2t_pk(biasGen[k]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
             serialDataSent++;
         }
@@ -452,7 +452,7 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     
     if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
     {
-        P2TPkt p2t_pk(spi[0]); 
+        Pkt p2t_pk(spi[0]); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         serialDataSent++;
     }
@@ -499,7 +499,7 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     
     if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
     {
-        P2TPkt p2t_pk(spi[0]); 
+        Pkt p2t_pk(spi[0]); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         serialDataSent++;
     }
@@ -676,10 +676,13 @@ void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int ser
 
         if(ImGui::Button("Handshake: C2F", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
+#ifdef TEST_C2F
             HANDSHAKE_C2F_command handshakeC2F;
-            P2TPkt p2tpk_HandshakeC2F(handshakeC2F); 
+            Pkt p2tpk_HandshakeC2F(handshakeC2F); 
+            
             write(serialPort, (void *) &p2tpk_HandshakeC2F, sizeof(p2tpk_HandshakeC2F));
-            handshakeStatusC2F = true;
+            handshakeStatusC2F = getHandshakeReturn(serialPort);
+#endif
         }
 
         ImGui::SameLine();
@@ -737,10 +740,13 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
 
         if(ImGui::Button("Handshake: Encoder", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
-            HANDSHAKE_ENCODER_command handshakeEncoder;
-            P2TPkt p2tpk_HandshakeEncoder(handshakeEncoder); 
-            write(serialPort, (void *) &p2tpk_HandshakeEncoder, sizeof(p2tpk_HandshakeEncoder));
-            handshakeStatusEncoder = true;
+#ifdef TEST_ENCODER
+            // HANDSHAKE_ENCODER_command handshakeEncoder;
+            // Pkt p2tpk_handshakeEncoder(handshakeEncoder); 
+            
+            // write(serialPort, (void *) &handshakeEncoder, sizeof(handshakeEncoder));
+            // handshakeStatusEncoder = getHandshakeReturn(serialPort);
+#endif
         }
 
         ImGui::SameLine();
