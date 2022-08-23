@@ -280,7 +280,7 @@ int main(int, char**)
         updateValues_DAC = false;  
         updateValues_BiasGen  = false;  
    
-        sleep(0.25);  
+        // sleep(0.25);  
     }
 
     //---------------------------------------------------------- Graceful Shutdown ------------------------------------------------------- 

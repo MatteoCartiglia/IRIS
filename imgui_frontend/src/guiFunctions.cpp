@@ -46,6 +46,7 @@ bool valueChange_SaveFilename = false;
 
 bool enableCommsEncoder = false;
 bool enableCommsC2F = false;
+bool enableCommsAER = false;
 bool handshakeStatusEncoder = false;
 bool handshakeStatusC2F = false;
 
@@ -287,7 +288,7 @@ int setupAerWindow(bool show_AER_config, int serialPort)
     ImGui::NewLine();
 
     // Adding a "Send" button to write to serial port
-    if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*1, BUTTON_HEIGHT)))
+    if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
     {
         // Creating the AER packet
         AER_DECODER_OUTPUT_command decoderOutput;
@@ -300,6 +301,12 @@ int setupAerWindow(bool show_AER_config, int serialPort)
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         serialDataSent++;
     }
+
+    ImGui::SameLine();
+
+    std::string toggleID_str = "toggleAER";
+    const char *toggleID = toggleID_str.c_str();
+    toggleButton(toggleID, &enableCommsAER);
     
     ImGui::End();
     return serialDataSent;
