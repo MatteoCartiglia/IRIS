@@ -38,4 +38,5 @@ This code is compiled and uploaded using "PlatformIO" plugin on Visual Studio Co
 ## To-Do:
 
 - Fix bug with BiasGen initialisation
-- Save & load new bias values
+- Fix bug with editing filename when saving
+- Fix bug with BiaGen loading bias values from file

@@ -1,6 +1,4 @@
 #---------------------------------------------------------------------------------------------------------------------------------------
-#
-#
 # Author: Ciara Giles-Doran <gciara@student.ethz.ch>
 # Last updated: 
 #---------------------------------------------------------------------------------------------------------------------------------------
@@ -10,6 +8,7 @@ imgui_frontend/src/.obj/*
 imgui_frontend/alive_interface
 imgui_frontend/data/customBiasValues/*
 imgui_frontend/data/savedOutput/*
+imgui_frontend/data/inputAER/*
 
 # Ignore directories created by PlatformIO
 teensy_backend/.pio

@@ -360,7 +360,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 #else
                     // Adding an input field for changing bias value
                     ImGui::PushItemWidth(260);
-                    float inputField_BiasGenValue = biasGen[j].currentValue_uA;
+                    float inputField_BiasGenValue = biasGen[j].currentValue_uA;             
                     inputField_BiasGenValue, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &inputField_BiasGenValue, 0.000001, 0, "%.6f", 0);
                     biasGen[j].currentValue_uA = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT); 
                     biasGen[j].currentValue_binary = getBiasGenPacket(biasGen[j].currentValue_uA, biasGen[j].transistorType);
@@ -511,7 +511,7 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------
-// loadPopup: Generic popup to handle bias value saving operations
+// savePopup: Generic popup to handle bias value saving operations
 //--------------------------------------------------------------------------------------------------------------------------------------
 template <typename T> void savePopup(bool openPopup, const char *popupLabel, T command)
 {
