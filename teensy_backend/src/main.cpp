@@ -114,7 +114,7 @@ void loop()
    {
         // Read the data in the input buffer
         usb_serial_read(&inputBuffer, sizeof(inputBuffer));
-        
+               
         // Interpret the input data
         switch ((PktType)inputBuffer.header) 
         {
@@ -207,16 +207,16 @@ void loop()
                 sendTeensyStatus(TeensyStatus::Success);
                 break;
             }
-                        
-            case PktType::Pkt_handshakeEncoder:
-            {
-                inputEncoder.handshake();
-                break;
-            }
 
             case PktType::Pkt_handshakeC2F:
             {
                 inputC2F.handshake();
+                break;
+            }
+                        
+            case PktType::Pkt_handshakeEncoder:
+            {
+                inputEncoder.handshake();
                 break;
             }
 

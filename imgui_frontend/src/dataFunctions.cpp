@@ -327,7 +327,7 @@ bool saveBiases(const char *filename, DAC_command* command)
         {
             fout << command[i].name << ','; 
             fout << command[i].data << ','; 
-            fout << command[i].command_address; 
+            fout << int(command[i].command_address); 
             fout << '\n'; 
         }
         

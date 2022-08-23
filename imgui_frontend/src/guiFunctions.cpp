@@ -541,7 +541,7 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
 
         if (ImGui::Button("Save", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
-            std::cout << typeid(command).hash_code();
+            // std::cout << typeid(command).hash_code();
             saveBiases(filename, command);
             ImGui::CloseCurrentPopup();   
         }
@@ -741,11 +741,11 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
         if(ImGui::Button("Handshake: Encoder", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
 #ifdef TEST_ENCODER
-            // HANDSHAKE_ENCODER_command handshakeEncoder;
-            // Pkt p2tpk_handshakeEncoder(handshakeEncoder); 
+            HANDSHAKE_ENCODER_command handshakeEncoder;
+            Pkt p2tpk_HandshakeEncoder(handshakeEncoder); 
             
-            // write(serialPort, (void *) &handshakeEncoder, sizeof(handshakeEncoder));
-            // handshakeStatusEncoder = getHandshakeReturn(serialPort);
+            write(serialPort, (void *) &p2tpk_HandshakeEncoder, sizeof(p2tpk_HandshakeEncoder));
+            handshakeStatusEncoder = getHandshakeReturn(serialPort);
 #endif
         }
 

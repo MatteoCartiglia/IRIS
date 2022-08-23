@@ -76,8 +76,8 @@ void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
 
     // Read encoder output
 #ifdef TEST_ENCODER
-    // if(inputType == TEENSY_INPUT_ENCODER && getHandshakeStatus(TEENSY_INPUT_ENCODER))
-    // {
+    if(inputType == TEENSY_INPUT_ENCODER && getHandshakeStatus(TEENSY_INPUT_ENCODER))
+    {
     //     ENCODER_INPUT_command inputEncoder;
     //     Pkt p2t_pkEncoder(inputEncoder); 
     //     write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
@@ -113,7 +113,7 @@ void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
     //             printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
     //         }
     //     }
-    // }
+    }
 #endif
 
     // Read C2F output
@@ -188,7 +188,7 @@ bool getHandshakeReturn(int serialPort)
     if((serialReadBytes != 0) && (serialReadBytes != -1))
     {
         tcflush(serialPort, TCIFLUSH);
-        return serialRead;
+        return char(serialRead);
     }
     else
     {

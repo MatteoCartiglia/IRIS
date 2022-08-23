@@ -23,8 +23,8 @@ struct ENCODER_INPUT_command;
 struct C2F_INPUT_command;
 struct C2F_OUTPUT_command;
 struct SPI_INPUT_command;
-struct HANDSHAKE_ENCODER_command;
 struct HANDSHAKE_C2F_command;
+struct HANDSHAKE_ENCODER_command;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
@@ -34,8 +34,8 @@ struct HANDSHAKE_C2F_command;
 // ---------------------------------------------------- Teensy Status Return Types ------------------------------------------------------
 enum class TeensyStatus 
 {
-    UnknownCommand                  = 0,
-    Success                         = 1,
+    UnknownCommand                  = 0U,
+    Success                         = 1U,
 };
 
 
@@ -48,8 +48,8 @@ enum class PktType
     Pkt_reqInputEncoder             = 4U,
     Pkt_reqInputC2F                 = 5U,
     Pkt_setSPI                      = 6U,
-    Pkt_handshakeEncoder            = 7U,
-    Pkt_handshakeC2F                = 8U,
+    Pkt_handshakeC2F                = 7U,
+    Pkt_handshakeEncoder            = 8U
 };
 
 
@@ -75,8 +75,8 @@ struct Pkt
     Pkt(const ENCODER_INPUT_command& inputEncoder);
     Pkt(const C2F_INPUT_command& inputC2F);
     Pkt(const SPI_INPUT_command& spi);
-    Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder);
     Pkt(const HANDSHAKE_C2F_command& handshakeC2F);
+    Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder);
 
     std::uint8_t header;                                        // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
@@ -151,15 +151,15 @@ struct SPI_INPUT_command
     uint16_t value;
 };
 
+struct HANDSHAKE_C2F_command
+{
+    HANDSHAKE_C2F_command() {};
+};
 
 struct HANDSHAKE_ENCODER_command
 {
     HANDSHAKE_ENCODER_command() {};
 };
 
-struct HANDSHAKE_C2F_command
-{
-    HANDSHAKE_C2F_command() {};
-};
 
 #endif

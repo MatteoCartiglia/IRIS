@@ -17,8 +17,8 @@
 #define EXISTS_OUTPUT_DECODER                    
 #define EXISTS_DAC     
 
-// #define TEST_C2F    
-// #define TEST_ENCODER        
+#define TEST_C2F    
+#define TEST_ENCODER        
 
 // GUI CONSTANTS
 #define BUTTON_HEIGHT                       20
@@ -145,7 +145,7 @@
     #define ENCODER_INPUT_BIT_2_PIN         28
     #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/Encoder/outputEncoder.csv"
     #define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/savedOutput/Encoder/outputEncoder"
-    #define ENCODER_ACTIVE_LOW              false
+    #define ENCODER_ACTIVE_LOW              true
     #define ENCODER_DELAY                   10000
 #endif
 

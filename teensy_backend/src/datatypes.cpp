@@ -69,14 +69,8 @@ Pkt::Pkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::underly
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// ENCODER HANDSHAKE Command Packet
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-Pkt::Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeEncoder)) {};
-
-//---------------------------------------------------------------------------------------------------------------------------------------
 // C2F HANDSHAKE Command Packet
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 Pkt::Pkt(const HANDSHAKE_C2F_command& handshakeC2F) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeC2F)) {};
-
+Pkt::Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeEncoder)) {};
