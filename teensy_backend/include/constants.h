@@ -15,10 +15,7 @@
 #define EXISTS_INPUT_ENCODER                  
 #define EXISTS_INPUT_C2F                     
 #define EXISTS_OUTPUT_DECODER                    
-#define EXISTS_DAC     
-
-#define TEST_C2F    
-#define TEST_ENCODER        
+#define EXISTS_DAC       
 
 // GUI CONSTANTS
 #define BUTTON_HEIGHT                       20

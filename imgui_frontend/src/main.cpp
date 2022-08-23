@@ -272,8 +272,7 @@ int main(int, char**)
         // Plot C2F and Encoder outputs
         if(show_PlotData)
         {
-            getSerialData_Plots(serialPort, show_PlotData, TEENSY_INPUT_ENCODER);
-            getSerialData_Plots(serialPort, show_PlotData, TEENSY_INPUT_C2F);
+            getSerialData_Plots(serialPort, show_PlotData);
         }
 
         // Render the window       

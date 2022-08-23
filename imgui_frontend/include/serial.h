@@ -30,7 +30,7 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getSerialData_Plots: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType);
+void getSerialData_Plots(int serialPort, bool show_PlotData);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getHandshakeReturn: Retrieves forced handshake status

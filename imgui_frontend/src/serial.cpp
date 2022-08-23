@@ -69,15 +69,17 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getSerialData_Plots: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
+void getSerialData_Plots(int serialPort, bool show_PlotData)
 {
     long time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     int serialReadBytes = 0;
 
-    // Read encoder output
-#ifdef TEST_ENCODER
-    if(inputType == TEENSY_INPUT_ENCODER && getHandshakeStatus(TEENSY_INPUT_ENCODER))
+    // -------------------------------------------- Get ALIVE Encoder Output & Update Plots ---------------------------------------------
+
+    if(getHandshakeStatus(TEENSY_INPUT_ENCODER))
     {
+        updatePlotWindow_Encoder(show_PlotData, time_ms, 0, serialPort);
+
     //     ENCODER_INPUT_command inputEncoder;
     //     Pkt p2t_pkEncoder(inputEncoder); 
     //     write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
@@ -114,15 +116,21 @@ void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
     //         }
     //     }
     }
-#endif
 
-    // Read C2F output
-#ifdef TEST_C2F
-    if(inputType == TEENSY_INPUT_C2F && getHandshakeStatus(TEENSY_INPUT_C2F))
+    else if (!getHandshakeStatus(TEENSY_INPUT_ENCODER))
     {
-        C2F_INPUT_command inputC2F;
-        Pkt p2t_pkC2F(inputC2F); 
-        write(serialPort, (void *) &p2t_pkC2F, sizeof(p2t_pkC2F));
+        updatePlotWindow_Encoder(show_PlotData, time_ms, 0, serialPort);
+    }
+
+
+    // ---------------------------------------------- Get ALIVE C2F Output & Update Plots -----------------------------------------------
+
+    if(getHandshakeStatus(TEENSY_INPUT_C2F))
+    {
+        updatePlotWindow_C2F(show_PlotData, time_ms, 0, serialPort);
+        // C2F_INPUT_command inputC2F;
+        // Pkt p2t_pkC2F(inputC2F); 
+        // write(serialPort, (void *) &p2t_pkC2F, sizeof(p2t_pkC2F));
 
         // outputALIVE output[MAX_PKT_BODY_LEN];
         // uint8_t outputC2FData;
@@ -156,20 +164,14 @@ void getSerialData_Plots(int serialPort, bool show_PlotData, int inputType)
         //     }
         // }
     }
-#endif
 
-#if defined(TEST_C2F) || defined(TEST_ENCODER)
-    else
+    else if(!getHandshakeStatus(TEENSY_INPUT_C2F))
     {
-#endif
-
-        updatePlotWindow_Encoder(show_PlotData, time_ms, 0, serialPort);
         updatePlotWindow_C2F(show_PlotData, time_ms, 0, serialPort);
-
-#if defined(TEST_C2F) || defined(TEST_ENCODER)
     }
-#endif
   
+
+    // Flush the serial port
     tcflush(serialPort, TCIFLUSH);
 }
 

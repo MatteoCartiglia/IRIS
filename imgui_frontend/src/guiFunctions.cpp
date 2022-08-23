@@ -38,9 +38,11 @@ bool selectionChange_synapseType  = 0;
 bool selectionChange_neuronNumber = 0;
 bool selectionChange_synapseNumber = 0;
 bool selectionChange_file = 0;
+
 bool valueChange_DACbias[DAC_CHANNELS_USED] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 bool valueChange_SPIbias_1[2] = {0, 0};
 bool valueChange_SPIbias_2[2] = {0, 0};
+bool valueChange_SaveFilename = false;
 
 bool enableCommsEncoder = false;
 bool enableCommsC2F = false;
@@ -513,7 +515,7 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 //--------------------------------------------------------------------------------------------------------------------------------------
 template <typename T> void savePopup(bool openPopup, const char *popupLabel, T command)
 {
-    char *filename;
+    char* filename;
 
     if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
     {
@@ -529,7 +531,7 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
         ImGui::NewLine();
         ImGui::Text("Filename: ");
         ImGui::SameLine();
-        ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
+        filename, valueChange_SaveFilename = ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
         ImGui::NewLine();
 
         if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
@@ -676,13 +678,11 @@ void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int ser
 
         if(ImGui::Button("Handshake: C2F", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
-#ifdef TEST_C2F
             HANDSHAKE_C2F_command handshakeC2F;
             Pkt p2tpk_HandshakeC2F(handshakeC2F); 
             
             write(serialPort, (void *) &p2tpk_HandshakeC2F, sizeof(p2tpk_HandshakeC2F));
             handshakeStatusC2F = getHandshakeReturn(serialPort);
-#endif
         }
 
         ImGui::SameLine();
@@ -740,13 +740,11 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
 
         if(ImGui::Button("Handshake: Encoder", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
-#ifdef TEST_ENCODER
             HANDSHAKE_ENCODER_command handshakeEncoder;
             Pkt p2tpk_HandshakeEncoder(handshakeEncoder); 
             
             write(serialPort, (void *) &p2tpk_HandshakeEncoder, sizeof(p2tpk_HandshakeEncoder));
             handshakeStatusEncoder = getHandshakeReturn(serialPort);
-#endif
         }
 
         ImGui::SameLine();
