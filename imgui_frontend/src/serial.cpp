@@ -80,41 +80,41 @@ void getSerialData_Plots(int serialPort, bool show_PlotData)
     {
         updatePlotWindow_Encoder(show_PlotData, time_ms, 0, serialPort);
 
-    //     ENCODER_INPUT_command inputEncoder;
-    //     Pkt p2t_pkEncoder(inputEncoder); 
-    //     write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
+        // ENCODER_INPUT_command inputEncoder;
+        // Pkt p2t_pkEncoder(inputEncoder); 
+        // write(serialPort, (void *) &p2t_pkEncoder, sizeof(p2t_pkEncoder));
 
-    //     outputALIVE output[EVENT_BUFFER_SIZE];
-    //     uint8_t outputEncoderData;
-    //     uint16_t outputEncoderTimestamp;
+        // outputALIVE output[EVENT_BUFFER_SIZE];
+        // uint8_t outputEncoderData;
+        // uint16_t outputEncoderTimestamp;
 
-    //     for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
-    //     {
-    //         for(int j = 0; i < 2; j++)
-    //         {
-    //             if(j == 0)
-    //             {
-    //                 serialReadBytes = read(serialPort, &outputEncoderData, 1);
-    //                 output[i].data = outputEncoderData;
-    //                 printf("%d\t", outputEncoderData);
-    //             }
-    //             else if(j == 1)
-    //             {
-    //                 serialReadBytes = read(serialPort, &outputEncoderTimestamp, 2);
-    //                 output[i].timestamp = outputEncoderTimestamp;
-    //                 printf("%d\n", outputEncoderTimestamp);
-    //             }
-    //         }
+        // for(int i = 0; i < EVENT_BUFFER_SIZE; i++)
+        // {
+        //     for(int j = 0; i < 2; j++)
+        //     {
+        //         if(j == 0)
+        //         {
+        //             serialReadBytes = read(serialPort, &outputEncoderData, 1);
+        //             output[i].data = outputEncoderData;
+        //             printf("%d\t", outputEncoderData);
+        //         }
+        //         else if(j == 1)
+        //         {
+        //             serialReadBytes = read(serialPort, &outputEncoderTimestamp, 2);
+        //             output[i].timestamp = outputEncoderTimestamp;
+        //             printf("%d\n", outputEncoderTimestamp);
+        //         }
+        //     }
 
-    //         if((serialReadBytes != 0) && (serialReadBytes != -1))
-    //         {
-    //             updatePlotWindow_Encoder(show_PlotData, output[i].timestamp, output[i].data, serialPort);
-    //         }
-    //         else
-    //         {
-    //             printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
-    //         }
-    //     }
+        //     if((serialReadBytes != 0) && (serialReadBytes != -1))
+        //     {
+        //         updatePlotWindow_Encoder(show_PlotData, output[i].timestamp, output[i].data, serialPort);
+        //     }
+        //     else
+        //     {
+        //         printf("Error reading serial port. Serial read byte: %d\n", serialReadBytes);
+        //     }
+        // }
     }
 
     else if (!getHandshakeStatus(TEENSY_INPUT_ENCODER))
