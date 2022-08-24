@@ -289,17 +289,17 @@ static void resetChip()
 static void aerInputEncoder_ISR()
 {
     if (!inputEncoder.reqRead()) 
-    {
-        inputEncoder.ackWrite(0);
-    }
-
-    else if (inputEncoder.reqRead())
-    {
+    {        
         if(inputEncoder.getBufferIndex() < MAX_PKT_BODY_LEN)
         {
             inputEncoder.recordEvent();
         }
 
+        inputEncoder.ackWrite(0);
+    }
+
+    else if (inputEncoder.reqRead())
+    {
         inputEncoder.ackWrite(1);
     }
 }
