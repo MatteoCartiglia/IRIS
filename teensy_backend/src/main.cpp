@@ -290,7 +290,7 @@ static void aerInputEncoder_ISR()
 {
     if (!inputEncoder.reqRead()) 
     {        
-        if(inputEncoder.getBufferIndex() < MAX_PKT_BODY_LEN)
+        if(inputEncoder.getBufferIndex() < int(MAX_PKT_BODY_LEN))
         {
             inputEncoder.recordEvent();
         }
@@ -313,7 +313,7 @@ static void aerInputC2F_ISR()
 {
     if (!inputC2F.reqRead()) 
     {        
-        if(inputC2F.getBufferIndex() < MAX_PKT_BODY_LEN)
+        if(inputC2F.getBufferIndex() < int(MAX_PKT_BODY_LEN))
         {
             inputC2F.recordEvent();
         }

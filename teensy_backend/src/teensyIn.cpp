@@ -97,6 +97,7 @@ void TeensyIn::recordEvent()
     outputALIVE newEvent;
     newEvent.data = dataRead();
     newEvent.timestamp = 0;
+    // newEvent.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
     _inputEventBuffer[0].data = _inputBufferIndex;
     _inputEventBuffer[1 + _inputBufferIndex++] = newEvent;
@@ -205,7 +206,7 @@ unsigned int TeensyIn::getInputData()
 
 void TeensyIn::resetBuffer()
 {
-  for(int i = 0; i < MAX_PKT_BODY_LEN; i++)
+  for(int i = 0; i < int(MAX_PKT_BODY_LEN); i++)
   {
     _inputEventBuffer[i].data = 0;
     _inputEventBuffer[i].timestamp = 0;

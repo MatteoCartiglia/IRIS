@@ -61,7 +61,7 @@ enum class PktType
 struct outputALIVE
 {
     uint8_t data;
-    uint16_t timestamp;
+    unsigned long timestamp;
 };
 
 // -------------------------------------------------- PC -> Teensy Comm Packet Struct ---------------------------------------------------
