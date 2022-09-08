@@ -543,9 +543,7 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
  
         ImGui::NewLine();
         ImGui::Text("Filename: ");
-
         ImGui::SameLine();
-
         filename, valueChange_SaveFilename = ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
         ImGui::NewLine();
         std::cout <<filename << std::endl;
@@ -559,9 +557,6 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
 
         if (ImGui::Button("Save", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
-           // strncpy(saving_filename, filename, 128);
-
-            // std::cout << typeid(command).hash_code();
             saveBiases(filename, command);
             ImGui::CloseCurrentPopup();   
         }
