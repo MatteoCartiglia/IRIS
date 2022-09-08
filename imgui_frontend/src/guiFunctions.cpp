@@ -290,16 +290,20 @@ int setupAerWindow(bool show_AER_config, int serialPort)
     // Adding a "Send" button to write to serial port
     if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
     {
-        // Creating the AER packet
-        AER_DECODER_OUTPUT_command decoderOutput;
-        decoderOutput.data = getAERpacket(selection_chipCore, selection_synapseType, selection_neuronNumber, value_synapseNumber);
+        for(int i =0; i<5; i++)
+        {
+            // Creating the AER packet
+            AER_DECODER_OUTPUT_command decoderOutput;
+            decoderOutput.data = getAERpacket(selection_chipCore, selection_synapseType, selection_neuronNumber, value_synapseNumber);
 
-        // std::cout << "AER packet: ";
-        // printBinaryValue(decoderOutput.data, AER_PACKET_SIZE);
+            // std::cout << "AER packet: ";
+            // printBinaryValue(decoderOutput.data, AER_PACKET_SIZE);
 
-        Pkt p2t_pk(decoderOutput); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-        serialDataSent++;
+            Pkt p2t_pk(decoderOutput); 
+            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            serialDataSent++;
+        }
+
     }
 
     ImGui::SameLine();
