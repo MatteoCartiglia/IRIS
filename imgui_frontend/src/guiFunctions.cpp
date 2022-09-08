@@ -526,24 +526,29 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 //--------------------------------------------------------------------------------------------------------------------------------------
 template <typename T> void savePopup(bool openPopup, const char *popupLabel, T command)
 {
-    char* filename;
-
-    if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
-    {
-        filename = DAC_FILENAME_SAVE;
-    }
-    else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
-    {
-        filename = BIASGEN_FILENAME_SAVE;
-    }
-
+    char filename[128];
     if (ImGui::BeginPopupModal(popupLabel, &openPopup))
     {
+        if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
+        {
+            char filename_dac[128] = "data/customBiasValues/DAC/untitled.csv"; 
+            strncpy(filename,  filename_dac, 128);
+
+        }
+        else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
+        {
+            char filename_bg[128] = "data/customBiasValues/BIASGEN/untitled.csv"; 
+            strncpy(filename,  filename_bg, 128);
+        }
+ 
         ImGui::NewLine();
         ImGui::Text("Filename: ");
+
         ImGui::SameLine();
+
         filename, valueChange_SaveFilename = ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
         ImGui::NewLine();
+        std::cout <<filename << std::endl;
 
         if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
@@ -554,6 +559,8 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
 
         if (ImGui::Button("Save", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
+           // strncpy(saving_filename, filename, 128);
+
             // std::cout << typeid(command).hash_code();
             saveBiases(filename, command);
             ImGui::CloseCurrentPopup();   

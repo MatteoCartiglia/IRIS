@@ -56,7 +56,6 @@
     #define BIASGEN_RESET_PIN               41
     
     #define BIASGEN_BIASFILE                "data/defaultBiasValues/defaultBiasValues_BIASGEN.csv"
-    #define BIASGEN_FILENAME_SAVE           "data/customBiasValues/BIASGEN/untitled.csv"
     #define BIASGEN_FILENAME_LOAD           "data/customBiasValues/BIASGEN/"
 
     #define BIASGEN_CHANNELS                54
@@ -192,7 +191,6 @@
     #define DAC_MAX_VOLTAGE                 1800    // mV
 
     #define DAC_BIASFILE                    "data/defaultBiasValues/defaultBiasValues_DAC.csv"
-    #define DAC_FILENAME_SAVE               "data/customBiasValues/DAC/untitled.csv"
     #define DAC_FILENAME_LOAD               "data/customBiasValues/DAC/"
 #endif
 
