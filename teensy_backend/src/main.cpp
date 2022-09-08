@@ -1,245 +1,339 @@
+//---------------------------------------------------------------------------------------------------------------------------------------
+// main.cpp file containing main function and ISR interrupt functions
+//
+// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
+// Last updated: 15 JUL 2022
+//---------------------------------------------------------------------------------------------------------------------------------------
+
 #include <Arduino.h>
-#include <SPI.h>
-#include "ncs_teensy.h"
+#include <vector>
+#include <iostream>
+
+#include "constants.h"
+#include "datatypes.h"
+#include "spiConfig.h"
+
 #include "dac.h"
-#include "aer_in.h"
-#include "teensy_interface.h"
-#include <Wire.h>
+#include "teensyIn.h"
+#include "teensyOut.h"
+
+// Declaring function prototypes in order of definition
+static void setupLFSR();
+static void resetChip();
+static void aerInputEncoder_ISR();
+static void aerInputC2F_ISR();
+static void sendTeensyStatus(TeensyStatus status);
 
 
-static P2TPkt rx_buf;
-static bool aero_flag;
-AER_out aero_buf[aero_buf_size];
-uint8_t msg_buf[1];
+//------------------------------------------------------- Defining Global Variables ------------------------------------------------------ 
+
+static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 
-void spi_controller(SPIClass SPI, int cs, int address, int value);
-void bg_controller(SPIClass SPI, int cs, int address, int value);
+#ifdef EXISTS_INPUT_ENCODER
+    int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
+    TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_ACTIVE_LOW);
+#endif
 
-void SPI_events(int spi_number, int address, int value);
-void spi_setup(int clk, int cs, int mosi );
+#ifdef EXISTS_INPUT_C2F
+    int inputC2F_dataPins[C2F_INPUT_NO_PIN] = {C2F_INPUT_BIT_0_PIN, C2F_INPUT_BIT_1_PIN, C2F_INPUT_BIT_2_PIN, C2F_INPUT_BIT_3_PIN, C2F_INPUT_BIT_4_PIN};
+    TeensyIn inputC2F(C2F_REQ, C2F_ACK, inputC2F_dataPins, C2F_INPUT_NO_PIN, C2F_DELAY, C2F_ACTIVE_LOW);
+#endif
 
-DAC dac{dac_rst,
-    a0, 
-    a1
+#ifdef EXISTS_OUTPUT_DECODER
+    int outputDecoder_dataPins[DECODER_OUTPUT_NO_PIN] = {DECODER_OUTPUT_BIT_0_PIN, DECODER_OUTPUT_BIT_1_PIN, DECODER_OUTPUT_BIT_2_PIN, DECODER_OUTPUT_BIT_3_PIN,
+                                DECODER_OUTPUT_BIT_4_PIN, DECODER_OUTPUT_BIT_5_PIN, DECODER_OUTPUT_BIT_6_PIN, DECODER_OUTPUT_BIT_7_PIN, DECODER_OUTPUT_BIT_8_PIN};
+    TeensyOut outputDecoder(DECODER_REQ, DECODER_ACK, outputDecoder_dataPins, DECODER_OUTPUT_NO_PIN, DECODER_DELAY, DECODER_ACTIVE_LOW);
+#endif
+
+#ifdef EXISTS_DAC
+    DAC dac{DAC_RESET, DAC_A0, DAC_A1};
+#endif
+
+#ifdef EXISTS_BIASGEN
+    SPIConfig biasGen{BIASGEN_SCK_PIN , BIASGEN_RESET_PIN , BIASGEN_MOSI_PIN,  BIASGEN_ENABLE_PIN, 0};
+#endif
+
+#ifdef EXISTS_SPI1
+    SPIConfig spi1{SPI1_SCK_PIN , SPI1_RESET_PIN , SPI1_MOSI_PIN, 1};
+#endif
+
+#ifdef EXISTS_SPI2
+    SPIConfig spi2{SPI2_SCK_PIN ,SPI2_RESET_PIN , SPI2_MOSI_PIN, 2};
+#endif
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// "setup" function: 
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void setup() 
+{
+    resetChip();        
+    setupLFSR();
+
+#ifdef EXISTS_BIASGEN
+    biasGen.setupSPI();
+    biasGen.resetSPI();
+#endif
+
+#ifdef EXISTS_SPI1
+    spi1.setupSPI();
+    spi1.resetSPI();
+#endif
+
+#ifdef EXISTS_SPI2
+    spi2.setupSPI();
+    spi2.resetSPI();
+#endif
+
+#ifdef EXISTS_INPUT_ENCODER
+    attachInterrupt(digitalPinToInterrupt(ENCODER_REQ), aerInputEncoder_ISR, CHANGE);
+#endif
+
+#ifdef EXISTS_INPUT_C2F
+    attachInterrupt(digitalPinToInterrupt(C2F_REQ), aerInputC2F_ISR, CHANGE);
+#endif
+
+#ifdef EXISTS_DAC
+    dac.join_I2C_bus();
+    dac.turnReferenceOff();
+#endif
+
+    Serial.print("********************* Setup complete *********************\n");
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// "main" function: reads and writes PC <-> Teensy serial communication
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void loop() 
+{    
+   if (usb_serial_available()) 
+   {
+        // Read the data in the input buffer
+        usb_serial_read(&inputBuffer, sizeof(inputBuffer));
+               
+        // Interpret the input data
+        switch ((PktType)inputBuffer.header) 
+        {
+            // Setup DAC
+            case PktType::Pkt_setDACvoltage:
+            { 
+                DAC_command DAC(inputBuffer);
+                dac.writeDAC(DAC.command_address, DAC.data); 
+
+                delay(100);
+                sendTeensyStatus(TeensyStatus::Success);
+
+                Serial.print("DAC command received. Pin ");
+                Serial.print(DAC.command_address);
+                Serial.print(" set to ");
+                Serial.print(DAC.data);
+                Serial.print(" mV.");
+                break;   
+            }
+
+            // Setup bias generator
+            case PktType::Pkt_setBiasGen:
+            {  
+                BIASGEN_command biasGenCommand(inputBuffer);
+                biasGen.writeSPI(biasGenCommand.biasNo, biasGenCommand.currentValue_binary);
+                delay(100);
+                sendTeensyStatus(TeensyStatus::Success);
+                Serial.print("BIASGEN command received. Bias ");
+                Serial.print(biasGenCommand.biasNo);
+                Serial.print(" set to approx. ");
+                Serial.print(biasGen.getBiasGenDecimal(biasGenCommand.currentValue_binary), 6);
+                Serial.print(" uA.");
+                break;
+            }
+
+            // Request decoder output
+            case PktType::Pkt_reqOutputDecoder:
+            {
+                AER_DECODER_OUTPUT_command decoder(inputBuffer);
+                outputDecoder.dataWrite(decoder.data);            
+
+                Serial.print("AER command received. Binary value: ");
+                Serial.print(decoder.data, BIN);
+                break;
+            }
+
+            // Get encoder input value
+            case PktType::Pkt_reqInputEncoder:
+            {
+                inputEncoder.sendEventBuffer();
+                break;
+            }
+
+            // Get C2F input value
+            case PktType::Pkt_reqInputC2F:
+            {
+                inputC2F.sendEventBuffer();
+                break;
+            }
+
+            // Setup SPIs
+            case PktType::Pkt_setSPI:
+            {
+                // Teensy 4.1 supports 3 SPIs. SPI0 is always for BiasGen. SPI1/2 are optional and user dependant.
+                SPI_INPUT_command spiCommand(inputBuffer);
+
+#ifdef EXISTS_SPI1
+                if (spiCommand.spi_number == 1 )
+                {
+                    Serial.print("SPI command received. Spi number 1, address ");
+                    Serial.print(spiCommand.address);
+                    Serial.print("Value ");
+                    Serial.print(spiCommand.value);
+                    spi1.writeSPI(spiCommand.address, spiCommand.value);
+                }
+#endif
+
+#ifdef EXISTS_SPI2
+                if (spiCommand.spi_number == 2)
+                {
+                    spi2.writeSPI(spiCommand.address, spiCommand.value);
+                    Serial.print("SPI command received: Spi number 2, address ");
+                    Serial.print(spiCommand.address);
+                    Serial.print("Value: ");
+                    Serial.print(spiCommand.value);
+                }
+#endif
+
+                delay(100);
+                sendTeensyStatus(TeensyStatus::Success);
+                break;
+            }
+
+            case PktType::Pkt_handshakeC2F:
+            {
+                inputC2F.handshake();
+                break;
+            }
+                        
+            case PktType::Pkt_handshakeEncoder:
+            {
+                inputEncoder.handshake();
+                break;
+            }
+
+            default: 
+            {
+               // sendTeensyStatus(TeensyStatus::UnknownCommand);
+                break;  
+            }
+        } 
+   }
 };
 
 
-AER_in aero(aero_req,
-            aero_ack,
-            aero_data,
-            aero_num_data_pins,
-            aero_buf,
-            aer_delays,
-            10,
-            false);
-int aero_duration = 15; 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// setupLFSR: Sets up Linear Feedback Shift Register
+//---------------------------------------------------------------------------------------------------------------------------------------
 
-elapsedMicros since_blank_micro;
-elapsedMillis since_blank_milli;
-
-
-//interrupt handler run all the time and through out or put into buffer (flag if full) main loop empties this buffer
-// sending events to the chip: number 1 without isi number two with buffer and timer interupt 
-
-void transmitAnyAerEvents() 
+static void setupLFSR()
 {
-    if ( aero_flag &&  aero.get_index() ) {
-        for (int i = 0; i < aero.get_index(); ++i) {
-            P2TPkt aero_pkt(aero_buf[i]);
-            usb_serial_write((const void*) &aero_pkt, sizeof(aero_pkt));
+  pinMode(LB_LFSR_CLK, OUTPUT);
+  delay(100);
+  digitalWrite(LB_LFSR_CLK, LOW);
+  delay(100);
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// resetChip: Sets up and executes chip reset pattern
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+static void resetChip()
+{
+  pinMode(P_RST_PIN, OUTPUT);
+  pinMode(S_RST_PIN, OUTPUT);
+  pinMode(SYN_RST_NMDA_PIN, OUTPUT);
+  pinMode(SYN_RST_GABGA_PIN, OUTPUT);
+  pinMode(LB_LFSR_RST, OUTPUT);
+  delay(100);
+
+  digitalWrite(P_RST_PIN, LOW);
+  delay(100);
+  digitalWrite(S_RST_PIN, LOW);
+  delay(100);
+
+  digitalWrite(P_RST_PIN, HIGH);
+  delay(100);
+  digitalWrite(S_RST_PIN, HIGH);
+  delay(100);
+
+  digitalWrite(SYN_RST_NMDA_PIN, HIGH);
+  delay(100);
+  digitalWrite(SYN_RST_GABGA_PIN, HIGH);
+  delay(100);
+
+  digitalWrite(SYN_RST_NMDA_PIN, LOW);
+  delay(100);
+  digitalWrite(SYN_RST_GABGA_PIN, LOW);
+  delay(100);
+
+  digitalWrite(LB_LFSR_RST, HIGH);
+  delay(100);
+  digitalWrite(LB_LFSR_RST, LOW);
+  delay(1000);
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// AER Input Interrupt Servie Routine (ISR) for encoder input
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+static void aerInputEncoder_ISR()
+{
+    if (!inputEncoder.reqRead()) 
+    {        
+        if(inputEncoder.getBufferIndex() < int(MAX_PKT_BODY_LEN))
+        {
+            inputEncoder.recordEvent();
         }
-        since_blank_milli = 0;
-        aero.set_index(0);
+
+        inputEncoder.ackWrite(0);
+    }
+
+    else if (inputEncoder.reqRead())
+    {
+        inputEncoder.ackWrite(1);
     }
 }
 
-void SPI_events(int spi_number, int address, int value)
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// AER Input Interrupt Servie Routine (ISR) for C2F input
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+static void aerInputC2F_ISR()
 {
-  switch(spi_number)
-  {
-    case 0:
-        bg_controller(SPI, slaveSelectPin_SPI_BGEN, address, value);
-    case 1:
-        spi_controller(SPI1, slaveSelectPin_SPI1_CRST,address, value);
-    case 2:
-        spi_controller(SPI2, slaveSelectPin_SPI2_VRST, address, value);
-    default:
-    break;
-  }
-}
-void bg_controller(SPIClass SPI, int cs, int address, int value)
-{
-
-    SPI.begin();
-    SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
-    uint8_t add = (address  >> 8 ) & 0xFF ; 
-    uint8_t add2 = address  & 0xFF ; 
-    uint8_t val = (value  >> 8 ) & 0xFF ; 
-    uint8_t val2 = value  & 0xFF ; 
-    digitalWrite(cs,LOW);
-    delay(100);
-    digitalWrite(cs,HIGH);
-    delay(100); 
-    digitalWrite(cs,LOW);
-    delay(100);
-
-    SPI.transfer(add);
-    SPI.transfer(add2);
-    SPI.transfer(val);
-    SPI.transfer(val2);
-    SPI.endTransaction();
-}
-
-//cannot create an SPI class because it SPI.h doesn't have a constructur
-void spi_controller(SPIClass SPI, int cs, int address, int value)
-{
-    SPI.begin();
-    SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
-    digitalWrite(cs,LOW);
-    delay(100);
-    digitalWrite(cs,HIGH);
-    delay(100); 
-    digitalWrite(cs,LOW);
-    delay(100);
-    SPI.transfer(address);
-    SPI.transfer(value);
-    SPI.endTransaction();
-}
-void bg_setup(int clk, int cs, int mosi , int enable){ 
-
-    pinMode(enable, OUTPUT);
-    pinMode(clk, OUTPUT);
-    pinMode(cs, OUTPUT);
-    pinMode(mosi, OUTPUT);
-    digitalWrite(clk, LOW);
-    delay(1);
-    digitalWrite(cs, HIGH);
-    delay(1);
-    digitalWrite(mosi, LOW);
-    delay(1);
-    digitalWrite(enable, HIGH);
-    delay(1);
-}   
-
-void spi_setup(int clk, int cs, int mosi ){ 
-    pinMode(clk, OUTPUT);
-    pinMode(cs, OUTPUT);
-    pinMode(mosi, OUTPUT);
-    digitalWrite(clk, LOW);
-    delay(1);
-    digitalWrite(cs, HIGH);
-    delay(1);
-    digitalWrite(mosi, LOW);
-    delay(1);
-}   
-
-// AER
-static void aeroISR()
-{
-    if (!aero.reqRead()) {
-        if (aero_flag  && (aero.get_index() < aero_buf_size) ) { 
-            aero.record_event();
+    if (!inputC2F.reqRead()) 
+    {        
+        if(inputC2F.getBufferIndex() < int(MAX_PKT_BODY_LEN))
+        {
+            inputC2F.recordEvent();
         }
-        aero.ackWrite(0);
-        if (aero.reqRead()){
-            aero.ackWrite(1);
-        }
+        inputC2F.ackWrite(0);
+    }
+
+    else if (inputC2F.reqRead())
+    {      
+        inputC2F.ackWrite(1);
     }
 }
 
- 
-// TEENSY 2 PC USB message
-void sendStatus(TeensyStatus msg) {
-  msg_buf[0] = (uint8_t) msg;
-  usb_serial_write(msg_buf, sizeof(msg_buf));
-} // Success is 0
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// sendTeensyStatus: Sends Teensy Status update to PC 
+//---------------------------------------------------------------------------------------------------------------------------------------
 
-void setup() {
-
-    if (BIAS_GEN) bg_setup(BGSCK , slaveSelectPin_SPI_BGEN , BGMOSI, BG_enable);
-    if (SPI1_ON) spi_setup(CSCK , slaveSelectPin_SPI1_CRST , CMOSI);
-    if (SPI2_ON) spi_setup(VSCK , slaveSelectPin_SPI2_VRST , VMOSI);
-    
-    aero_flag = false;
-    attachInterrupt(digitalPinToInterrupt(aero_req), aeroISR, CHANGE);
-
-    dac.setup_dacs();
-    dac.join_i2c_bus();
-    dac.turn_reference_off();
-    Serial.print("SETUP COMPLETE!");
-
+static void sendTeensyStatus(TeensyStatus status)
+{
+    std::uint8_t teensyStatusBuffer[1] = {(uint8_t) status};
+    // usb_serial_write(teensyStatusBuffer, sizeof(teensyStatusBuffer));
 }
 
-
-void loop() {
-   if (usb_serial_available()) {
-        usb_serial_read(&rx_buf, sizeof(rx_buf)); // in bytes. 1 byte is 8 bits.
-
-        switch ((P2tPktType)rx_buf.header) {
-
-            case P2tPktType::P2tReset:{ // reset
-                Serial.print("Reset recieved");
-               // sendStatus(TeensyStatus::Success);
-                break;
-            }
-                
-               
-            case P2tPktType::P2tSetBiasGen:{  // BiasGen
-                Serial.print("Biasgen command recieved \n");
-                BIASGEN_command BG (rx_buf);
-                int bg_val = ( (BG.course_val << COURSE_BIAS_SHIFT )| (BG.fine_val << FINE_BIAS_SHIFT ) | BG.transistor_type );
-                SPI_events(0,BG.address,bg_val );
-                Serial.print("Biasgen command done  \n");
-
-              //  sendStatus(TeensyStatus::Success);
-                break;
-            }
-            case P2tPktType::P2tSetDcVoltage :{  // DAC
-                DAC_command DAC( rx_buf);
-                dac.write_dacs(DAC.command_address, DAC.data); 
-                delay(100);
-                Serial.print("DAC command recived \n");
-                sendStatus(TeensyStatus::Success);
-                break;   
-            }
-            case P2tPktType::P2tSetSPI: { // SPIs
-                Serial.print("SPI command recieved \n");
-                SPI_command SPI  (rx_buf);
-                SPI_events(SPI.spi_number , SPI.address, SPI.value);
-              //  sendStatus(TeensyStatus::Success);
-                break;
-            }
-            case  P2tPktType::P2tRequestAerOutput: { // aer
-               // Serial.print("AER activated \n");
-                aero.set_index(0);
-                aero.set_t0(micros());
-                since_blank_milli = 0;
-                aero_flag = true;
-
-                delay(100);
-                AER_out tmp;
-                tmp.address = 10;
-                tmp.ts_1ms = 0b0000000011111111;
-                P2TPkt aero_pkt(tmp);
-               // Serial.print(aero_pkt.header);
-                usb_serial_write((const void*) &aero_pkt, sizeof(aero_pkt));
-              //  Serial.print("\n");
-
-                break;
-            }
-            case P2tPktType::P2tGetTeensySN:{  // SN
-                break;       
-            } 
-
-            case P2tPktType::P2tSendEvents:{ // II     
-                break;     
-            }   
-            default: 
-                sendStatus(TeensyStatus::UnknownCommand);
-                break;  
-        } 
-   }
-    transmitAnyAerEvents();
-} ;

@@ -1,0 +1,312 @@
+//---------------------------------------------------------------------------------------------------------------------------------------
+// main.cpp file containing main function and serial port reading operations
+//
+// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
+// Last updated: 15 JUL 2022
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+#include <GLFW/glfw3.h>     // Will drag system OpenGL headers
+#include <unistd.h>         // UNIX standard function definitions
+#include <errno.h>          // Error number definitions
+#include <fcntl.h>          // File control definitions
+#include <filesystem>
+#include <stdio.h>
+#include <string>   
+#include <vector>   
+#include <cstddef>
+#include <iostream>
+#include <chrono>
+#include <thread>
+
+#include "../imgui/imgui_backend/imgui_impl_opengl3.h"
+#include "../imgui/imgui_backend/imgui_impl_glfw.h"
+#include "../../teensy_backend/include/datatypes.h"
+#include "../imgui/imgui_src/implot.h"
+#include "../imgui/imgui_src/implot_internal.h"
+
+#include "../include/guiFunctions.h"
+#include "../include/dataFunctions.h"
+#include "../include/serial.h"
+#include "../../teensy_backend/include/constants.h"
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// main: program execution starts here
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+int main(int, char**)
+{
+    //----------------------------------------------- Defining & Initialising BiasGen Variables -----------------------------------------
+
+#ifdef EXISTS_BIASGEN
+    bool show_BiasGen_config = true;
+
+    BIASGEN_command biasGen[BIASGEN_CHANNELS];
+    getBiasValues(biasGen,  BIASGEN_BIASFILE);
+
+    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
+    bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
+    int noRelevantFileRows[BIASGEN_CATEGORIES];
+    bool updateValues_BiasGen = false;
+
+    #ifdef BIASGEN_SET_TRANSISTOR_TYPE
+        std::vector<std::vector<std::vector<int>>> valueChange_BiasGen;
+        int biasGenNoValueChanges = 2;
+
+        for(int i = 0; i < BIASGEN_CATEGORIES; i++)
+        {
+            std::vector<int> valueChange_currentTransistorType;
+
+            // Resizing the vector to prevent malloc errors
+            valueChange_currentTransistorType.resize(biasGenNoValueChanges);
+
+            noRelevantFileRows[i] = getRelevantFileRows_BiasGen(substring[i], biasGen, relevantFileRows[i], BIASGEN_CHANNELS);
+            std::vector<std::vector<int>> valueChange_BiasGen_Category;
+            valueChange_BiasGen_Category.resize(noRelevantFileRows[i]);
+
+            for(int j = 0; j <= noRelevantFileRows[i]; j++)
+            {
+                for(int k = 0; k < biasGenNoValueChanges; k++)
+                {
+                    valueChange_currentTransistorType.push_back(0);
+                }
+
+                valueChange_BiasGen_Category.push_back(valueChange_currentTransistorType);
+            }
+            
+            valueChange_BiasGen.push_back(valueChange_BiasGen_Category);
+        }
+    #else
+        std::vector<std::vector<int>> valueChange_BiasGen;
+
+        // Creating a vector of boolean vectors to hold the bias value change variables for each bias per category
+        for(int i = 0; i < BIASGEN_CATEGORIES; i++)
+        {
+            std::vector<int> valueChange_BiasGen_Category;
+            noRelevantFileRows[i] = getRelevantFileRows_BiasGen(substring[i], biasGen, relevantFileRows[i], BIASGEN_CHANNELS);
+            
+            // Resizing the vector to prevent malloc errors
+            valueChange_BiasGen_Category.resize(noRelevantFileRows[i]);
+
+            for(int j = 0; j <= noRelevantFileRows[i]; j++)
+            {
+                valueChange_BiasGen_Category.push_back(0);
+            }
+            
+            valueChange_BiasGen.push_back(valueChange_BiasGen_Category);
+        }
+    #endif
+#else    
+    bool show_BiasGen_config = false;
+#endif
+
+    //------------------------------------------------ Defining & Initialising SPI Variables ------------------------------------------
+#ifdef EXISTS_SPI1
+    bool show_SPI1_config = true;
+    SPI_INPUT_command spi_command[1];
+    spi_command[0].spi_number = 1;
+    spi_command[0].value = 100;
+    spi_command[0].address = 200;
+#else    
+    bool show_SPI1_config = false;
+#endif
+
+#ifdef EXISTS_SPI2
+    bool show_SPI2_config = true;
+    SPI_INPUT_command spi2_command[1];
+    spi2_command[0].spi_number = 2;
+    spi2_command[0].value = 1;
+    spi2_command[0].address = 200;
+#else    
+    bool show_SPI2_config = false;
+#endif
+
+    //--------------------------------------------- Defining & Initialising Decoder Variables -----------------------------------------
+
+#ifdef EXISTS_OUTPUT_DECODER
+    bool show_AER_config = true;
+#endif
+
+    //------------------------------------------------ Defining & Initialising DAC Variables ------------------------------------------
+
+#ifdef EXISTS_DAC
+    bool show_DAC_config = true;
+    bool updateValues_DAC = true;
+    DAC_command dac[DAC_CHANNELS_USED];
+    getBiasValues(dac, DAC_BIASFILE);
+#endif
+    
+    //--------------------------------------------- Defining & Initialising All Other Variables -------------------------------------- 
+    
+    bool show_Serial_output = true;
+    bool show_PlotData = true;
+                      
+    auto time = std::time(nullptr);
+    auto time_tm = *std::localtime(&time);
+    std::ostringstream outputTimeString;
+    outputTimeString << std::put_time(&time_tm, "_%d_%m_%H_%M");
+    auto timeString = outputTimeString.str();
+
+    const char* logString;
+    bool logEntry = false;
+
+    int serialPort;
+    char serialPortOpenStr[SERIAL_BUFFER_SIZE_PORT_OPEN] = {"Serial port opened successfully.\n"};
+    int expectedResponses = 0;
+    struct termios serialPortSettings;
+
+
+    //--------------------------------------------------------- Opening Serial Port ------------------------------------------------------
+    
+    serialPort = open(SERIAl_PORT_NAME, O_RDWR);
+    tcgetattr(serialPort, &serialPortSettings);         // Get the current attributes of the Serial port 
+    cfsetispeed(&serialPortSettings,B19200);            // Set Read Speed as 19200                     
+    cfsetospeed(&serialPortSettings,B19200);            // Set Write Speed as 19200
+    // serialPortSettings.c_cc[VTIME] = 0;                 // 
+    // serialPortSettings.c_cc[VMIN] = 0;
+
+
+    if (serialPort < 0) 
+    {
+        printf("Error opening serial port. Error: %i %s\n", errno, strerror(errno));
+        // std::thread aerCommThread(readSerialPort);
+    }
+    else 
+    {
+        logString = serialPortOpenStr;
+        logEntry = true;
+    }
+
+    //----------------------------------------------------------- Setup GUI Window ------------------------------------------------------- 
+        
+    GLFWwindow* window = setupWindow();
+
+    // Keep window open until the 'X' button is pressed
+    while (!glfwWindowShouldClose(window))
+    {
+        // Flush serial input buffer
+        tcflush(serialPort, TCIFLUSH);
+
+        glfwPollEvents();
+
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        // Setup the window to show output values
+        if(show_Serial_output)
+        {
+            logEntry = updateSerialOutputWindow(show_Serial_output, logEntry, logString);      
+        }
+       
+        // Setup AER event logging window
+        if (show_AER_config)
+        {
+            expectedResponses = setupAerWindow(show_AER_config, serialPort);
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_AER);
+                expectedResponses = 0;
+            }
+        }
+
+        // Setup digital-to-analogue convertor configuration window - ok!
+#ifdef EXISTS_DAC
+        if (show_DAC_config)
+        {
+            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, updateValues_DAC);
+            
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
+                expectedResponses = 0;
+            }
+        }
+#endif
+
+        // Setup the bias generation configuration window 
+#ifdef EXISTS_BIASGEN
+        if (show_BiasGen_config)
+        {
+            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, updateValues_BiasGen);
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
+            }
+        }
+#endif
+
+       // Setup the SPI1 configuration window 
+#ifdef EXISTS_SPI1
+        if (show_SPI1_config)
+        {
+            expectedResponses = setupSPI1Window(show_SPI1_config, serialPort, spi_command, SPI1_RESOLUTION);
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
+            }
+        }
+#endif
+
+       // Setup the SPI2 configuration window 
+#ifdef EXISTS_SPI2
+
+        if (show_SPI2_config)
+        {
+            expectedResponses = setupSPI2Window(show_SPI2_config, serialPort, spi2_command, SPI2_RESOLUTION);
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
+            }
+        }
+#endif
+
+        // Plot C2F and Encoder outputs
+        if(show_PlotData)
+        {
+            getSerialData_Plots(serialPort, show_PlotData);
+        }
+
+        // Render the window       
+        renderImGui(window);
+        updateValues_DAC = false;  
+        updateValues_BiasGen  = false;  
+   
+        // sleep(0.25);  
+    }
+
+    //---------------------------------------------------------- Graceful Shutdown ------------------------------------------------------- 
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+
+    ImGui::DestroyContext();
+    ImPlot::DestroyContext();
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
+    //-------------------------------------------------------- Saving Files Correctly ---------------------------------------------------- 
+
+    if(std::filesystem::exists(C2F_INPUT_SAVE_FILENAME_CSV))
+    {
+        std::string newName = C2F_INPUT_SAVE_FILENAME + timeString + ".csv";
+        rename(C2F_INPUT_SAVE_FILENAME_CSV, newName.c_str());
+    }
+
+    if(std::filesystem::exists(ENCODER_INPUT_SAVE_FILENAME_CSV))
+    {
+        std::string newName = ENCODER_INPUT_SAVE_FILENAME + timeString + ".csv";;
+        rename(ENCODER_INPUT_SAVE_FILENAME_CSV, newName.c_str());
+    }
+
+    return 0;
+} 
