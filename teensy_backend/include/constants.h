@@ -35,7 +35,7 @@
 // PC <-> TEENSY SERIAL COMMUNICATION
 #define SERIAL_COMMS_SHIFT                  8
 #define SERIAL_COMMS_MAX_PKT_LEN            20           // Clarify
-#define SERIAl_PORT_NAME                    "/dev/ttyACM0"
+#define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105661701" 
 #define SERIAL_BUFFER_SIZE_BIAS             62
 #define SERIAL_BUFFER_SIZE_DAC              44
 #define SERIAL_BUFFER_SIZE_PORT_OPEN        34
@@ -129,7 +129,7 @@
     #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
     #define C2F_INPUT_SAVE_FILENAME         "../imgui_frontend/data/savedOutput/C2F/C2F"
     #define C2F_ACTIVE_LOW                  true
-    #define C2F_DELAY                       10000
+    #define C2F_DELAY                       1
 #endif
 
 // ENCODER COMMUNICATION

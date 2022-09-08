@@ -47,7 +47,7 @@ OBJS = $(addprefix $(ODIR_PATH), $(notdir $(SOURCES:.cpp=.o)))
 # COMMON BUILD FLAGS
 #---------------------------------------------------------------------
 
-CXXFLAGS = -std=c++17 -I/imgui -I/backends -g -Wall -Wformat -lstdc++fs
+CXXFLAGS = -std=c++17 -I/imgui -I/backends -g -Wall -Wformat 
 
 #---------------------------------------------------------------------
 # BUILD FLAGS PER PLATFORM
@@ -57,7 +57,7 @@ CXXFLAGS = -std=c++17 -I/imgui -I/backends -g -Wall -Wformat -lstdc++fs
 ifeq ($(UNAME_S), Linux)
 	ECHO_MESSAGE = "Linux"
 	LIBS += $(LINUX_GL_LIBS) `pkg-config --static --libs glfw3`
-	CXXFLAGS += `pkg-config --cflags glfw3`
+	CXXFLAGS += `pkg-config --cflags glfw3` -lstdc++fs
 	CFLAGS = $(CXXFLAGS)
 endif
 
