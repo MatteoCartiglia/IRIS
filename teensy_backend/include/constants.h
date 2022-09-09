@@ -35,7 +35,7 @@
 // PC <-> TEENSY SERIAL COMMUNICATION
 #define SERIAL_COMMS_SHIFT                  8
 #define SERIAL_COMMS_MAX_PKT_LEN            20           // Clarify
-#define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105661701" 
+#define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105688601" 
 #define SERIAL_BUFFER_SIZE_BIAS             62
 #define SERIAL_BUFFER_SIZE_DAC              44
 #define SERIAL_BUFFER_SIZE_PORT_OPEN        34

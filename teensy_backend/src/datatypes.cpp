@@ -47,13 +47,13 @@ Pkt::Pkt(const AER_DECODER_OUTPUT_command& outputDecoder) : header(static_cast<s
 // ENCODER Command Packet
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-Pkt::Pkt(const ENCODER_INPUT_command& inputEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_reqInputEncoder)) {};
+Pkt::Pkt(const ENCODER_INPUT_command& inputEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::P2tRequestAerEncoderOutput)) {};
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // C2F Command Packet
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-Pkt::Pkt(const C2F_INPUT_command& inputC2F) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_reqInputC2F)) {};
+Pkt::Pkt(const C2F_INPUT_command& inputC2F) : header(static_cast<std::underlying_type<PktType>::type>(PktType::P2tRequestAerC2FOutput)) {};
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // SPI Command Packet
@@ -68,6 +68,17 @@ Pkt::Pkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::underly
     body[4] = spi_command.value & BINARY_255;
 };
 
+//---------------------------------------------------------------------------------------------------------------------------------------
+// AER out Packet
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+Pkt::Pkt(const AER_out& aero_out) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_aeroevent)) 
+{
+body[0] = aero_out.data & BINARY_255; 
+body[1] = aero_out.data >> SERIAL_COMMS_SHIFT; 
+body[2] = aero_out.timestamp & BINARY_255;
+body[3] = aero_out.timestamp >> SERIAL_COMMS_SHIFT;
+};
 //---------------------------------------------------------------------------------------------------------------------------------------
 // C2F HANDSHAKE Command Packet
 //---------------------------------------------------------------------------------------------------------------------------------------

@@ -24,32 +24,14 @@ TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPi
   _inputNumDataPins = inputNumDataPins;
   _inputDelay = inputDelay;
   _inputActiveLow = inputActiveLow;
+  _inputBufferIndex = 0;
+  _t0 = 0;
+  saving_flag = false;
 
   resetBuffer();
   setupPins();
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// dataRead: Executes REQ/ACK handshake and retrieves input from ALIVE
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-unsigned int TeensyIn::dataRead()
-{
-    unsigned int inputData = 0;
-
-    if (reqRead())
-    {
-      inputData = getInputData();
-      ackWrite(1);
-    }
-
-    if(!reqRead())
-    {
-      ackWrite(0);
-    }
-
-    return inputData;
-}
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -88,22 +70,28 @@ int TeensyIn::getBufferIndex()
 
 
 //----------------------------------------------------------------------------------------------------------------------------------
+// setBufferIndex: Set the index of the buffer
+//----------------------------------------------------------------------------------------------------------------------------------
+
+void TeensyIn::setBufferIndex(int x)
+{
+   _inputBufferIndex = x;
+   
+}
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------
 // recordEvent: Records ALIVE output events as they occur
 //----------------------------------------------------------------------------------------------------------------------------------
 void TeensyIn::recordEvent()
 {
-  if(startRecording)
-  {
-    outputALIVE newEvent;
-    newEvent.data = dataRead();
-    newEvent.timestamp = 0;
-    // newEvent.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+  
+  AER_out newEvent;
+  newEvent.data = getInputData();
+  newEvent.timestamp = (micros() - _t0);
 
-    _inputEventBuffer[0].data = _inputBufferIndex;
-    _inputEventBuffer[1 + _inputBufferIndex++] = newEvent;
-  }
-
-  // Serial.print(_inputBufferIndex);
+  _inputEventBuffer[_inputBufferIndex++] = newEvent;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -111,11 +99,11 @@ void TeensyIn::recordEvent()
 //----------------------------------------------------------------------------------------------------------------------------------
 void TeensyIn::sendEventBuffer()
 {
-  // for(int i = 0; i < MAX_PKT_BODY_LEN; i++)
-  // {
-  //   Serial.print(_inputEventBuffer[i].data);
-  //   Serial.print(_inputEventBuffer[i].timestamp);
-  // }
+   for(int i = 0; i < _inputBufferIndex; i++)
+   {
+      Pkt pkt_out(_inputEventBuffer[i]);
+      usb_serial_write((const void*) &pkt_out, sizeof(pkt_out));      
+   }
 
   resetBuffer();
 }
@@ -212,4 +200,19 @@ void TeensyIn::resetBuffer()
     _inputEventBuffer[i].timestamp = 0;
   }
   _inputBufferIndex = 0;
+}
+//--------------------------------------------------------------------------------------------------------------------------------------
+//
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+void TeensyIn::set_t0(int t0) {
+  _t0 = t0;
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------
+//toggle_saving_flag : enable/disable saving flag
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+void TeensyIn::toggle_saving_flag() {
+  saving_flag = ~saving_flag;
 }

@@ -49,6 +49,7 @@ bool enableCommsC2F = false;
 bool enableCommsAER = false;
 bool handshakeStatusEncoder = false;
 bool handshakeStatusC2F = false;
+bool savingEncoder = false;
 
 
 std::vector<double> inputEncoder_xValues;
@@ -405,7 +406,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
             serialDataSent++;
         }
     }
-    
+
     ImGui::NewLine();
 
     if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
@@ -759,18 +760,22 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
         }
 
         ImGui::SameLine();
-        ImGui::Text("           ALIVE Output: Encoder ");  
+        ImGui::Text("ALIVE Output: Encoder ");  
         ImGui::SameLine();
 
-        std::string toggleID_str = "toggleEncoder";
-        const char *toggleID = toggleID_str.c_str();
-        toggleButton(toggleID, &enableCommsEncoder);
-        ImGui::NewLine();
-
-        if(enableCommsEncoder)
+        if (ImGui::Button( "Save"))
         {
-        // Activate logging in ENCODER 
+            ENCODER_INPUT_command Enable_Encoder;
+            Pkt p2tpk_Enable_encoder(Enable_Encoder);
+            write(serialPort, (void *) &p2tpk_Enable_encoder, sizeof(p2tpk_Enable_encoder));
+           // handshakeStatusEncoder = getHandshakeReturn(serialPort);
+            savingEncoder = !savingEncoder;
+            //serialDataSent++;
+
         }
+        ImGui::SameLine();
+        ImGui::Checkbox("Saving: ", &savingEncoder);
+        ImGui::NewLine();
     }  
 
     ImGui::End();

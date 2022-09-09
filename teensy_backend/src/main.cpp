@@ -33,11 +33,15 @@ static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 #ifdef EXISTS_INPUT_ENCODER
     int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
     TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_ACTIVE_LOW);
+    int enc_since_blank_milli = 0;
+    bool enc_aero_flag = true;
 #endif
 
 #ifdef EXISTS_INPUT_C2F
     int inputC2F_dataPins[C2F_INPUT_NO_PIN] = {C2F_INPUT_BIT_0_PIN, C2F_INPUT_BIT_1_PIN, C2F_INPUT_BIT_2_PIN, C2F_INPUT_BIT_3_PIN, C2F_INPUT_BIT_4_PIN};
     TeensyIn inputC2F(C2F_REQ, C2F_ACK, inputC2F_dataPins, C2F_INPUT_NO_PIN, C2F_DELAY, C2F_ACTIVE_LOW);
+    int c2f_since_blank_milli = 0;
+    bool c2f_aero_flag = true;
 #endif
 
 #ifdef EXISTS_OUTPUT_DECODER
@@ -162,16 +166,37 @@ void loop()
             }
 
             // Get encoder input value
-            case PktType::Pkt_reqInputEncoder:
+            case PktType::P2tRequestAerEncoderOutput:
             {
-                inputEncoder.sendEventBuffer();
+                Serial.print("Toggling saving encoder ");
+
+                //inputEncoder.setBufferIndex(0);
+                //inputEncoder.set_t0(0);
+                //inputEncoder.toggle_saving_flag(); 
+                
+                /*
+                delay(100);
+                AER_out tmp;
+                tmp.address = 10;
+                tmp.ts_1ms = 0b0000000011111111;
+                P2TPkt aero_pkt(tmp);
+               // Serial.print(aero_pkt.header);
+                usb_serial_write((const void*) &aero_pkt, sizeof(aero_pkt));
+                */
+
+                if (inputEncoder.saving_flag)
+                {
+                    inputEncoder.sendEventBuffer();
+                }
+
                 break;
             }
 
             // Get C2F input value
-            case PktType::Pkt_reqInputC2F:
+            case PktType::P2tRequestAerC2FOutput:
             {
-                inputC2F.sendEventBuffer();
+                c2f_aero_flag = true;
+
                 break;
             }
 
@@ -222,7 +247,7 @@ void loop()
 
             default: 
             {
-               // sendTeensyStatus(TeensyStatus::UnknownCommand);
+
                 break;  
             }
         } 
@@ -289,12 +314,11 @@ static void resetChip()
 static void aerInputEncoder_ISR()
 {
     if (!inputEncoder.reqRead()) 
-    {        
-        if(inputEncoder.getBufferIndex() < int(MAX_PKT_BODY_LEN))
-        {
+    {    
+        if (inputEncoder.saving_flag  && (inputEncoder.getBufferIndex() < int(MAX_PKT_BODY_LEN)) ) 
+        { 
             inputEncoder.recordEvent();
         }
-
         inputEncoder.ackWrite(0);
     }
 
