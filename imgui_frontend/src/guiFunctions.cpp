@@ -405,7 +405,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
             serialDataSent++;
         }
     }
-
+    
     ImGui::NewLine();
 
     if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
@@ -546,8 +546,6 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
         ImGui::SameLine();
         filename, valueChange_SaveFilename = ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
         ImGui::NewLine();
-        std::cout <<filename << std::endl;
-
         if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
             ImGui::CloseCurrentPopup();
@@ -769,10 +767,10 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
         toggleButton(toggleID, &enableCommsEncoder);
         ImGui::NewLine();
 
-        // if(enableCommsEncoder)
-        // {
-
-        // }
+        if(enableCommsEncoder)
+        {
+        // Activate logging in ENCODER 
+        }
     }  
 
     ImGui::End();

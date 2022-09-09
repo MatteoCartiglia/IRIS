@@ -33,6 +33,8 @@ void loadBiasValues(BIASGEN_command bg[], int serialPort)
     {
         Pkt p2t_pk(bg[i]); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
+
     }
 }
 
