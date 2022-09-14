@@ -89,7 +89,7 @@ void getBiasValues(DAC_command dac[], const std::string filename = DAC_BIASFILE 
 
 void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
 {
-    std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(BIASGEN_BIASFILE);
+    std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
 
     for (int i = 0; i < (int) parseCSVoutput.size(); i++)
     {

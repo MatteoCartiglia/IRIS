@@ -72,16 +72,20 @@ Pkt::Pkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::underly
 // AER out Packet
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-Pkt::Pkt(const AER_out& aero_out) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_aeroevent)) 
+Aer_Data_Pkt::Aer_Data_Pkt(const AER_out event_buffer[], size_t n) : number_events(n)
 {
-body[0] = aero_out.data & BINARY_255; 
-body[1] = aero_out.data >> SERIAL_COMMS_SHIFT; 
-body[2] = aero_out.timestamp & BINARY_255;
-body[3] = aero_out.timestamp >> SERIAL_COMMS_SHIFT;
+    for (int i = 0; i < n; i++)
+    {
+        body[i] = event_buffer[i];
+    }
 };
+
+
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // C2F HANDSHAKE Command Packet
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 Pkt::Pkt(const HANDSHAKE_C2F_command& handshakeC2F) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeC2F)) {};
 Pkt::Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeEncoder)) {};
+Pkt::Pkt(const GetAerEncoderOutput& GetAerEncoderOutput) : header(static_cast<std::underlying_type<PktType>::type>(PktType::PktGetAerEncoderOutput)) {};

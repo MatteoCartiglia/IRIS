@@ -272,7 +272,7 @@ int main(int, char**)
         // Plot C2F and Encoder outputs
         if(show_PlotData)
         {
-            expectedResponses = getSerialData_Plots(serialPort, show_PlotData);
+            getSerialData_Plots(serialPort, show_PlotData);
             
             if(expectedResponses > 0)
             {

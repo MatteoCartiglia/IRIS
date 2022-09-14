@@ -26,7 +26,7 @@ struct SPI_INPUT_command;
 struct HANDSHAKE_C2F_command;
 struct HANDSHAKE_ENCODER_command;
 struct AER_out;
-
+struct GetAerEncoderOutput ;
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -51,7 +51,8 @@ enum class PktType
     Pkt_setSPI                      = 6U,
     Pkt_handshakeC2F                = 7U,
     Pkt_handshakeEncoder            = 8U,
-    Pkt_aeroevent                   = 9U
+    Pkt_aeroevent                   = 9U,
+    PktGetAerEncoderOutput          = 10U
 
 };
 
@@ -74,12 +75,14 @@ struct Pkt
     Pkt(const SPI_INPUT_command& spi);
     Pkt(const HANDSHAKE_C2F_command& handshakeC2F);
     Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder);
-    Pkt(const AER_out& AER_out_event);
+    Pkt(const GetAerEncoderOutput& AerEncoderOutput);
+
 
     std::uint8_t header;                                        // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
 
 }__attribute__ ((packed));
+
 
 
 // -------------------------------------------- Struct for PC -> Teensy -> DAC communication --------------------------------------------
@@ -129,6 +132,14 @@ struct ENCODER_INPUT_command
     ENCODER_INPUT_command() {};
 };
 
+// --------------------------- Struct to enable logging of sending events PC -> Teensy   ---------------------
+
+struct GetAerEncoderOutput
+{
+    GetAerEncoderOutput() {};
+};
+
+
 
 // ----------------------------- Struct to enable logging of c2f  PC-> Teensy  -----------------------
 
@@ -146,7 +157,7 @@ struct AER_out
 
     uint16_t data;
     uint16_t timestamp;
-};
+}__attribute__((packed));
 
 
 // --------------------------------------------- Struct for PC -> Teensy -> SPI communication -------------------------------------------
@@ -170,6 +181,18 @@ struct HANDSHAKE_ENCODER_command
 {
     HANDSHAKE_ENCODER_command() {};
 };
+
+
+
+struct Aer_Data_Pkt
+{
+    Aer_Data_Pkt(){};
+    Aer_Data_Pkt(const AER_out event_buffer[], size_t number_events);
+
+    std::uint32_t number_events;                                        
+    AER_out body[MAX_EVENTS_PER_PACKET];
+
+}__attribute__ ((packed));
 
 
 #endif

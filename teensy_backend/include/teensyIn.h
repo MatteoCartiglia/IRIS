@@ -103,12 +103,14 @@ class TeensyIn
     int* _inputDataPins;
     int _inputNumDataPins;
     int _inputDelay;
-    bool _inputActiveLow;
+    bool _inputHandshakeActiveLow;
+    bool _inputDataActiveLow;
+
     int  _t0;
 
 
     int _inputBufferIndex;
-    AER_out _inputEventBuffer[1024];
+    AER_out _inputEventBuffer[MAX_EVENTS_PER_PACKET];
 };
 
 

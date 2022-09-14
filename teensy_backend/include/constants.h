@@ -35,7 +35,7 @@
 // PC <-> TEENSY SERIAL COMMUNICATION
 #define SERIAL_COMMS_SHIFT                  8
 #define SERIAL_COMMS_MAX_PKT_LEN            20           // Clarify
-#define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105688601" 
+#define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105661701" 
 #define SERIAL_BUFFER_SIZE_BIAS             62
 #define SERIAL_BUFFER_SIZE_DAC              44
 #define SERIAL_BUFFER_SIZE_PORT_OPEN        34
@@ -47,6 +47,11 @@
 #define TEENSY_INPUT_ENCODER                1
 #define TEENSY_INPUT_BUFFER_SIZE            1024
 #define TEENSY_OUTPUT_HANDSHAKE_TIMEOUT     10          // microseconds
+
+// TEENSY -> HOST 
+
+#define  MAX_EVENTS_PER_PACKET              1024
+
 
 // BIASGEN 
 #ifdef EXISTS_BIASGEN
@@ -141,7 +146,8 @@
     #define ENCODER_INPUT_BIT_2_PIN         28
     #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/Encoder/outputEncoder.csv"
     #define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/savedOutput/Encoder/outputEncoder"
-    #define ENCODER_ACTIVE_LOW              true
+    #define ENCODER_HANDSHAKE_ACTIVE_LOW              true
+    #define ENCODER_DATA_ACTIVE_LOW         false
     #define ENCODER_DELAY                   10000
 #endif
 

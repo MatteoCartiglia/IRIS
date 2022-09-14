@@ -32,7 +32,7 @@ static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 #ifdef EXISTS_INPUT_ENCODER
     int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
-    TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_ACTIVE_LOW);
+    TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_HANDSHAKE_ACTIVE_LOW, ENCODER_DATA_ACTIVE_LOW);
     int enc_since_blank_milli = 0;
     bool enc_aero_flag = true;
 #endif
@@ -168,12 +168,14 @@ void loop()
             // Get encoder input value
             case PktType::P2tRequestAerEncoderOutput:
             {
-                Serial.print("Toggling saving encoder ");
+                Serial.println(inputEncoder.saving_flag);
 
-                //inputEncoder.setBufferIndex(0);
-                //inputEncoder.set_t0(0);
-                //inputEncoder.toggle_saving_flag(); 
-                
+                Serial.println("Toggling saving encoder /n");
+                inputEncoder.setBufferIndex(0);
+                inputEncoder.set_t0(0);
+                inputEncoder.toggle_saving_flag(); 
+                Serial.println(inputEncoder.saving_flag);
+
                 /*
                 delay(100);
                 AER_out tmp;
@@ -184,13 +186,24 @@ void loop()
                 usb_serial_write((const void*) &aero_pkt, sizeof(aero_pkt));
                 */
 
-                if (inputEncoder.saving_flag)
-                {
-                    inputEncoder.sendEventBuffer();
-                }
+
 
                 break;
             }
+            case PktType::PktGetAerEncoderOutput:
+            {
+              //  Serial.println("Get number of events");
+
+                if (inputEncoder.saving_flag)
+                {
+                    Serial.print("Number of events: ");
+                    Serial.println(inputEncoder.getBufferIndex());
+
+                    inputEncoder.sendEventBuffer();
+    
+                }
+            }
+
 
             // Get C2F input value
             case PktType::P2tRequestAerC2FOutput:
@@ -318,7 +331,7 @@ static void aerInputEncoder_ISR()
         if (inputEncoder.saving_flag  && (inputEncoder.getBufferIndex() < int(MAX_PKT_BODY_LEN)) ) 
         { 
             inputEncoder.recordEvent();
-        }
+        }   
         inputEncoder.ackWrite(0);
     }
 

@@ -197,6 +197,10 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
         // Adding a update button to write to serial port
         if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) || updateValues)
         {
+            if (dac[i].data==0) 
+            {
+            dac[i].data =1;
+            }
             Pkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
             serialDataSent++;
@@ -771,7 +775,6 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
            // handshakeStatusEncoder = getHandshakeReturn(serialPort);
             savingEncoder = !savingEncoder;
             //serialDataSent++;
-
         }
         ImGui::SameLine();
         ImGui::Checkbox("Saving: ", &savingEncoder);

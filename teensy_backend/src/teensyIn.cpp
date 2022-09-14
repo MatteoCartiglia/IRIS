@@ -4,6 +4,7 @@
 // Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
 // Last updated: (Ciara Giles-Doran <gciara@student.ethz.ch>)
 //---------------------------------------------------------------------------------------------------------------------------------------
+#include <Arduino.h>
 
 #include "teensyIn.h"
 #include "constants.h"
@@ -16,14 +17,16 @@ bool startRecording = false;
 // TeensyIn constructor
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay, bool inputActiveLow)
+TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay, bool inputHandshakeActiveLow, bool inputDataActiveLow = false)
 {
   _inputReqPin = inputReqPin;
   _inputAckPin = inputAckPin;
   _inputDataPins = inputDataPins;
   _inputNumDataPins = inputNumDataPins;
   _inputDelay = inputDelay;
-  _inputActiveLow = inputActiveLow;
+  _inputHandshakeActiveLow = inputHandshakeActiveLow;
+  _inputDataActiveLow = inputDataActiveLow;
+
   _inputBufferIndex = 0;
   _t0 = 0;
   saving_flag = false;
@@ -40,7 +43,7 @@ TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPi
 
 bool TeensyIn::reqRead() 
 {
-  return digitalReadFast(_inputReqPin)^_inputActiveLow;
+  return digitalReadFast(_inputReqPin)^_inputHandshakeActiveLow;
 }
 
 
@@ -50,7 +53,7 @@ bool TeensyIn::reqRead()
 
 void TeensyIn::ackWrite(bool val) 
 {
-  digitalWriteFast(_inputAckPin, val^_inputActiveLow);
+  digitalWriteFast(_inputAckPin, val^_inputHandshakeActiveLow);
 
   if (_inputDelay) 
   {
@@ -99,21 +102,29 @@ void TeensyIn::recordEvent()
 //----------------------------------------------------------------------------------------------------------------------------------
 void TeensyIn::sendEventBuffer()
 {
-   for(int i = 0; i < _inputBufferIndex; i++)
-   {
-      Pkt pkt_out(_inputEventBuffer[i]);
-      usb_serial_write((const void*) &pkt_out, sizeof(pkt_out));      
-   }
+
+    //usb_serial_write((const void*) &_inputBufferIndex, sizeof(_inputBufferIndex));      
+    
+   
+  //  Serial.println("Data/ts: ");
+
+  //  Serial.println(_inputEventBuffer[i].data, BIN);
+   // Serial.println(_inputEventBuffer[i].timestamp);
+
+    Aer_Data_Pkt pkt_out(_inputEventBuffer, _inputBufferIndex);
+
+    usb_serial_write((const void*) &pkt_out, sizeof(pkt_out));      
+   
 
   resetBuffer();
-}
+} 
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // handshake: Executes REQ/ACK handshake between Teensy and ALIVE
 //----------------------------------------------------------------------------------------------------------------------------------
 void TeensyIn::handshake()
 {
-  if(_inputActiveLow)
+  if(_inputHandshakeActiveLow)
   {
     if (!reqRead()) 
     {
@@ -130,7 +141,7 @@ void TeensyIn::handshake()
 
   }
 
-  else if(!_inputActiveLow)
+  else if(!_inputHandshakeActiveLow)
   {
     if (!reqRead()) 
     {
@@ -175,9 +186,10 @@ unsigned int TeensyIn::getInputData()
   for (int i = 0; i < _inputNumDataPins; i++) 
   {
     inputData |= digitalReadFast(_inputDataPins[i]) << i;
+    Serial.println(inputData, BIN);
   }
 
-  if (_inputActiveLow) 
+  if (_inputDataActiveLow) 
   {
     return ~inputData;
   }
@@ -214,5 +226,14 @@ void TeensyIn::set_t0(int t0) {
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 void TeensyIn::toggle_saving_flag() {
-  saving_flag = ~saving_flag;
+  bool new_saving_flag;
+  if (saving_flag) 
+  {
+    new_saving_flag = 0;
+  }
+   if (saving_flag ==0)
+     {
+    new_saving_flag = 1;
+    }
+  saving_flag = new_saving_flag;
 }
