@@ -120,7 +120,7 @@
 #define ALIVE_PACKET_SIZE                   9
 
 // C2F COMMUNICATION
-#ifdef EXISTS_INPUT_C2F
+#ifdef EXISTS_C2F
     #define C2F_ACK                         0
     #define C2F_REQ                         35
     #define C2F_INPUT_NO_PIN                5
@@ -132,12 +132,13 @@
     #define C2F_INPUT_RANGE                 32
     #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
     #define C2F_INPUT_SAVE_FILENAME         "../imgui_frontend/data/savedOutput/C2F/C2F"
-    #define C2F_ACTIVE_LOW                  true
+    #define C2F_HANDSHAKE_ACTIVE_LOW        true
+    #define C2F_DATA_ACTIVE_LOW             false
     #define C2F_DELAY                       1
 #endif
 
 // ENCODER COMMUNICATION
-#ifdef EXISTS_INPUT_ENCODER
+#ifdef EXISTS_ENCODER
     #define ENCODER_ACK                     30
     #define ENCODER_REQ                     29
     #define ENCODER_INPUT_NO_PIN            3  
@@ -146,7 +147,7 @@
     #define ENCODER_INPUT_BIT_2_PIN         28
     #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/Encoder/outputEncoder.csv"
     #define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/savedOutput/Encoder/outputEncoder"
-    #define ENCODER_HANDSHAKE_ACTIVE_LOW              true
+    #define ENCODER_HANDSHAKE_ACTIVE_LOW    true
     #define ENCODER_DATA_ACTIVE_LOW         false
     #define ENCODER_DELAY                   10000
 #endif

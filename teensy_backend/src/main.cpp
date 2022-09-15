@@ -14,7 +14,7 @@
 #include "spiConfig.h"
 
 #include "dac.h"
-#include "teensyIn.h"
+#include "AER_in.h"
 #include "teensyOut.h"
 
 // Declaring function prototypes in order of definition
@@ -30,16 +30,16 @@ static void sendTeensyStatus(TeensyStatus status);
 static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 
-#ifdef EXISTS_INPUT_ENCODER
+#ifdef EXISTS_ENCODER
     int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
-    TeensyIn inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_HANDSHAKE_ACTIVE_LOW, ENCODER_DATA_ACTIVE_LOW);
+    AER_in inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_HANDSHAKE_ACTIVE_LOW, ENCODER_DATA_ACTIVE_LOW);
     int enc_since_blank_milli = 0;
     bool enc_aero_flag = true;
 #endif
 
-#ifdef EXISTS_INPUT_C2F
+#ifdef EXISTS_C2F
     int inputC2F_dataPins[C2F_INPUT_NO_PIN] = {C2F_INPUT_BIT_0_PIN, C2F_INPUT_BIT_1_PIN, C2F_INPUT_BIT_2_PIN, C2F_INPUT_BIT_3_PIN, C2F_INPUT_BIT_4_PIN};
-    TeensyIn inputC2F(C2F_REQ, C2F_ACK, inputC2F_dataPins, C2F_INPUT_NO_PIN, C2F_DELAY, C2F_ACTIVE_LOW);
+    AER_in inputC2F(C2F_REQ, C2F_ACK, inputC2F_dataPins, C2F_INPUT_NO_PIN, C2F_DELAY, C2F_HANDSHAKE_ACTIVE_LOW, C2F_DATA_ACTIVE_LOW);
     int c2f_since_blank_milli = 0;
     bool c2f_aero_flag = true;
 #endif
@@ -91,11 +91,11 @@ void setup()
     spi2.resetSPI();
 #endif
 
-#ifdef EXISTS_INPUT_ENCODER
+#ifdef EXISTS_ENCODER
     attachInterrupt(digitalPinToInterrupt(ENCODER_REQ), aerInputEncoder_ISR, CHANGE);
 #endif
 
-#ifdef EXISTS_INPUT_C2F
+#ifdef EXISTS_C2F
     attachInterrupt(digitalPinToInterrupt(C2F_REQ), aerInputC2F_ISR, CHANGE);
 #endif
 
@@ -190,6 +190,8 @@ void loop()
 
                 break;
             }
+#ifdef EXISTS_ENCODER
+
             case PktType::PktGetAerEncoderOutput:
             {
               //  Serial.println("Get number of events");
@@ -202,9 +204,16 @@ void loop()
                     inputEncoder.sendEventBuffer();
     
                 }
+            break;
             }
+            case PktType::Pkt_handshakeEncoder:
+            {
+                inputEncoder.handshake();
+                break;
+            }
+#endif
 
-
+#ifdef EXISTS_C2F
             // Get C2F input value
             case PktType::P2tRequestAerC2FOutput:
             {
@@ -213,6 +222,13 @@ void loop()
                 break;
             }
 
+            case PktType::Pkt_handshakeC2F:
+            {
+                inputC2F.handshake();
+                break;
+            }
+                      
+#endif
             // Setup SPIs
             case PktType::Pkt_setSPI:
             {
@@ -245,18 +261,8 @@ void loop()
                 sendTeensyStatus(TeensyStatus::Success);
                 break;
             }
+  
 
-            case PktType::Pkt_handshakeC2F:
-            {
-                inputC2F.handshake();
-                break;
-            }
-                        
-            case PktType::Pkt_handshakeEncoder:
-            {
-                inputEncoder.handshake();
-                break;
-            }
 
             default: 
             {
@@ -319,6 +325,7 @@ static void resetChip()
   delay(1000);
 }
 
+#ifdef EXISTS_ENCODER
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // AER Input Interrupt Servie Routine (ISR) for encoder input
@@ -340,12 +347,12 @@ static void aerInputEncoder_ISR()
         inputEncoder.ackWrite(1);
     }
 }
+#endif
 
-
+#ifdef EXISTS_C2F
 //---------------------------------------------------------------------------------------------------------------------------------------
 // AER Input Interrupt Servie Routine (ISR) for C2F input
 //---------------------------------------------------------------------------------------------------------------------------------------
-
 static void aerInputC2F_ISR()
 {
     if (!inputC2F.reqRead()) 
@@ -362,7 +369,7 @@ static void aerInputC2F_ISR()
         inputC2F.ackWrite(1);
     }
 }
-
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // sendTeensyStatus: Sends Teensy Status update to PC 
