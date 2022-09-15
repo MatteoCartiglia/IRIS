@@ -76,7 +76,7 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getSerialData_Plots: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getSerialData_Plots(int serialPort, bool show_PlotData)
+void getSerialData_Encoder(int serialPort, bool show_PlotData)
 {
     long time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     int serialReadBytes = 0;
@@ -84,9 +84,13 @@ void getSerialData_Plots(int serialPort, bool show_PlotData)
     Pkt p2t_pk(trasmit); 
     Aer_Data_Pkt aer_data;
     write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-    //std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
+    std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
     serialReadBytes = read(serialPort,(void *) &aer_data, sizeof(aer_data));
     int number_events = (serialReadBytes - sizeof(aer_data.number_events)) / sizeof(AER_out);
+    std::cout << serialReadBytes << std::endl;
+
+    std::cout <<"Num of events: " << aer_data.number_events << std::endl;
+    std::cout <<"Body: " <<  aer_data.body << std::endl;
 
     //std::cout << number_events << std::endl;
 
@@ -98,23 +102,12 @@ void getSerialData_Plots(int serialPort, bool show_PlotData)
 
 
     updatePlotWindow_Encoder(show_PlotData, time_ms, 0, serialPort);
-    
-
- 
 
  /*
     // ---------------------------------------------- Get ALIVE C2F Output & Update Plots -----------------------------------------------
 
-    if(getHandshakeStatus(TEENSY_INPUT_C2F))
-    {
         updatePlotWindow_C2F(show_PlotData, time_ms, 0, serialPort);
-       
-    }
-
-    else if(!getHandshakeStatus(TEENSY_INPUT_C2F))
-    {
-        updatePlotWindow_C2F(show_PlotData, time_ms, 0, serialPort);
-    }
+    
   
     */
     // Flush the serial port

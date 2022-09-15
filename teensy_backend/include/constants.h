@@ -12,8 +12,8 @@
 #define EXISTS_BIASGEN                   
 //#define EXISTS_SPI1                      
 //#define EXISTS_SPI2                     
-#define EXISTS_INPUT_ENCODER                  
-#define EXISTS_INPUT_C2F                     
+#define EXISTS_ENCODER                  
+//#define EXISTS_C2F                     
 #define EXISTS_OUTPUT_DECODER                    
 #define EXISTS_DAC       
 

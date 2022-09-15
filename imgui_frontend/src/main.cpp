@@ -136,11 +136,19 @@ int main(int, char**)
     getBiasValues(dac, DAC_BIASFILE);
 #endif
     
+#ifdef EXISTS_ENCODER
+    bool show_Encoder = true;
+
+#endif
+#ifdef EXISTS_C2F
+    bool show_C2F = true;
+
+#endif
+
     //--------------------------------------------- Defining & Initialising All Other Variables -------------------------------------- 
     
     bool show_Serial_output = true;
-    bool show_PlotData = true;
-                      
+           
     auto time = std::time(nullptr);
     auto time_tm = *std::localtime(&time);
     std::ostringstream outputTimeString;
@@ -269,17 +277,24 @@ int main(int, char**)
         }
 #endif
 
-        // Plot C2F and Encoder outputs
-        if(show_PlotData)
+#ifdef EXISTS_ENCODER
+  // Encoder outputs
+        if(show_Encoder)
         {
-            getSerialData_Plots(serialPort, show_PlotData);
+            getSerialData_Encoder(serialPort, show_Encoder);
             
-            if(expectedResponses > 0)
-            {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
-                expectedResponses = 0;
-            }
         }
+#endif
+
+#ifdef EXISTS_C2F
+  // Encoder outputs
+        if(show_C2F)
+        {
+            getSerialData_C2F(serialPort, show_C2F);
+            
+        }
+#endif
+
 
         // Render the window       
         renderImGui(window);

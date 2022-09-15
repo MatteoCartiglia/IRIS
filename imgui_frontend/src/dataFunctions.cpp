@@ -73,12 +73,6 @@ void getBiasValues(DAC_command dac[], const std::string filename = DAC_BIASFILE 
         dac[i].name = dacBiasName;
         dac[i].data = (uint16_t) std::stoi(parseCSVoutput[i][1]);
         dac[i].command_address =DAC_COMMAND_WRITE_UPDATE << DAC_COMMAND_WRITE_SHIFT| (int) std::stoi(parseCSVoutput[i][2]);
-    
-    //    std::cout << (int) std::stoi(parseCSVoutput[i][2]) ;
-    //    std::cout << '\n' ;
-    //    std::cout << dac[i].command_address ;
-    //    std::cout << '\n' ;
-
     }
 }
 
@@ -107,8 +101,6 @@ void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
         biasGen[i].biasNo = std::stoi(parseCSVoutput[i][3]);
         biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uA, biasGen[i].transistorType);
 
-        // printf("%s : ", biasGen_BiasName.c_str());
-        // printBinaryValue(biasGen[i].currentValue_binary, BIASGEN_PACKET_SIZE);
     }
 }
 
