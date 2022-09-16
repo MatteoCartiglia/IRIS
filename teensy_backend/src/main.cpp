@@ -78,17 +78,14 @@ void setup()
 
 #ifdef EXISTS_BIASGEN
     biasGen.setupSPI();
-    biasGen.resetSPI();
 #endif
 
 #ifdef EXISTS_SPI1
     spi1.setupSPI();
-    spi1.resetSPI();
 #endif
 
 #ifdef EXISTS_SPI2
     spi2.setupSPI();
-    spi2.resetSPI();
 #endif
 
 #ifdef EXISTS_ENCODER

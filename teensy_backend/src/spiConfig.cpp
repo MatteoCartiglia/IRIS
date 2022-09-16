@@ -19,9 +19,7 @@ SPIConfig::SPIConfig(const int clk, const int reset, const int mosi, int SPInumb
     _reset = reset;
     _mosi = mosi;
     _SPInumber = SPInumber;    
-
 }
-
 //----------------------------------------------------------------------------------------------------------------------------------
 // Class constructor; initialises the BiasGen object and sets up the relevant pins on Teensy
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -32,7 +30,6 @@ SPIConfig::SPIConfig(const int clk, const int reset, const int mosi,const int en
     _mosi = mosi;
     _enable = enable;
     _SPInumber = SPInumber;    
-
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -51,10 +48,14 @@ void SPIConfig::setupSPI()
     digitalWrite(_clk, LOW);
     delay(1);
 
-    // TODO: Handle case where enabling is NONE
+    resetSPI();
+
     if (_enable)
     {
         pinMode(_enable, OUTPUT);
+        delay(1);
+        digitalWrite(_enable, LOW);
+        delay(10);
         digitalWrite(_enable, HIGH);
         delay(1);
     }
