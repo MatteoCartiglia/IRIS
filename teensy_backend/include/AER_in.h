@@ -110,7 +110,7 @@ class AER_in
 
 
     int _inputBufferIndex;
-    AER_out _inputEventBuffer[MAX_EVENTS_PER_PACKET];
+    AER_out _inputEventBuffer[MAX_EVENTS_PER_PACKET] = {};
 };
 
 

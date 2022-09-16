@@ -192,7 +192,7 @@ struct Aer_Data_Pkt
     std::uint32_t number_events;                                        
     AER_out body[MAX_EVENTS_PER_PACKET];
 
-}__attribute__ ((packed));
+}__attribute__((packed));
 
 
 #endif

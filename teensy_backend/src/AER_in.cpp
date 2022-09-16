@@ -109,12 +109,16 @@ void AER_in::sendEventBuffer()
   //  Serial.println("Data/ts: ");
 
   //  Serial.println(_inputEventBuffer[i].data, BIN);
-   // Serial.println(_inputEventBuffer[i].timestamp);
+  // Serial.println(_inputEventBuffer[i].timestamp);
 
-    Aer_Data_Pkt pkt_out(_inputEventBuffer, _inputBufferIndex);
+  Aer_Data_Pkt pkt_out(_inputEventBuffer, _inputBufferIndex);
+  pkt_out.number_events = 2;
+  pkt_out.body[0].data = 42;
+  pkt_out.body[0].timestamp = 200;
+  pkt_out.body[1].data = 43;
+  pkt_out.body[1].timestamp = 400;
 
-    usb_serial_write((const void*) &pkt_out, sizeof(pkt_out));      
-   
+  usb_serial_write((const void*) &pkt_out, sizeof(pkt_out));  
 
   resetBuffer();
 } 

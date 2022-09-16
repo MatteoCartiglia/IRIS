@@ -36,30 +36,45 @@ SPIConfig::SPIConfig(const int clk, const int reset, const int mosi,const int en
 // setupSPI: sets up the relevant pins on Teensy
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void SPIConfig::setupSPI()
+void SPIConfig::setupBG()
 {
     pinMode(_clk, OUTPUT);
     pinMode(_reset, OUTPUT);
     pinMode(_mosi, OUTPUT);
-    delay(5);
+    pinMode(_enable, OUTPUT);
+
+    delay(10);
     
     digitalWrite(_mosi, LOW);
-    delay(1);
+    delay(10);
     digitalWrite(_clk, LOW);
-    delay(1);
+    delay(10);
+    digitalWrite(_enable, LOW);
+    delay(10);
 
     resetSPI();
+    delay(10);
+    digitalWrite(_enable, HIGH);
+    delay(10);
 
-    if (_enable)
-    {
-        pinMode(_enable, OUTPUT);
-        delay(1);
-        digitalWrite(_enable, LOW);
-        delay(10);
-        digitalWrite(_enable, HIGH);
-        delay(1);
-    }
+
+
 }
+
+void SPIConfig::setupSPI()
+{
+    pinMode(_clk, OUTPUT);
+    pinMode(_reset, OUTPUT);
+    pinMode(_mosi, OUTPUT); 
+
+    digitalWrite(_mosi, LOW);
+    delay(10);
+    digitalWrite(_clk, LOW);
+    delay(10);
+    
+    resetSPI();
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // resetSPI: Executes the SPI reset pattern 
@@ -71,8 +86,8 @@ void SPIConfig::resetSPI()
     delay(10);
     digitalWrite(_reset, HIGH);
     delay(10);
-    digitalWrite(_reset, LOW);
-    delay(10);
+    digitalWrite(_reset, LOW);          
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
