@@ -277,14 +277,8 @@ int main(int, char**)
         }
 #endif
 
-#ifdef EXISTS_ENCODER
-  // Encoder outputs
-        if(show_Encoder)
-        {
-            getSerialData_Encoder(serialPort, show_Encoder);
-            
-        }
-#endif
+
+
 
 #ifdef EXISTS_C2F
   // Encoder outputs
@@ -295,6 +289,12 @@ int main(int, char**)
         }
 #endif
 
+  // Encoder outputs
+        if(show_Encoder)
+        {
+            getEncoderdata(serialPort, show_Encoder);
+            
+        }
 
         // Render the window       
         renderImGui(window);
@@ -317,7 +317,7 @@ int main(int, char**)
 
     //-------------------------------------------------------- Saving Files Correctly ---------------------------------------------------- 
 
-    if(std::filesystem::exists(C2F_INPUT_SAVE_FILENAME_CSV))
+    /*if(std::filesystem::exists(C2F_INPUT_SAVE_FILENAME_CSV))
     {
         std::string newName = C2F_INPUT_SAVE_FILENAME + timeString + ".csv";
         rename(C2F_INPUT_SAVE_FILENAME_CSV, newName.c_str());
@@ -327,7 +327,7 @@ int main(int, char**)
     {
         std::string newName = ENCODER_INPUT_SAVE_FILENAME + timeString + ".csv";;
         rename(ENCODER_INPUT_SAVE_FILENAME_CSV, newName.c_str());
-    }
+    }*/
 
     return 0;
 } 

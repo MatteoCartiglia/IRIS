@@ -50,7 +50,7 @@
 
 // TEENSY -> HOST 
 
-#define  MAX_EVENTS_PER_PACKET              1024
+#define  MAX_EVENTS_PER_PACKET              256
 
 
 // BIASGEN 
@@ -120,6 +120,8 @@
 #define ALIVE_PACKET_SIZE                   9
 
 // C2F COMMUNICATION
+    #define C2F_INPUT_RANGE                 32
+    #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
 #ifdef EXISTS_C2F
     #define C2F_ACK                         0
     #define C2F_REQ                         35

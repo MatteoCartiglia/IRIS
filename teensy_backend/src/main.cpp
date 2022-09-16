@@ -77,7 +77,7 @@ void setup()
     setupLFSR();
 
 #ifdef EXISTS_BIASGEN
-    biasGen.setupSPI();
+    biasGen.setupBG();
 #endif
 
 #ifdef EXISTS_SPI1
@@ -182,9 +182,6 @@ void loop()
                // Serial.print(aero_pkt.header);
                 usb_serial_write((const void*) &aero_pkt, sizeof(aero_pkt));
                 */
-
-
-
                 break;
             }
 #ifdef EXISTS_ENCODER
@@ -195,8 +192,8 @@ void loop()
 
                 if (inputEncoder.saving_flag)
                 {
-                    Serial.print("Number of events: ");
-                    Serial.println(inputEncoder.getBufferIndex());
+                    //Serial.print("Number of events: ");
+                    //Serial.println(inputEncoder.getBufferIndex());
 
                     inputEncoder.sendEventBuffer();
     

@@ -52,6 +52,7 @@ bool handshakeStatusC2F = false;
 bool savingEncoder = false;
 
 
+
 std::vector<double> inputEncoder_xValues;
 std::vector<int> inputEncoder_yValues;
 
@@ -60,6 +61,7 @@ std::vector<int> inputC2F_yValues;
 
 std::string popupSave_str = "Save Bias Values";
 const char *popupSave = popupSave_str.c_str(); 
+
 std::string popupLoad_str = "Load Bias Values";
 const char *popupLoad = popupLoad_str.c_str(); 
 bool openSavePopup = true;
@@ -721,7 +723,7 @@ void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int ser
 
 void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int serialPort)
 {
-    long valuesToSave[2] = {timeStamp, long(value)};
+   /*  long valuesToSave[2] = {timeStamp, long(value)};
     double timeStamp_s = timeStamp/1000;
 
     ImGui::Begin("ALIVE Output", &updatePlot);  
@@ -740,7 +742,7 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
     }
 
     if(ImPlot::BeginPlot("Encoder Output: Firing Neuron Number"))
-    {
+    { 
         ImPlot::GetStyle().UseLocalTime;
         ImPlot::GetStyle().Use24HourClock;
 
@@ -753,6 +755,7 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
         saveToCSV(valuesToSave, 2, ENCODER_INPUT_SAVE_FILENAME_CSV);
 
         ImGui::NewLine();
+        
 
         if(ImGui::Button("Handshake: Encoder", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
@@ -781,7 +784,7 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
         ImGui::NewLine();
     }  
 
-    ImGui::End();
+    ImGui::End();*/
 }
 
 
@@ -848,7 +851,6 @@ int checkLimits_Synapse(int value, int synapseType)
 
     return value;
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // glfw_error_callback: Prints GLFW callback error to terminal

@@ -90,6 +90,7 @@ int setupAerWindow(bool show_AER_config, int serialPort);
     template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, int serialPort);
 #endif
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // updateSerialOutputWindow: Writes serial input to Log window in GUI
 //---------------------------------------------------------------------------------------------------------------------------------------

@@ -30,7 +30,7 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getSerialData_Encoder: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getSerialData_Encoder(int serialPort, bool show_PlotData);
+void getEncoderdata(int serialPort, bool show_PlotData);
 void getSerialData_C2F(int serialPort, bool show_PlotData);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
