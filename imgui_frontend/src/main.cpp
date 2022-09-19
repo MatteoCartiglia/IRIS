@@ -207,6 +207,7 @@ int main(int, char**)
         {
             logEntry = updateSerialOutputWindow(show_Serial_output, logEntry, logString);      
         }
+#ifdef EXISTS_OUTPUT_DECODER
        
         // Setup AER event logging window
         if (show_AER_config)
@@ -219,7 +220,7 @@ int main(int, char**)
                 expectedResponses = 0;
             }
         }
-
+#endif
         // Setup digital-to-analogue convertor configuration window - ok!
 #ifdef EXISTS_DAC
         if (show_DAC_config)
@@ -288,6 +289,7 @@ int main(int, char**)
             
         }
 #endif
+#ifdef EXISTS_ENCODER
 
   // Encoder outputs
         if(show_Encoder)
@@ -295,12 +297,17 @@ int main(int, char**)
             getEncoderdata(serialPort, show_Encoder);
             
         }
-
+#endif
         // Render the window       
         renderImGui(window);
-        updateValues_DAC = false;  
+#ifdef EXISTS_DAC
+        updateValues_DAC = false;
+#endif
+  #ifdef EXISTS_BIASGEN
+       
         updateValues_BiasGen  = false;  
-   
+ #endif
+  
         // sleep(0.25);  
     }
 

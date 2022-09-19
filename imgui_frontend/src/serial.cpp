@@ -21,6 +21,7 @@ bool savingEnc = false;
 //---------------------------------------------------------------------------------------------------------------------------------------
 // loadBiasValues: Sends the new DAC values to the Teensy 
 //---------------------------------------------------------------------------------------------------------------------------------------
+#ifdef EXISTS_DAC
 
 void loadBiasValues(DAC_command dac[], int serialPort )
 {
@@ -35,10 +36,13 @@ void loadBiasValues(DAC_command dac[], int serialPort )
         std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
     }
 }
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // loadBiasGenValues: Sends the new BIASGEN values to the Teensy 
 //---------------------------------------------------------------------------------------------------------------------------------------
+#ifdef EXISTS_BIASGEN
+
 void loadBiasValues(BIASGEN_command bg[], int serialPort)
 {
     for (int i = 0; i< BIASGEN_CHANNELS; i++)
@@ -49,7 +53,7 @@ void loadBiasValues(BIASGEN_command bg[], int serialPort)
 
     }
 }
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getSerialData: Reads data in serial port and writes entry to Log window
 //---------------------------------------------------------------------------------------------------------------------------------------
