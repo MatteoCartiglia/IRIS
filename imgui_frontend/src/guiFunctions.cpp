@@ -245,7 +245,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-#if EXISTS_OUTPUT_DECODER
+#ifdef EXISTS_OUTPUT_DECODER
 int setupAerWindow(bool show_AER_config, int serialPort)
 {
     int serialDataSent = 0;      

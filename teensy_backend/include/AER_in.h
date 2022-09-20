@@ -20,7 +20,7 @@ class AER_in
     //-----------------------------------------------------------------------------------------------------------------------------------
     // Class constructor; initialises the AER_in object and sets up the relevant pins on Teensy
     //-----------------------------------------------------------------------------------------------------------------------------------
-    AER_in(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay = 0, 
+    AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay = 0, 
                 bool inputActiveLow = false, bool inputDataActiveLow = false);
 
 
@@ -106,7 +106,7 @@ class AER_in
     bool _inputHandshakeActiveLow;
     bool _inputDataActiveLow;
 
-    int  _t0;
+    unsigned long  _t0;
 
 
     int _inputBufferIndex;

@@ -10,6 +10,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <fstream>
 
 
 std::vector<AER_out> input_data;    
@@ -17,6 +18,7 @@ std::string popupSave_str_encoder = "Save events";
 const char *popupSave_encoder = popupSave_str_encoder.c_str();                            
 bool savingEnc = false;
 
+void save_events(const std::string& filename, std::vector<AER_out> input_data);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // loadBiasValues: Sends the new DAC values to the Teensy 
@@ -103,7 +105,7 @@ void getEncoderdata(int serialPort, bool show_PlotData)
         }
 
         ImGui::SameLine();
-        ImGui::Text("ALIVE Output: Encoder ");  
+        ImGui::Text(" Output: Encoder ");  
         ImGui::SameLine();
 
         if (ImGui::Button( "Save"))
@@ -124,17 +126,25 @@ void getEncoderdata(int serialPort, bool show_PlotData)
             std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(500) );
 
             int serialReadBytes = read(serialPort,(void *) &aer_data, sizeof(aer_data));
-            int number_event = (int)aer_data.number_events;
-            std::cout <<"[0]: " << aer_data.body[0].data <<" " << aer_data.body[0].timestamp  <<std::endl;
-            std::cout <<"[1]: " << aer_data.body[1].data <<" "  << aer_data.body[1].timestamp  <<std::endl;
-            //input_data.push_back(aer_data.body[0]);
-            std::cout << "num:" << number_event <<std::endl;
-            std::cout <<"Size: " << input_data.size() <<std::endl;
-            if(number_event >0 && number_event < MAX_EVENTS_PER_PACKET)
+            //std::cout << "retval: " << serialReadBytes <<std::endl;
+            if (serialReadBytes==-1)
             {
-                for (int j=0; j< (number_event-2);j++)
+                std::cout <<"Error= -1" << std::endl;
+            }
+            else if (serialReadBytes==0)
+            {
+                std::cout <<"Error = no data read" << std::endl;
+            }
+            else
+            {   
+              //  assert(serialReadBytes == (aer_data.number_events * sizeof(AER_out)) +sizeof(aer_data.number_events));
+                if(aer_data.number_events >0 && aer_data.number_events < MAX_EVENTS_PER_PACKET)
                 {
-                    input_data.push_back(aer_data.body[j]);
+                    for (int j=0; j< (aer_data.number_events);j++)
+                    {
+                        input_data.push_back(aer_data.body[j]);
+                        std::cout<< "Data: "<< aer_data.body[j].data<< " Ts: " <<aer_data.body[j].timestamp<< std::endl;
+                    }
                 }
             }
         }
@@ -142,15 +152,34 @@ void getEncoderdata(int serialPort, bool show_PlotData)
         ImGui::Checkbox("Saving: ", &savingEnc);
         ImGui::NewLine();
 
-
-
-    
- 
+        if (ImGui::Button( "Save to file"))
+        {
+            save_events(ENCODER_INPUT_SAVE_FILENAME_CSV, input_data);
+        }
     // Flush the serial port 
     tcflush(serialPort, TCIFLUSH);
 
     ImGui::End();
     
+}
+
+void save_events( const std::string& filename, std::vector<AER_out> input_data)
+{
+    std::ofstream file(filename, std::ios::out | std::ios::app);    
+    if(file.is_open())
+    {
+        file << "data, ts (in micros)" << '\n'; 
+
+        for (int i = 0; i < input_data.size()-1; i++) 
+        {
+            file << input_data[i].data << ','; 
+            file << input_data[i].timestamp << ','; 
+            file << '\n'; 
+        }
+        
+        input_data.clear();
+    }
+
 }
 
 

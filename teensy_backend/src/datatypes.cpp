@@ -74,7 +74,7 @@ Pkt::Pkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::underly
 
 Aer_Data_Pkt::Aer_Data_Pkt(const AER_out event_buffer[], size_t n) : number_events(n)
 {
-    for (int i = 0; i < n; i++)
+    for (unsigned int i = 0; i < n; i++)
     {
         body[i] = event_buffer[i];
     }

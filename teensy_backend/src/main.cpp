@@ -18,10 +18,15 @@
 #include "teensyOut.h"
 
 // Declaring function prototypes in order of definition
+#ifdef EXISTS_ALIVE
 static void setupLFSR();
+#endif
 static void resetChip();
 static void aerInputEncoder_ISR();
+#ifdef EXISTS_C2F
+
 static void aerInputC2F_ISR();
+#endif
 static void sendTeensyStatus(TeensyStatus status);
 
 
@@ -31,7 +36,14 @@ static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 
 #ifdef EXISTS_ENCODER
-    int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
+#ifdef EXISTS_SPAIC
+    int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN,ENCODER_INPUT_BIT_3_PIN,ENCODER_INPUT_BIT_4_PIN};
+#endif
+
+#ifdef EXISTS_ALIVE
+     int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
+
+#endif
     AER_in inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_HANDSHAKE_ACTIVE_LOW, ENCODER_DATA_ACTIVE_LOW);
     int enc_since_blank_milli = 0;
     bool enc_aero_flag = true;
@@ -73,12 +85,11 @@ static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 void setup() 
 {
-    resetChip();        
+    resetChip();  
+    #ifdef EXISTS_ALIVE
     setupLFSR();
+    #endif
 
-#ifdef EXISTS_BIASGEN
-    biasGen.setupBG();
-#endif
 
 #ifdef EXISTS_SPI1
     spi1.setupSPI();
@@ -99,6 +110,10 @@ void setup()
 #ifdef EXISTS_DAC
     dac.join_I2C_bus();
     dac.turnReferenceOff();
+#endif
+delay(5000);
+#ifdef EXISTS_BIASGEN
+    biasGen.setupBG();
 #endif
 
     Serial.print("********************* Setup complete *********************\n");
@@ -122,6 +137,7 @@ void loop()
             // Setup DAC
             case PktType::Pkt_setDACvoltage:
             { 
+    
                 DAC_command DAC(inputBuffer);
                 dac.writeDAC(DAC.command_address, DAC.data); 
 
@@ -135,6 +151,7 @@ void loop()
                 Serial.print(" mV.");
                 break;   
             }
+#ifdef EXISTS_BIASGEN
 
             // Setup bias generator
             case PktType::Pkt_setBiasGen:
@@ -150,7 +167,8 @@ void loop()
                 Serial.print(" uA.");
                 break;
             }
-
+#endif
+#ifdef EXISTS_OUTPUT_DECODER
             // Request decoder output
             case PktType::Pkt_reqOutputDecoder:
             {
@@ -161,17 +179,19 @@ void loop()
                 Serial.print(decoder.data, BIN);
                 break;
             }
+#endif
+#ifdef EXISTS_ENCODER
 
             // Get encoder input value
             case PktType::P2tRequestAerEncoderOutput:
             {
-                Serial.println(inputEncoder.saving_flag);
+               // Serial.println(inputEncoder.saving_flag);
 
-                Serial.println("Toggling saving encoder /n");
+               // Serial.println("Toggling saving encoder /n");
                 inputEncoder.setBufferIndex(0);
-                inputEncoder.set_t0(0);
+                inputEncoder.set_t0(micros());
                 inputEncoder.toggle_saving_flag(); 
-                Serial.println(inputEncoder.saving_flag);
+               // Serial.println(inputEncoder.saving_flag);
 
                 /*
                 delay(100);
@@ -184,6 +204,7 @@ void loop()
                 */
                 break;
             }
+#endif
 #ifdef EXISTS_ENCODER
 
             case PktType::PktGetAerEncoderOutput:
@@ -192,9 +213,6 @@ void loop()
 
                 if (inputEncoder.saving_flag)
                 {
-                    //Serial.print("Number of events: ");
-                    //Serial.println(inputEncoder.getBufferIndex());
-
                     inputEncoder.sendEventBuffer();
     
                 }
@@ -271,7 +289,7 @@ void loop()
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupLFSR: Sets up Linear Feedback Shift Register
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_ALIVE
 static void setupLFSR()
 {
   pinMode(LB_LFSR_CLK, OUTPUT);
@@ -279,6 +297,7 @@ static void setupLFSR()
   digitalWrite(LB_LFSR_CLK, LOW);
   delay(100);
 }
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // resetChip: Sets up and executes chip reset pattern
@@ -288,10 +307,6 @@ static void resetChip()
 {
   pinMode(P_RST_PIN, OUTPUT);
   pinMode(S_RST_PIN, OUTPUT);
-  pinMode(SYN_RST_NMDA_PIN, OUTPUT);
-  pinMode(SYN_RST_GABGA_PIN, OUTPUT);
-  pinMode(LB_LFSR_RST, OUTPUT);
-  delay(100);
 
   digitalWrite(P_RST_PIN, LOW);
   delay(100);
@@ -302,7 +317,12 @@ static void resetChip()
   delay(100);
   digitalWrite(S_RST_PIN, HIGH);
   delay(100);
+#ifdef EXISTS_ALIVE       
 
+  pinMode(SYN_RST_NMDA_PIN, OUTPUT);
+  pinMode(SYN_RST_GABGA_PIN, OUTPUT);
+  pinMode(LB_LFSR_RST, OUTPUT);
+  delay(100);
   digitalWrite(SYN_RST_NMDA_PIN, HIGH);
   delay(100);
   digitalWrite(SYN_RST_GABGA_PIN, HIGH);
@@ -317,6 +337,7 @@ static void resetChip()
   delay(100);
   digitalWrite(LB_LFSR_RST, LOW);
   delay(1000);
+  #endif
 }
 
 #ifdef EXISTS_ENCODER
@@ -329,7 +350,7 @@ static void aerInputEncoder_ISR()
 {
     if (!inputEncoder.reqRead()) 
     {    
-        if (inputEncoder.saving_flag  && (inputEncoder.getBufferIndex() < int(MAX_PKT_BODY_LEN)) ) 
+        if (inputEncoder.saving_flag  && (inputEncoder.getBufferIndex() < int(MAX_EVENTS_PER_PACKET)) ) 
         { 
             inputEncoder.recordEvent();
         }   
@@ -371,7 +392,7 @@ static void aerInputC2F_ISR()
 
 static void sendTeensyStatus(TeensyStatus status)
 {
-    std::uint8_t teensyStatusBuffer[1] = {(uint8_t) status};
+   // std::uint8_t teensyStatusBuffer[1] = {(uint8_t) status};
     // usb_serial_write(teensyStatusBuffer, sizeof(teensyStatusBuffer));
 }
 

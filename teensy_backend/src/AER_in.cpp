@@ -17,7 +17,7 @@ bool startRecording = false;
 // AER_in constructor
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-AER_in::AER_in(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay, bool inputHandshakeActiveLow, bool inputDataActiveLow = false)
+AER_in::AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay, bool inputHandshakeActiveLow, bool inputDataActiveLow)
 {
   _inputReqPin = inputReqPin;
   _inputAckPin = inputAckPin;
@@ -93,7 +93,10 @@ void AER_in::recordEvent()
   AER_out newEvent;
   newEvent.data = getInputData();
   newEvent.timestamp = (micros() - _t0);
-
+  /*Serial.print("Data & ts ");
+  Serial.print(newEvent.data, DEC);
+  Serial.print(" ");
+  Serial.println(newEvent.timestamp, DEC); */
   _inputEventBuffer[_inputBufferIndex++] = newEvent;
 }
 
@@ -102,22 +105,12 @@ void AER_in::recordEvent()
 //----------------------------------------------------------------------------------------------------------------------------------
 void AER_in::sendEventBuffer()
 {
-
-    //usb_serial_write((const void*) &_inputBufferIndex, sizeof(_inputBufferIndex));      
-    
-   
-  //  Serial.println("Data/ts: ");
-
-  //  Serial.println(_inputEventBuffer[i].data, BIN);
-  // Serial.println(_inputEventBuffer[i].timestamp);
+  //Serial.print("index: ");
+ // Serial.print(_inputBufferIndex);
 
   Aer_Data_Pkt pkt_out(_inputEventBuffer, _inputBufferIndex);
-  pkt_out.number_events = 2;
-  pkt_out.body[0].data = 42;
-  pkt_out.body[0].timestamp = 200;
-  pkt_out.body[1].data = 43;
-  pkt_out.body[1].timestamp = 400;
-
+  //Serial.print("Num of events: ");
+ // Serial.println(pkt_out.number_events, DEC);
   usb_serial_write((const void*) &pkt_out, sizeof(pkt_out));  
 
   resetBuffer();
@@ -132,14 +125,12 @@ void AER_in::handshake()
   {
     if (!reqRead()) 
     {
-      startRecording = 1;    
-      Serial.print(true);
+
       ackWrite(0);
     }
 
     else if (reqRead())
     {
-      Serial.print(false);
       ackWrite(1);
     }
 
@@ -149,14 +140,11 @@ void AER_in::handshake()
   {
     if (!reqRead()) 
     {
-      Serial.print(false);
       ackWrite(0);
     }
 
     else if (reqRead())
     {
-      startRecording = 1;    
-      Serial.print(true);
       ackWrite(1);
     }
   }
@@ -190,9 +178,8 @@ unsigned int AER_in::getInputData()
   for (int i = 0; i < _inputNumDataPins; i++) 
   {
     inputData |= digitalReadFast(_inputDataPins[i]) << i;
-    Serial.println(inputData, BIN);
-  }
 
+  }
   if (_inputDataActiveLow) 
   {
     return ~inputData;
@@ -210,7 +197,7 @@ unsigned int AER_in::getInputData()
 
 void AER_in::resetBuffer()
 {
-  for(int i = 0; i < int(MAX_PKT_BODY_LEN); i++)
+  for(int i = 0; i < int(MAX_EVENTS_PER_PACKET); i++)
   {
     _inputEventBuffer[i].data = 0;
     _inputEventBuffer[i].timestamp = 0;

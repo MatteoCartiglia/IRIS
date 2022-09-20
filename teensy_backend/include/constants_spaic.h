@@ -107,8 +107,7 @@
     #define ENCODER_INPUT_BIT_2_PIN         6
     #define ENCODER_INPUT_BIT_3_PIN         7
     #define ENCODER_INPUT_BIT_4_PIN         8
-    #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/Encoder/outputEncoder.csv"
-    #define ENCODER_INPUT_SAVE_FILENAME     "../imgui_frontend/data/savedOutput/Encoder/outputEncoder"
+    #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/Encoder/SPAIC_outputEncoder.csv"
     #define ENCODER_HANDSHAKE_ACTIVE_LOW    true
     #define ENCODER_DATA_ACTIVE_LOW         false
     #define ENCODER_DELAY                   10000

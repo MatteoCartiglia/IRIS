@@ -27,6 +27,8 @@ void loadBiasValues(BIASGEN_command bg[], int serialPort);
 //---------------------------------------------------------------------------------------------------------------------------------------
 void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize);
 
+void  save_events( const std::string& filename, std::vector<AER_out> input_data);
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getSerialData_Encoder: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------

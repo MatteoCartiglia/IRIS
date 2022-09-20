@@ -153,10 +153,10 @@ struct C2F_INPUT_command
 struct AER_out
 {
     AER_out() {};
-    AER_out (const Pkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), timestamp(( pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]) {};
+    AER_out (const Pkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), timestamp(( pkt.body[2] << SERIAL_COMMS_SHIFT*3) | pkt.body[3] << SERIAL_COMMS_SHIFT*2 | pkt.body[4] << SERIAL_COMMS_SHIFT*3|pkt.body[5]) {};
 
-    uint16_t data;
-    uint16_t timestamp;
+    uint16_t data=0;
+    uint32_t timestamp=0;
 }__attribute__((packed));
 
 
@@ -189,8 +189,8 @@ struct Aer_Data_Pkt
     Aer_Data_Pkt(){};
     Aer_Data_Pkt(const AER_out event_buffer[], size_t number_events);
 
-    std::uint32_t number_events;                                        
-    AER_out body[MAX_EVENTS_PER_PACKET];
+    std::uint32_t number_events = 0;                                        
+    AER_out body[MAX_EVENTS_PER_PACKET]={};
 
 }__attribute__((packed));
 
