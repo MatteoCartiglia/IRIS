@@ -25,7 +25,8 @@ struct C2F_OUTPUT_command;
 struct SPI_INPUT_command;
 struct HANDSHAKE_C2F_command;
 struct HANDSHAKE_ENCODER_command;
-
+struct AER_out;
+struct GetAerEncoderOutput ;
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -39,17 +40,20 @@ enum class TeensyStatus
 };
 
 
-// --------------------------------------------------- PC -> Teensy Comm Packet Types --------------------------------------------------
+// --------------------------------------------------- PC <-> Teensy Comm Packet Types --------------------------------------------------
 enum class PktType 
 {
     Pkt_setDACvoltage               = 1U,
     Pkt_setBiasGen                  = 2U,
     Pkt_reqOutputDecoder            = 3U,
-    Pkt_reqInputEncoder             = 4U,
-    Pkt_reqInputC2F                 = 5U,
+    P2tRequestAerEncoderOutput      = 4U,
+    P2tRequestAerC2FOutput          = 5U,
     Pkt_setSPI                      = 6U,
     Pkt_handshakeC2F                = 7U,
-    Pkt_handshakeEncoder            = 8U
+    Pkt_handshakeEncoder            = 8U,
+    Pkt_aeroevent                   = 9U,
+    PktGetAerEncoderOutput          = 10U
+
 };
 
 
@@ -57,14 +61,8 @@ enum class PktType
 // STRUCTURED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-// ------------------------------------------------- ALIVE -> Teensy -> PC data struct --------------------------------------------------
-struct outputALIVE
-{
-    uint8_t data;
-    unsigned long timestamp;
-};
 
-// -------------------------------------------------- PC -> Teensy Comm Packet Struct ---------------------------------------------------
+// -------------------------------------------------- PC <-> Teensy Comm Packet Struct ---------------------------------------------------
 
 struct Pkt 
 {
@@ -77,11 +75,14 @@ struct Pkt
     Pkt(const SPI_INPUT_command& spi);
     Pkt(const HANDSHAKE_C2F_command& handshakeC2F);
     Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder);
+    Pkt(const GetAerEncoderOutput& AerEncoderOutput);
+
 
     std::uint8_t header;                                        // Packet length encoded in header excludes size of header
     std::uint8_t body[MAX_PKT_BODY_LEN];
 
 }__attribute__ ((packed));
+
 
 
 // -------------------------------------------- Struct for PC -> Teensy -> DAC communication --------------------------------------------
@@ -113,7 +114,7 @@ struct BIASGEN_command
     bool transistorType;
 };
 
-// --------------------------- Struct for PC -> Teensy -> ALIVE communication [DECODER: Teensy output, ALIVE input] ---------------------
+// --------------------------- Struct for Input interface PC -> Teensy -> communication [Input interface: Teensy output] ---------------------
 
 struct AER_DECODER_OUTPUT_command
 {
@@ -124,20 +125,40 @@ struct AER_DECODER_OUTPUT_command
 };
 
 
-// --------------------------- Struct for PC -> Teensy <- ALIVE communication [ENCODER: Teensy input, ALIVE output] ---------------------
+// --------------------------- Struct to enable logging of Encoder events PC -> Teensy   ---------------------
 
 struct ENCODER_INPUT_command
 {
     ENCODER_INPUT_command() {};
 };
 
+// --------------------------- Struct to enable logging of sending events PC -> Teensy   ---------------------
 
-// ----------------------------- Struct for PC -> Teensy <- ALIVE communication [C2F: Teensy input, ALIVE output] -----------------------
+struct GetAerEncoderOutput
+{
+    GetAerEncoderOutput() {};
+};
+
+
+
+// ----------------------------- Struct to enable logging of c2f  PC-> Teensy  -----------------------
 
 struct C2F_INPUT_command
 {
     C2F_INPUT_command() {};
 };
+
+// -------------------------------------------------  Teensy -> PC data struct --------------------------------------------------
+
+struct AER_out
+{
+    AER_out() {};
+    AER_out (const Pkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), timestamp(( pkt.body[2] << SERIAL_COMMS_SHIFT*3) | pkt.body[3] << SERIAL_COMMS_SHIFT*2 | pkt.body[4] << SERIAL_COMMS_SHIFT*3|pkt.body[5]) {};
+
+    uint16_t data=0;
+    uint32_t timestamp=0;
+}__attribute__((packed));
+
 
 // --------------------------------------------- Struct for PC -> Teensy -> SPI communication -------------------------------------------
 
@@ -160,6 +181,18 @@ struct HANDSHAKE_ENCODER_command
 {
     HANDSHAKE_ENCODER_command() {};
 };
+
+
+
+struct Aer_Data_Pkt
+{
+    Aer_Data_Pkt(){};
+    Aer_Data_Pkt(const AER_out event_buffer[], size_t number_events);
+
+    std::uint32_t number_events = 0;                                        
+    AER_out body[MAX_EVENTS_PER_PACKET]={};
+
+}__attribute__((packed));
 
 
 #endif

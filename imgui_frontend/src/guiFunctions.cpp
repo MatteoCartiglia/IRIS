@@ -15,12 +15,15 @@
 #include <typeinfo>
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
-
+#ifdef EXISTS_OUTPUT_DECODER
 const char *options_chipCore[ALIVE_NO_CORES] = {"Cortical Circuit", "Neural Network"};
 const char *options_synapseType[ALIVE_NO_SYNAPSE_TYPES] = {"AMPA", "GABAa", "GABAb", "NMDA"};
 const char *options_neuronNumber[ALIVE_NO_NEURONS] = {"1", "2", "3", "4"};
 const char *options_neuronNumber_PlasticSynapses[1] = {"All Neurons"};
+#endif
+#ifdef EXISTS_BIASGEN
 const char *biasGenHeaderStr[BIASGEN_CATEGORIES] = {"Alpha DPI", "Neurons", "Analogue Synapses", "Digital Synapses", "Synapse Pulse Extension", "Learning Block", "Stop Learning Block", "Current To Frequency", "Buffer"};
+#endif
 
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
     const char *options_biasGenTransistorType[2] = {"nFET", "pFET"};
@@ -38,8 +41,9 @@ bool selectionChange_synapseType  = 0;
 bool selectionChange_neuronNumber = 0;
 bool selectionChange_synapseNumber = 0;
 bool selectionChange_file = 0;
-
-bool valueChange_DACbias[DAC_CHANNELS_USED] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+#ifdef EXISTS_DAC
+bool valueChange_DACbias[DAC_CHANNELS_USED] = {};
+#endif
 bool valueChange_SPIbias_1[2] = {0, 0};
 bool valueChange_SPIbias_2[2] = {0, 0};
 bool valueChange_SaveFilename = false;
@@ -49,6 +53,8 @@ bool enableCommsC2F = false;
 bool enableCommsAER = false;
 bool handshakeStatusEncoder = false;
 bool handshakeStatusC2F = false;
+bool savingEncoder = false;
+
 
 
 std::vector<double> inputEncoder_xValues;
@@ -59,6 +65,7 @@ std::vector<int> inputC2F_yValues;
 
 std::string popupSave_str = "Save Bias Values";
 const char *popupSave = popupSave_str.c_str(); 
+
 std::string popupLoad_str = "Load Bias Values";
 const char *popupLoad = popupLoad_str.c_str(); 
 bool openSavePopup = true;
@@ -125,8 +132,8 @@ GLFWwindow* setupWindow()
 
     ImGui::CreateContext();
     ImPlot::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui::StyleColorsDark();
+
 
     //---------------------------------------------- Setting up Platform/Renderer backends ----------------------------------------------
 
@@ -162,7 +169,7 @@ void renderImGui(GLFWwindow* window)
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_DAC
 int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
 {
     int serialDataSent = 0;
@@ -196,6 +203,10 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
         // Adding a update button to write to serial port
         if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) || updateValues)
         {
+            if (dac[i].data==0) 
+            {
+            dac[i].data =1;
+            }
             Pkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
             serialDataSent++;
@@ -229,12 +240,12 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
     
     return serialDataSent;
 }
-       
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_OUTPUT_DECODER
 int setupAerWindow(bool show_AER_config, int serialPort)
 {
     int serialDataSent = 0;      
@@ -316,12 +327,12 @@ int setupAerWindow(bool show_AER_config, int serialPort)
     return serialDataSent;
 }
 
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 
 //                     #ifdef condition used to define different definition if transistor type option to be displayed and handled
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_BIASGEN
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
 int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[],bool updateValues)
@@ -426,7 +437,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
     ImGui::End();
     return serialDataSent;
 }
-
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send
@@ -526,25 +537,26 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 //--------------------------------------------------------------------------------------------------------------------------------------
 template <typename T> void savePopup(bool openPopup, const char *popupLabel, T command)
 {
-    char* filename;
-
-    if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
-    {
-        filename = DAC_FILENAME_SAVE;
-    }
-    else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
-    {
-        filename = BIASGEN_FILENAME_SAVE;
-    }
-
+    char filename[128];
     if (ImGui::BeginPopupModal(popupLabel, &openPopup))
     {
+        if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
+        {
+            char filename_dac[128] = "data/customBiasValues/DAC/untitled.csv"; 
+            strncpy(filename,  filename_dac, 128);
+
+        }
+        else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
+        {
+            char filename_bg[128] = "data/customBiasValues/BIASGEN/untitled.csv"; 
+            strncpy(filename,  filename_bg, 128);
+        }
+ 
         ImGui::NewLine();
         ImGui::Text("Filename: ");
         ImGui::SameLine();
         filename, valueChange_SaveFilename = ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
         ImGui::NewLine();
-
         if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
             ImGui::CloseCurrentPopup();
@@ -554,7 +566,6 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
 
         if (ImGui::Button("Save", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
-            // std::cout << typeid(command).hash_code();
             saveBiases(filename, command);
             ImGui::CloseCurrentPopup();   
         }
@@ -572,15 +583,19 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
     char *filepath;
     std::string comboLabel_loadFiles_str = "##";
     const char *comboLabel_loadFiles = comboLabel_loadFiles_str.c_str();
+    #ifdef EXISTS_DAC
 
     if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
     {
         filepath = DAC_FILENAME_LOAD;
     }
+    #endif
+    #ifdef EXISTS_BIASGEN
     else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
     {
         filepath = BIASGEN_FILENAME_LOAD;
     }
+    #endif
 
     if (ImGui::BeginPopupModal(popupLabel, &openLoadPopup))
     {
@@ -651,7 +666,7 @@ bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char
 //---------------------------------------------------------------------------------------------------------------------------------------
 // updatePlotWindow: Initialises and updates GUI window displaying live output from ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_C2F
 void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int serialPort)
 {
     long valuesToSave[2] = {timeStamp, long(value)};
@@ -712,11 +727,12 @@ void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int ser
     
     ImGui::End();
 }
+#endif
 
 
 void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int serialPort)
 {
-    long valuesToSave[2] = {timeStamp, long(value)};
+   /*  long valuesToSave[2] = {timeStamp, long(value)};
     double timeStamp_s = timeStamp/1000;
 
     ImGui::Begin("ALIVE Output", &updatePlot);  
@@ -735,7 +751,7 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
     }
 
     if(ImPlot::BeginPlot("Encoder Output: Firing Neuron Number"))
-    {
+    { 
         ImPlot::GetStyle().UseLocalTime;
         ImPlot::GetStyle().Use24HourClock;
 
@@ -748,6 +764,7 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
         saveToCSV(valuesToSave, 2, ENCODER_INPUT_SAVE_FILENAME_CSV);
 
         ImGui::NewLine();
+        
 
         if(ImGui::Button("Handshake: Encoder", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
@@ -759,21 +776,24 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
         }
 
         ImGui::SameLine();
-        ImGui::Text("           ALIVE Output: Encoder ");  
+        ImGui::Text("ALIVE Output: Encoder ");  
         ImGui::SameLine();
 
-        std::string toggleID_str = "toggleEncoder";
-        const char *toggleID = toggleID_str.c_str();
-        toggleButton(toggleID, &enableCommsEncoder);
+        if (ImGui::Button( "Save"))
+        {
+            ENCODER_INPUT_command Enable_Encoder;
+            Pkt p2tpk_Enable_encoder(Enable_Encoder);
+            write(serialPort, (void *) &p2tpk_Enable_encoder, sizeof(p2tpk_Enable_encoder));
+           // handshakeStatusEncoder = getHandshakeReturn(serialPort);
+            savingEncoder = !savingEncoder;
+            //serialDataSent++;
+        }
+        ImGui::SameLine();
+        ImGui::Checkbox("Saving: ", &savingEncoder);
         ImGui::NewLine();
-
-        // if(enableCommsEncoder)
-        // {
-
-        // }
     }  
 
-    ImGui::End();
+    ImGui::End();*/
 }
 
 
@@ -816,7 +836,7 @@ float checkLimits(float value, float maxLimit, float minValue)
 //---------------------------------------------------------------------------------------------------------------------------------------
 // checkLimits_Synapse: Calls the checkLimits function using the predefined limits for each type of synapse
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_OUTPUT_DECODER
 int checkLimits_Synapse(int value, int synapseType)
 {
     // Call checkLimits with correct maxLimit parameter
@@ -840,8 +860,7 @@ int checkLimits_Synapse(int value, int synapseType)
 
     return value;
 }
-
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // glfw_error_callback: Prints GLFW callback error to terminal
 //---------------------------------------------------------------------------------------------------------------------------------------

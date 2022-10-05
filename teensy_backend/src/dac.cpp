@@ -40,11 +40,11 @@ void DAC::setupDAC()
 
   // Reset the DAC 
   digitalWrite(_dac_rst, HIGH);
-  delay(1);
+  delay(10);
   digitalWrite(_dac_rst, LOW);
-  delay(1);
+  delay(10);
   digitalWrite(_dac_rst, HIGH);
-  delay(1);
+  delay(10);
 
   Serial.println("DAC setup complete.");
 }
@@ -79,6 +79,8 @@ void DAC::writeDAC(uint8_t command_addess, uint16_t value)
     Wire2.write(dacDataHighByte);
     Wire2.write(dacDataLowByte);
     Wire2.endTransmission();
+    delay(100);
+
 }
 
 

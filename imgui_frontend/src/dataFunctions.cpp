@@ -13,11 +13,11 @@
 namespace fs = std::experimental::filesystem;
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
-
+#ifdef EXISTS_BIASGEN
 double masterCurrent[BIASGEN_NO_MASTER_CURRENTS] = {BIASGEN_MASTER_CURRENT_0, BIASGEN_MASTER_CURRENT_1, BIASGEN_MASTER_CURRENT_2,
                                                     BIASGEN_MASTER_CURRENT_3, BIASGEN_MASTER_CURRENT_4, BIASGEN_MASTER_CURRENT_5};
 
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // parseCSV: Parses CSV files containing POR bias value for the DAC and Bias Generator
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -53,10 +53,11 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
 }
 
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getDACvalues: Initialises DAC_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_DAC
 void getBiasValues(DAC_command dac[], const std::string filename = DAC_BIASFILE )
 {
     std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
@@ -73,23 +74,17 @@ void getBiasValues(DAC_command dac[], const std::string filename = DAC_BIASFILE 
         dac[i].name = dacBiasName;
         dac[i].data = (uint16_t) std::stoi(parseCSVoutput[i][1]);
         dac[i].command_address =DAC_COMMAND_WRITE_UPDATE << DAC_COMMAND_WRITE_SHIFT| (int) std::stoi(parseCSVoutput[i][2]);
-    
-    //    std::cout << (int) std::stoi(parseCSVoutput[i][2]) ;
-    //    std::cout << '\n' ;
-    //    std::cout << dac[i].command_address ;
-    //    std::cout << '\n' ;
-
     }
 }
 
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getBiasGenValues: Initialises BIASGEN_command array with values from CSV file
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_BIASGEN
 void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
 {
-    std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(BIASGEN_BIASFILE);
+    std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
 
     for (int i = 0; i < (int) parseCSVoutput.size(); i++)
     {
@@ -107,11 +102,9 @@ void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
         biasGen[i].biasNo = std::stoi(parseCSVoutput[i][3]);
         biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uA, biasGen[i].transistorType);
 
-        // printf("%s : ", biasGen_BiasName.c_str());
-        // printBinaryValue(biasGen[i].currentValue_binary, BIASGEN_PACKET_SIZE);
     }
 }
-
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getFileLines: Retrieves the number of lines in a given file
@@ -135,7 +128,7 @@ int getFileLines(const std::string& path)
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getRelevantFileRows_BiasGen: Retrieves the number of file lines containing the specified substring 
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_BIASGEN
 int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[], bool relevantFileRows[], int fileRows)
 {
     int counter = 0;
@@ -155,11 +148,11 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
 
     return counter;
 }
-
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getBiasGenPacket: Converts the bias voltage value into the equivalent binary value to send to the Bias Generator
 //---------------------------------------------------------------------------------------------------------------------------------------
+#ifdef EXISTS_BIASGEN
 
 int getBiasGenPacket(float decimalVal, bool transistorType)
 {
@@ -195,12 +188,12 @@ int getBiasGenPacket(float decimalVal, bool transistorType)
         return binaryVal;
     }
 }
-
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getAERpacket: Generates the equivalent AER binary value for the user-selected options
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_OUTPUT_DECODER
 int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber)
 {
     int chipCore = selection_chipCore << ALIVE_CORE_SHIFT;
@@ -242,8 +235,7 @@ int getAERpacket(int selection_chipCore, int selection_synapseType, int selectio
         return 0;
     }
 }
-
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // printBinaryValue: Prints the given decimal value in binary to the terminal
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -314,6 +306,7 @@ void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename)
 //---------------------------------------------------------------------------------------------------------------------------------------
 // saveBiases: Helper fuction to save current bias values for DAC (overloaded function)
 //---------------------------------------------------------------------------------------------------------------------------------------
+#ifdef EXISTS_DAC
 
 bool saveBiases(const char *filename, DAC_command* command)
 {
@@ -339,11 +332,12 @@ bool saveBiases(const char *filename, DAC_command* command)
     }
 }
 
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // saveBiases: Helper fuction to save current bias values for BIASGEN (overloaded function)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
+#ifdef EXISTS_BIASGEN
 bool saveBiases(const char *filename, BIASGEN_command* command)
 {
     std::ofstream fout(filename);
@@ -368,6 +362,7 @@ bool saveBiases(const char *filename, BIASGEN_command* command)
         return false;
     }
 }
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getNoFiles: Returns the number of files in the specified directory

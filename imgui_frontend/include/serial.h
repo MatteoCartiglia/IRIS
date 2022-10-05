@@ -27,10 +27,13 @@ void loadBiasValues(BIASGEN_command bg[], int serialPort);
 //---------------------------------------------------------------------------------------------------------------------------------------
 void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize);
 
+void  save_events( const std::string& filename, std::vector<AER_out> input_data);
+
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData_Plots: Reads data in serial port and updates plots displayed
+// getSerialData_Encoder: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getSerialData_Plots(int serialPort, bool show_PlotData);
+void getEncoderdata(int serialPort, bool show_PlotData);
+void getSerialData_C2F(int serialPort, bool show_PlotData);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getHandshakeReturn: Retrieves forced handshake status

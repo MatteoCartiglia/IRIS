@@ -47,13 +47,13 @@ Pkt::Pkt(const AER_DECODER_OUTPUT_command& outputDecoder) : header(static_cast<s
 // ENCODER Command Packet
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-Pkt::Pkt(const ENCODER_INPUT_command& inputEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_reqInputEncoder)) {};
+Pkt::Pkt(const ENCODER_INPUT_command& inputEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::P2tRequestAerEncoderOutput)) {};
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // C2F Command Packet
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-Pkt::Pkt(const C2F_INPUT_command& inputC2F) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_reqInputC2F)) {};
+Pkt::Pkt(const C2F_INPUT_command& inputC2F) : header(static_cast<std::underlying_type<PktType>::type>(PktType::P2tRequestAerC2FOutput)) {};
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // SPI Command Packet
@@ -69,8 +69,23 @@ Pkt::Pkt(const SPI_INPUT_command& spi_command) : header(static_cast<std::underly
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
+// AER out Packet
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+Aer_Data_Pkt::Aer_Data_Pkt(const AER_out event_buffer[], size_t n) : number_events(n)
+{
+    for (unsigned int i = 0; i < n; i++)
+    {
+        body[i] = event_buffer[i];
+    }
+};
+
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
 // C2F HANDSHAKE Command Packet
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 Pkt::Pkt(const HANDSHAKE_C2F_command& handshakeC2F) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeC2F)) {};
 Pkt::Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeEncoder)) {};
+Pkt::Pkt(const GetAerEncoderOutput& GetAerEncoderOutput) : header(static_cast<std::underlying_type<PktType>::type>(PktType::PktGetAerEncoderOutput)) {};

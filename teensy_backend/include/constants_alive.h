@@ -1,3 +1,4 @@
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
@@ -8,7 +9,7 @@
 #define EXISTS_ENCODER                  
 //#define EXISTS_C2F                     
 #define EXISTS_OUTPUT_DECODER                    
-#define EXISTS_DAC      
+#define EXISTS_DAC       
 
 #define EXISTS_ALIVE
 //#define EXISTS_SPAIC

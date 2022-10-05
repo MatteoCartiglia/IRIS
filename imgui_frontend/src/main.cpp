@@ -136,11 +136,19 @@ int main(int, char**)
     getBiasValues(dac, DAC_BIASFILE);
 #endif
     
+#ifdef EXISTS_ENCODER
+    bool show_Encoder = true;
+
+#endif
+#ifdef EXISTS_C2F
+    bool show_C2F = true;
+
+#endif
+
     //--------------------------------------------- Defining & Initialising All Other Variables -------------------------------------- 
     
     bool show_Serial_output = true;
-    bool show_PlotData = true;
-                      
+           
     auto time = std::time(nullptr);
     auto time_tm = *std::localtime(&time);
     std::ostringstream outputTimeString;
@@ -180,6 +188,8 @@ int main(int, char**)
     //----------------------------------------------------------- Setup GUI Window ------------------------------------------------------- 
         
     GLFWwindow* window = setupWindow();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
 
     // Keep window open until the 'X' button is pressed
     while (!glfwWindowShouldClose(window))
@@ -192,6 +202,8 @@ int main(int, char**)
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
+        io.DeltaTime = 1.0f/60.0f;
+
         ImGui::NewFrame();
 
         // Setup the window to show output values
@@ -199,6 +211,7 @@ int main(int, char**)
         {
             logEntry = updateSerialOutputWindow(show_Serial_output, logEntry, logString);      
         }
+#ifdef EXISTS_OUTPUT_DECODER
        
         // Setup AER event logging window
         if (show_AER_config)
@@ -211,7 +224,7 @@ int main(int, char**)
                 expectedResponses = 0;
             }
         }
-
+#endif
         // Setup digital-to-analogue convertor configuration window - ok!
 #ifdef EXISTS_DAC
         if (show_DAC_config)
@@ -269,17 +282,36 @@ int main(int, char**)
         }
 #endif
 
-        // Plot C2F and Encoder outputs
-        if(show_PlotData)
-        {
-            getSerialData_Plots(serialPort, show_PlotData);
-        }
 
+
+
+#ifdef EXISTS_C2F
+  // Encoder outputs
+        if(show_C2F)
+        {
+            getSerialData_C2F(serialPort, show_C2F);
+            
+        }
+#endif
+#ifdef EXISTS_ENCODER
+
+  // Encoder outputs
+        if(show_Encoder)
+        {
+            getEncoderdata(serialPort, show_Encoder);
+            
+        }
+#endif
         // Render the window       
         renderImGui(window);
-        updateValues_DAC = false;  
+#ifdef EXISTS_DAC
+        updateValues_DAC = false;
+#endif
+  #ifdef EXISTS_BIASGEN
+       
         updateValues_BiasGen  = false;  
-   
+ #endif
+  
         // sleep(0.25);  
     }
 
@@ -296,7 +328,7 @@ int main(int, char**)
 
     //-------------------------------------------------------- Saving Files Correctly ---------------------------------------------------- 
 
-    if(std::filesystem::exists(C2F_INPUT_SAVE_FILENAME_CSV))
+    /*if(std::filesystem::exists(C2F_INPUT_SAVE_FILENAME_CSV))
     {
         std::string newName = C2F_INPUT_SAVE_FILENAME + timeString + ".csv";
         rename(C2F_INPUT_SAVE_FILENAME_CSV, newName.c_str());
@@ -306,7 +338,7 @@ int main(int, char**)
     {
         std::string newName = ENCODER_INPUT_SAVE_FILENAME + timeString + ".csv";;
         rename(ENCODER_INPUT_SAVE_FILENAME_CSV, newName.c_str());
-    }
+    }*/
 
     return 0;
 } 

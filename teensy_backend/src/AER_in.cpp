@@ -4,8 +4,9 @@
 // Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
 // Last updated: (Ciara Giles-Doran <gciara@student.ethz.ch>)
 //---------------------------------------------------------------------------------------------------------------------------------------
+#include <Arduino.h>
 
-#include "teensyIn.h"
+#include "AER_in.h"
 #include "constants.h"
 #include "datatypes.h"
 #include <chrono>
@@ -13,52 +14,36 @@
 bool startRecording = false;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// TeensyIn constructor
+// AER_in constructor
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-TeensyIn::TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay, bool inputActiveLow)
+AER_in::AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay, bool inputHandshakeActiveLow, bool inputDataActiveLow)
 {
   _inputReqPin = inputReqPin;
   _inputAckPin = inputAckPin;
   _inputDataPins = inputDataPins;
   _inputNumDataPins = inputNumDataPins;
   _inputDelay = inputDelay;
-  _inputActiveLow = inputActiveLow;
+  _inputHandshakeActiveLow = inputHandshakeActiveLow;
+  _inputDataActiveLow = inputDataActiveLow;
+
+  _inputBufferIndex = 0;
+  _t0 = 0;
+  saving_flag = false;
 
   resetBuffer();
   setupPins();
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// dataRead: Executes REQ/ACK handshake and retrieves input from ALIVE
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-unsigned int TeensyIn::dataRead()
-{
-    unsigned int inputData = 0;
-
-    if (reqRead())
-    {
-      inputData = getInputData();
-      ackWrite(1);
-    }
-
-    if(!reqRead())
-    {
-      ackWrite(0);
-    }
-
-    return inputData;
-}
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // reqRead: Reads REQ pin state
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-bool TeensyIn::reqRead() 
+bool AER_in::reqRead() 
 {
-  return digitalReadFast(_inputReqPin)^_inputActiveLow;
+  return digitalReadFast(_inputReqPin)^_inputHandshakeActiveLow;
 }
 
 
@@ -66,9 +51,9 @@ bool TeensyIn::reqRead()
 // ackWrite: Writes to ACK pin
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void TeensyIn::ackWrite(bool val) 
+void AER_in::ackWrite(bool val) 
 {
-  digitalWriteFast(_inputAckPin, val^_inputActiveLow);
+  digitalWriteFast(_inputAckPin, val^_inputHandshakeActiveLow);
 
   if (_inputDelay) 
   {
@@ -81,79 +66,85 @@ void TeensyIn::ackWrite(bool val)
 // getBufferIndex: Retreives the current index of the buffer
 //----------------------------------------------------------------------------------------------------------------------------------
 
-int TeensyIn::getBufferIndex()
+int AER_in::getBufferIndex()
 {
   return _inputBufferIndex;
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------------------
+// setBufferIndex: Set the index of the buffer
+//----------------------------------------------------------------------------------------------------------------------------------
+
+void AER_in::setBufferIndex(int x)
+{
+   _inputBufferIndex = x;
+   
+}
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------
 // recordEvent: Records ALIVE output events as they occur
 //----------------------------------------------------------------------------------------------------------------------------------
-void TeensyIn::recordEvent()
+void AER_in::recordEvent()
 {
-  if(startRecording)
-  {
-    outputALIVE newEvent;
-    newEvent.data = dataRead();
-    newEvent.timestamp = 0;
-    // newEvent.timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-
-    _inputEventBuffer[0].data = _inputBufferIndex;
-    _inputEventBuffer[1 + _inputBufferIndex++] = newEvent;
-  }
-
-  // Serial.print(_inputBufferIndex);
+  
+  AER_out newEvent;
+  newEvent.data = getInputData();
+  newEvent.timestamp = (micros() - _t0);
+  /*Serial.print("Data & ts ");
+  Serial.print(newEvent.data, DEC);
+  Serial.print(" ");
+  Serial.println(newEvent.timestamp, DEC); */
+  _inputEventBuffer[_inputBufferIndex++] = newEvent;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // sendEventBuffer: Sends ALIVE output data saved in buffer to Teensy
 //----------------------------------------------------------------------------------------------------------------------------------
-void TeensyIn::sendEventBuffer()
+void AER_in::sendEventBuffer()
 {
-  // for(int i = 0; i < MAX_PKT_BODY_LEN; i++)
-  // {
-  //   Serial.print(_inputEventBuffer[i].data);
-  //   Serial.print(_inputEventBuffer[i].timestamp);
-  // }
+  //Serial.print("index: ");
+ // Serial.print(_inputBufferIndex);
+
+  Aer_Data_Pkt pkt_out(_inputEventBuffer, _inputBufferIndex);
+  //Serial.print("Num of events: ");
+ // Serial.println(pkt_out.number_events, DEC);
+  usb_serial_write((const void*) &pkt_out, sizeof(pkt_out));  
 
   resetBuffer();
-}
+} 
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // handshake: Executes REQ/ACK handshake between Teensy and ALIVE
 //----------------------------------------------------------------------------------------------------------------------------------
-void TeensyIn::handshake()
+void AER_in::handshake()
 {
-  if(_inputActiveLow)
+  if(_inputHandshakeActiveLow)
   {
     if (!reqRead()) 
     {
-      startRecording = 1;    
-      Serial.print(true);
+
       ackWrite(0);
     }
 
     else if (reqRead())
     {
-      Serial.print(false);
       ackWrite(1);
     }
 
   }
 
-  else if(!_inputActiveLow)
+  else if(!_inputHandshakeActiveLow)
   {
     if (!reqRead()) 
     {
-      Serial.print(false);
       ackWrite(0);
     }
 
     else if (reqRead())
     {
-      startRecording = 1;    
-      Serial.print(true);
       ackWrite(1);
     }
   }
@@ -164,7 +155,7 @@ void TeensyIn::handshake()
 // setupPins: Sets up the relevant pins for communication
 //----------------------------------------------------------------------------------------------------------------------------------
 
-void TeensyIn::setupPins()
+void AER_in::setupPins()
 {
   pinMode(_inputReqPin, INPUT);
   pinMode(_inputAckPin, OUTPUT);
@@ -180,16 +171,16 @@ void TeensyIn::setupPins()
 // getInputData: Retrieves input from ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-unsigned int TeensyIn::getInputData() 
+unsigned int AER_in::getInputData() 
 {
   unsigned int inputData = 0;
 
   for (int i = 0; i < _inputNumDataPins; i++) 
   {
     inputData |= digitalReadFast(_inputDataPins[i]) << i;
-  }
 
-  if (_inputActiveLow) 
+  }
+  if (_inputDataActiveLow) 
   {
     return ~inputData;
   }
@@ -204,12 +195,36 @@ unsigned int TeensyIn::getInputData()
 // resetBuffer: (Re)Initialises the ALIVE output buffer and (re)sets buffer index counter variable
 //--------------------------------------------------------------------------------------------------------------------------------------
 
-void TeensyIn::resetBuffer()
+void AER_in::resetBuffer()
 {
-  for(int i = 0; i < int(MAX_PKT_BODY_LEN); i++)
+  for(int i = 0; i < int(MAX_EVENTS_PER_PACKET); i++)
   {
     _inputEventBuffer[i].data = 0;
     _inputEventBuffer[i].timestamp = 0;
   }
   _inputBufferIndex = 0;
+}
+//--------------------------------------------------------------------------------------------------------------------------------------
+//
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+void AER_in::set_t0(int t0) {
+  _t0 = t0;
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------
+//toggle_saving_flag : enable/disable saving flag
+//--------------------------------------------------------------------------------------------------------------------------------------
+
+void AER_in::toggle_saving_flag() {
+  bool new_saving_flag;
+  if (saving_flag) 
+  {
+    new_saving_flag = 0;
+  }
+   if (saving_flag ==0)
+     {
+    new_saving_flag = 1;
+    }
+  saving_flag = new_saving_flag;
 }

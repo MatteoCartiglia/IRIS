@@ -5,28 +5,24 @@
 // Last updated: 15 JUL 2022 (Ciara Giles-Doran <gciara@student.ethz.ch>)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-#ifndef TEENSYIN_H
-#define TEENSYIN_H
+#ifndef AER_in_H
+#define AER_in_H
 
 #include <Arduino.h>
 #include "../include/datatypes.h"
 
-class TeensyIn 
+class AER_in 
 {
     // ------------------------------------------ Declaring class constructor and public methods ----------------------------------------
 
     public:
 
     //-----------------------------------------------------------------------------------------------------------------------------------
-    // Class constructor; initialises the TeensyIn object and sets up the relevant pins on Teensy
+    // Class constructor; initialises the AER_in object and sets up the relevant pins on Teensy
     //-----------------------------------------------------------------------------------------------------------------------------------
-    TeensyIn(const int inputReqPin, const int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay = 0, 
-                bool inputActiveLow = false);
+    AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay = 0, 
+                bool inputActiveLow = false, bool inputDataActiveLow = false);
 
-    //----------------------------------------------------------------------------------------------------------------------------------
-    // dataRead: Executes REQ/ACK handshake and retrieves input from ALIVE
-    //----------------------------------------------------------------------------------------------------------------------------------
-    unsigned int dataRead();
 
     //----------------------------------------------------------------------------------------------------------------------------------
     // reqRead: Reads REQ pin state
@@ -43,6 +39,11 @@ class TeensyIn
     //----------------------------------------------------------------------------------------------------------------------------------
     int getBufferIndex();
 
+   //----------------------------------------------------------------------------------------------------------------------------------
+    // setBufferIndex: Retreives the current index of the buffer
+    //----------------------------------------------------------------------------------------------------------------------------------
+    void setBufferIndex(int x);
+
     //----------------------------------------------------------------------------------------------------------------------------------
     // recordEvent: Records ALIVE output events as they occur
     //----------------------------------------------------------------------------------------------------------------------------------
@@ -57,6 +58,20 @@ class TeensyIn
     // handshake: Executes REQ/ACK handshake between Teensy and ALIVE
     //----------------------------------------------------------------------------------------------------------------------------------
     void handshake();
+
+    //----------------------------------------------------------------------------------------------------------------------------------
+    // set_t0 : Sets the initial time
+    //----------------------------------------------------------------------------------------------------------------------------------
+    void set_t0(int t0);
+
+
+
+   //----------------------------------------------------------------------------------------------------------------------------------
+    // toggle_saving_flag : toogle the saving flag
+    //----------------------------------------------------------------------------------------------------------------------------------
+    void toggle_saving_flag();
+    bool saving_flag;
+
 
 
     // ---------------------------------------------------- Declaring private methods --------------------------------------------------
@@ -78,6 +93,9 @@ class TeensyIn
     void resetBuffer();
 
 
+
+
+
     // --------------------------------------------------- Declaring private variables -------------------------------------------------
 
     int _inputReqPin;
@@ -85,10 +103,15 @@ class TeensyIn
     int* _inputDataPins;
     int _inputNumDataPins;
     int _inputDelay;
-    bool _inputActiveLow;
+    bool _inputHandshakeActiveLow;
+    bool _inputDataActiveLow;
+
+    unsigned long  _t0;
+
 
     int _inputBufferIndex;
-    outputALIVE _inputEventBuffer[MAX_PKT_BODY_LEN];
+    AER_out _inputEventBuffer[MAX_EVENTS_PER_PACKET] = {};
 };
+
 
 #endif
