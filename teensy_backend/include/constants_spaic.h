@@ -37,7 +37,7 @@
 #define SERIAL_BUFFER_SIZE_AER              44
 #define SERIAL_ASCII_SPACE                  32
 
-// ALIVE <-> TEENSY COMMUNICATION
+// CHIP <-> TEENSY COMMUNICATION
 #define TEENSY_INPUT_C2F                    0
 #define TEENSY_INPUT_ENCODER                1
 #define TEENSY_INPUT_BUFFER_SIZE            1024
