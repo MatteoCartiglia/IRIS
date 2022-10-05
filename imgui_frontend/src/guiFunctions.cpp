@@ -132,8 +132,8 @@ GLFWwindow* setupWindow()
 
     ImGui::CreateContext();
     ImPlot::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui::StyleColorsDark();
+
 
     //---------------------------------------------- Setting up Platform/Renderer backends ----------------------------------------------
 

@@ -188,6 +188,8 @@ int main(int, char**)
     //----------------------------------------------------------- Setup GUI Window ------------------------------------------------------- 
         
     GLFWwindow* window = setupWindow();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
 
     // Keep window open until the 'X' button is pressed
     while (!glfwWindowShouldClose(window))
@@ -200,6 +202,8 @@ int main(int, char**)
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
+        io.DeltaTime = 1.0f/60.0f;
+
         ImGui::NewFrame();
 
         // Setup the window to show output values
