@@ -9,6 +9,7 @@
 #include "../include/guiFunctions.h"
 #include <experimental/filesystem>
 #include <chrono>
+#include <bitset>
 
 namespace fs = std::experimental::filesystem;
 
@@ -105,6 +106,27 @@ void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
     }
 }
 #endif
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// getIIValues: Gets the input interface values from a file
+//---------------------------------------------------------------------------------------------------------------------------------------
+void getIIValues(const std::string filename, std::vector<AER_DECODER_OUTPUT_command> &II_list)
+{
+    std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
+    AER_DECODER_OUTPUT_command tmp;
+
+    for (int i = 0; i < (int) parseCSVoutput.size(); i++)
+    {   
+        tmp.data = std::stof(parseCSVoutput[i][0]);
+        tmp.isi = std::stof(parseCSVoutput[i][1]);
+        II_list.push_back(tmp);
+
+        std::cout << "Data: " << std::bitset<16> (II_list[i].data) << " ISI: " << II_list[i].isi << std::endl;
+    }
+
+
+}
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getFileLines: Retrieves the number of lines in a given file

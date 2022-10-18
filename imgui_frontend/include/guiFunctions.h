@@ -44,9 +44,10 @@ void renderImGui(GLFWwindow* window);
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-int setupAerWindow(bool show_AER_config, int serialPort);
+void setupAerWindow(bool show_AER_config, int serialPort);
 
-
+void loadII (bool openLoadPopup, const char *popupLabel, std::vector<AER_DECODER_OUTPUT_command> &II_list);
+void ii_stimulate( int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_list);
 #ifdef EXISTS_BIASGEN
     //-----------------------------------------------------------------------------------------------------------------------------------
     // setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 

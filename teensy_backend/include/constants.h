@@ -155,6 +155,7 @@
 
     #define DECODER_ACTIVE_LOW              false // ALIVE is ACTIVE HIGH
     #define DECODER_DELAY                   10
+    #define INPUT_INTERFACE_FILENAME_LOAD   "data/IIValues/"
 #endif
 
 // RESET PINS

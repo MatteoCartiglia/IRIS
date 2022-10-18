@@ -119,9 +119,11 @@ struct BIASGEN_command
 struct AER_DECODER_OUTPUT_command
 {
     AER_DECODER_OUTPUT_command() {};
-    AER_DECODER_OUTPUT_command (const Pkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]) {};
+    AER_DECODER_OUTPUT_command (const Pkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), isi((pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]) {};
 
     std::uint16_t data;
+    std::uint16_t isi;
+
 };
 
 

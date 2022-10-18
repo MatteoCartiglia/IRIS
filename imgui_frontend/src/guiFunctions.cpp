@@ -13,6 +13,7 @@
 #include <experimental/filesystem>
 #include <chrono>
 #include <typeinfo>
+#include <thread>
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
 #ifdef EXISTS_OUTPUT_DECODER
@@ -68,10 +69,20 @@ const char *popupSave = popupSave_str.c_str();
 
 std::string popupLoad_str = "Load Bias Values";
 const char *popupLoad = popupLoad_str.c_str(); 
+
+std::string popupII_str = "Load Input Interface";
+const char *popupII = popupII_str.c_str(); 
+bool openIIPopup = true;
 bool openSavePopup = true;
 bool openLoadPopup = true;
+std::vector<AER_DECODER_OUTPUT_command> II_list;
+int ii_input;
 
 namespace fs = std::experimental::filesystem;
+
+
+
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupWindow: Defines platform-specific variables, creates GUI window, initialises ImGui and ImPlot contexts and sets up 
@@ -246,77 +257,41 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_OUTPUT_DECODER
-int setupAerWindow(bool show_AER_config, int serialPort)
+void setupAerWindow(bool show_AER_config, int serialPort)
 {
-    int serialDataSent = 0;      
-    ImGui::Begin("AER Packet", &show_AER_config);  
-
-    std::string comboLabel_core_str = " CORE";
-    const char *comboLabel_core = comboLabel_core_str.c_str();
-    selection_chipCore, selectionChange_chipCore = ImGui::Combo(comboLabel_core, &selection_chipCore, options_chipCore, ALIVE_NO_CORES);
-
-    std::string comboLabel_synapse_str = " SYNAPSE TYPE";
-    const char *comboLabel_synapse = comboLabel_synapse_str.c_str();
-    selection_synapseType, selectionChange_synapseType = ImGui::Combo(comboLabel_synapse, &selection_synapseType, options_synapseType, ALIVE_NO_SYNAPSE_TYPES);
-
-    std::string comboLabel_neuronNumber_str = " NEURON";
-    const char *comboLabel_neuronNumber = comboLabel_neuronNumber_str.c_str();
-
-    // Plastic synapses (NMDA and GABAb) for both cores
-    if((selection_synapseType == 3) || (selection_synapseType == 2))
-    {
-        selection_neuronNumber, selectionChange_neuronNumber = ImGui::Combo(comboLabel_neuronNumber, &selection_neuronNumber, options_neuronNumber_PlasticSynapses, 1);
-    }
-    // Non-plastic synapses (AMPA and GABAa) for both cores
-    else 
-    {
-        selection_neuronNumber, selectionChange_neuronNumber = ImGui::Combo(comboLabel_neuronNumber, &selection_neuronNumber, options_neuronNumber, ALIVE_NO_NEURONS);
-    }
-
-    // Creating different labels for the synapse number to make it clear for the user if AMPA+ or AMPA- synapses have been selected in the NN core
-    std::string comboLabel_synapseNumber_str;
-
-    if((selection_chipCore == 1) && (selection_synapseType == 0))
-    {
-        if(value_synapseNumber < ALIVE_NO_AMPA_SYNAPSES_NN)
-        {
-            comboLabel_synapseNumber_str = " AMPA+ SYNAPSE NO.";
-        }
-        else
-        {
-            comboLabel_synapseNumber_str = " AMPA- SYNAPSE NO.";
-        }
-    }
-    else
-    {
-        comboLabel_synapseNumber_str = " SYNAPSE NO.";
-    }
-
-    const char *comboLabel_synapseNumber = comboLabel_synapseNumber_str.c_str();
-    value_synapseNumber, selectionChange_synapseNumber = ImGui::InputInt(comboLabel_synapseNumber, &value_synapseNumber);
-    value_synapseNumber = checkLimits_Synapse(value_synapseNumber, selection_synapseType);   
+    ImGui::Begin(" Input interface", &show_AER_config);  
 
     ImGui::NewLine();
 
-    // Adding a "Send" button to write to serial port
-    if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
+
+    if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
     {
-        for(int i =0; i<5; i++)
-        {
-            // Creating the AER packet
-            AER_DECODER_OUTPUT_command decoderOutput;
-            decoderOutput.data = getAERpacket(selection_chipCore, selection_synapseType, selection_neuronNumber, value_synapseNumber);
+        ImGui::OpenPopup(popupII);
+    }
+    loadII(openIIPopup, popupII, II_list);
+    ImGui::NewLine();
 
-            // std::cout << "AER packet: ";
-            // printBinaryValue(decoderOutput.data, AER_PACKET_SIZE);
-
-            Pkt p2t_pk(decoderOutput); 
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-            serialDataSent++;
-        }
-
+    if (ImGui::Button("Start", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))    
+    {
+        auto stimulator = std::thread(ii_stimulate, serialPort,  std::ref(II_list));
+        
+        stimulator.detach();   
     }
 
+    ImGui::InputInt("Input value sending (dec): ", &ii_input);
+    ImGui::NewLine();
+    ImGui::NewLine();
+
+    if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
+    {
+        AER_DECODER_OUTPUT_command sender;
+            sender.data = (uint16_t)ii_input;
+        for(int i =0; i<5; i++)
+        {   
+            Pkt p2t_pk(sender); 
+            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        }
+    }
     ImGui::SameLine();
 
     std::string toggleID_str = "toggleAER";
@@ -324,10 +299,34 @@ int setupAerWindow(bool show_AER_config, int serialPort)
     toggleButton(toggleID, &enableCommsAER);
     
     ImGui::End();
-    return serialDataSent;
 }
 
 #endif
+void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_list)
+{
+    std::cout << "Stimulation thread start " << std::endl;
+
+    for (int i=0; i<II_list.size(); i++)
+    {
+
+        //std::chrono::high_resolution_clock::time_point start =  std::chrono::high_resolution_clock::now();
+        std::this_thread::sleep_for(std::chrono::microseconds(II_list[i].isi*10));
+        //std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+        //auto elipsed = start - end;
+       // std::cout << "Elipsed: " << elipsed << " Instead of: "<< II_list[i].isi*10 <<std::endl;
+        //std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+        //std::cout << "Elapsed: " << time_span.count() << " Instead of: "<< II_list[i].isi*10 *1e-6 <<std::endl;
+
+        //std::cout << "Data: " << II_list[i].data <<std::endl;
+
+        Pkt p2t_pk(II_list[i]); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+    }
+
+    std::cout << "Stimulation thread ended " << std::endl;
+}
+
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 
 //                     #ifdef condition used to define different definition if transistor type option to be displayed and handled
@@ -531,7 +530,6 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     return serialDataSent;
 }
 
-
 //--------------------------------------------------------------------------------------------------------------------------------------
 // savePopup: Generic popup to handle bias value saving operations
 //--------------------------------------------------------------------------------------------------------------------------------------
@@ -597,6 +595,7 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
     }
     #endif
 
+
     if (ImGui::BeginPopupModal(popupLabel, &openLoadPopup))
     {
         // Get the files in the specified directory 
@@ -632,6 +631,44 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
     }
 }
 
+// should be a pointed to memory location
+void loadII (bool openLoadPopup, const char *popupLabel, std::vector<AER_DECODER_OUTPUT_command>  &II_list)
+{
+    if (ImGui::BeginPopupModal(popupLabel, &openLoadPopup))
+    { 
+        char *filepath;  
+        std::string comboLabel_loadFiles_str = "##";
+        const char *comboLabel_loadFiles = comboLabel_loadFiles_str.c_str();
+
+        filepath = INPUT_INTERFACE_FILENAME_LOAD;
+        int noFiles = getNoFiles(filepath);
+        char* biases_filenames[noFiles];
+        getFilepathArray(noFiles, filepath, biases_filenames);
+
+        // Select file from comboBox
+        
+        ImGui::NewLine();
+        ImGui::Text("Select file: ");  
+        ImGui::SameLine();
+        selection_file, selectionChange_file = ImGui::Combo(comboLabel_loadFiles, &selection_file, biases_filenames, noFiles);
+        ImGui::NewLine();
+
+        if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
+        {   II_list.clear(); 
+            getIIValues((const std::string) biases_filenames[selection_file], II_list );
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup(); 
+
+    }
+
+
+}
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // updateSerialOutputWindow: Writes serial input to Log window in GUI
@@ -831,7 +868,6 @@ float checkLimits(float value, float maxLimit, float minValue)
 
     return value;
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // checkLimits_Synapse: Calls the checkLimits function using the predefined limits for each type of synapse
