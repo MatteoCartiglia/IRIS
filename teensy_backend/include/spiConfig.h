@@ -12,6 +12,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include "constants.h"
+#include "constants_global.h"
 
 class SPIConfig {
 

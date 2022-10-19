@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <string>
 #include "constants.h"
+#include "constants_global.h"
 
 static constexpr std::size_t MAX_PKT_BODY_LEN = SERIAL_COMMS_MAX_PKT_LEN - sizeof(std::uint8_t);    // Clarify
 

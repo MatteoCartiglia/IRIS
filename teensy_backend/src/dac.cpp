@@ -7,6 +7,7 @@
 
 #include "dac.h"
 #include "constants.h"
+#include "constants_global.h"
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // Class constructor; initialises the BiasGen object and sets up the relevant pins on Teensy
