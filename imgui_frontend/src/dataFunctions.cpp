@@ -213,52 +213,6 @@ int getBiasGenPacket(float decimalVal, bool transistorType)
 #endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getAERpacket: Generates the equivalent AER binary value for the user-selected options
-//---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_OUTPUT_DECODER
-int getAERpacket(int selection_chipCore, int selection_synapseType, int selection_neuronNumber, int value_synapseNumber)
-{
-    int chipCore = selection_chipCore << ALIVE_CORE_SHIFT;
-    int synapseType = selection_synapseType << ALIVE_SYNAPSE_TYPE_SHIFT;
-
-    // For AMPA synapses, the neuron number is selected and bit 3 is tied to 1
-    if(selection_synapseType == 0)
-    {
-        int neuronNumber = selection_neuronNumber << ALIVE_NEURON_SHIFT;
-        int synapseLimit = 1 << ALIVE_AMPA_SHIFT;
-        return chipCore | synapseType | neuronNumber | synapseLimit | value_synapseNumber;
-    }
-
-    // For GABAa synapses (CC and NN), the neuron number is selected and bits 1-3 are tied to 1
-    else if(selection_synapseType == 1)
-    {
-        int neuronNumber = selection_neuronNumber << ALIVE_NEURON_SHIFT;
-        int synapseLimit = ALIVE_GABAa_BITS_1_2_3 << 1;
-        return chipCore | synapseType | neuronNumber | synapseLimit | value_synapseNumber;
-    }
-
-    // For NN GABAb, bits 4 and 5 of the AER packet are tied to 1 as there are only 16 columns
-    else if((selection_synapseType == 2) && (selection_chipCore == 1))
-    {
-        int neuronNumber = ALIVE_NN_GABAb_BITS_4_5 << ALIVE_NEURON_SHIFT;
-        return chipCore | synapseType | neuronNumber | value_synapseNumber;
-    }
-
-    // For NMDA synapses (CC and NN) and CC GABGb, all neurons are selected 
-    else if((selection_synapseType == 3) || ((selection_synapseType == 2) && (selection_chipCore == 0)))
-    {
-        return chipCore | synapseType | value_synapseNumber;
-    }
-
-    // If the conditions above have not been met, there is an error
-    else
-    {
-        printf("AER packet error. Core: %d\t Synapse Type: %d\n", chipCore, synapseType);
-        return 0;
-    }
-}
-#endif
-//---------------------------------------------------------------------------------------------------------------------------------------
 // printBinaryValue: Prints the given decimal value in binary to the terminal
 //---------------------------------------------------------------------------------------------------------------------------------------
 

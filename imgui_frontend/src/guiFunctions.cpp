@@ -10,6 +10,8 @@
 #include "../include/dataFunctions.h"
 #include "../include/serial.h"
 #include "../../teensy_backend/include/constants.h"
+#include "../../teensy_backend/include/constants_global.h"
+
 #include <experimental/filesystem>
 #include <chrono>
 #include <typeinfo>
@@ -17,10 +19,7 @@
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
 #ifdef EXISTS_OUTPUT_DECODER
-const char *options_chipCore[ALIVE_NO_CORES] = {"Cortical Circuit", "Neural Network"};
-const char *options_synapseType[ALIVE_NO_SYNAPSE_TYPES] = {"AMPA", "GABAa", "GABAb", "NMDA"};
-const char *options_neuronNumber[ALIVE_NO_NEURONS] = {"1", "2", "3", "4"};
-const char *options_neuronNumber_PlasticSynapses[1] = {"All Neurons"};
+
 #endif
 #ifdef EXISTS_BIASGEN
 const char *biasGenHeaderStr[BIASGEN_CATEGORIES] = {"Alpha DPI", "Neurons", "Analogue Synapses", "Digital Synapses", "Synapse Pulse Extension", "Learning Block", "Stop Learning Block", "Current To Frequency", "Buffer"};
@@ -75,6 +74,7 @@ const char *popupII = popupII_str.c_str();
 bool openIIPopup = true;
 bool openSavePopup = true;
 bool openLoadPopup = true;
+
 std::vector<AER_DECODER_OUTPUT_command> II_list;
 int ii_input;
 
@@ -869,34 +869,7 @@ float checkLimits(float value, float maxLimit, float minValue)
     return value;
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// checkLimits_Synapse: Calls the checkLimits function using the predefined limits for each type of synapse
-//---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_OUTPUT_DECODER
-int checkLimits_Synapse(int value, int synapseType)
-{
-    // Call checkLimits with correct maxLimit parameter
 
-    if(selection_synapseType == 3)
-    {
-        value = checkLimits(value, ALIVE_NO_NMDA_SYNAPSES);
-    }
-    else if (selection_synapseType == 1)
-    {
-        value = checkLimits(value, ALIVE_NO_GABAa_SYNAPSES);
-    }
-    else if (selection_synapseType == 2)
-    {
-        value = checkLimits(value, ALIVE_NO_GABAb_SYNAPSES);
-    }
-    else if (selection_synapseType == 0)
-    {
-        value = checkLimits(value, ALIVE_NO_AMPA_SYNAPSES);
-    }
-
-    return value;
-}
-#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // glfw_error_callback: Prints GLFW callback error to terminal
 //---------------------------------------------------------------------------------------------------------------------------------------

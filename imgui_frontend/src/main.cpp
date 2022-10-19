@@ -28,6 +28,7 @@
 #include "../include/dataFunctions.h"
 #include "../include/serial.h"
 #include "../../teensy_backend/include/constants.h"
+#include "../../teensy_backend/include/constants_global.h"
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
