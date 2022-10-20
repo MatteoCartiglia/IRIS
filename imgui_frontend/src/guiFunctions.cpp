@@ -18,9 +18,6 @@
 #include <thread>
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
-#ifdef EXISTS_OUTPUT_DECODER
-
-#endif
 #ifdef EXISTS_BIASGEN
 const char *biasGenHeaderStr[BIASGEN_CATEGORIES] = {"Alpha DPI", "Neurons", "Analogue Synapses", "Digital Synapses", "Synapse Pulse Extension", "Learning Block", "Stop Learning Block", "Current To Frequency", "Buffer"};
 #endif
@@ -77,6 +74,9 @@ bool openLoadPopup = true;
 
 std::vector<AER_DECODER_OUTPUT_command> II_list;
 int ii_input;
+int ii_input_2;
+int number_ii_input;
+int number_ii_input_2;
 
 namespace fs = std::experimental::filesystem;
 
@@ -278,20 +278,32 @@ void setupAerWindow(bool show_AER_config, int serialPort)
         stimulator.detach();   
     }
 
-    ImGui::InputInt("Input value sending (dec): ", &ii_input);
+    ImGui::InputInt("First input value sending (dec): ", &ii_input);
+    ImGui::InputInt("First number of times: ", &number_ii_input);
+
     ImGui::NewLine();
+    ImGui::InputInt("Second input value sending (dec):", &ii_input_2);
+    ImGui::InputInt("Second number of times:", &number_ii_input_2);
+
     ImGui::NewLine();
 
     if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
     {
-        AER_DECODER_OUTPUT_command sender;
-            sender.data = (uint16_t)ii_input;
-        for(int i =0; i<5; i++)
+        AER_DECODER_OUTPUT_command sender, sender_2;
+        sender.data = (uint16_t)ii_input;
+        for(int i =0; i<number_ii_input; i++)
         {   
             Pkt p2t_pk(sender); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         }
+        sender_2.data = (uint16_t)ii_input_2;
+        for(int i =0; i<number_ii_input_2; i++)
+        {   
+            Pkt p2t_pk(sender_2); 
+            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        }
     }
+    sleep(2);
     ImGui::SameLine();
 
     std::string toggleID_str = "toggleAER";
@@ -299,6 +311,7 @@ void setupAerWindow(bool show_AER_config, int serialPort)
     toggleButton(toggleID, &enableCommsAER);
     
     ImGui::End();
+
 }
 
 #endif
@@ -631,7 +644,6 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
     }
 }
 
-// should be a pointed to memory location
 void loadII (bool openLoadPopup, const char *popupLabel, std::vector<AER_DECODER_OUTPUT_command>  &II_list)
 {
     if (ImGui::BeginPopupModal(popupLabel, &openLoadPopup))

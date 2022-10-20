@@ -12,6 +12,8 @@
 //#define EXISTS_ALIVE      
 #define EXISTS_SPAIC      
 
+#define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105661701" 
+
 
 // BIASGEN 
 #ifdef EXISTS_BIASGEN
