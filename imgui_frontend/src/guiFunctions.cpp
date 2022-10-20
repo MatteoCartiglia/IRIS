@@ -297,24 +297,29 @@ int setupAerWindow(bool show_AER_config, int serialPort)
     value_synapseNumber = checkLimits_Synapse(value_synapseNumber, selection_synapseType);   
 
     ImGui::NewLine();
+    AER_DECODER_OUTPUT_command teacher_signal;
+    teacher_signal.data = 296;//8;
+
+    AER_DECODER_OUTPUT_command input_signal;
+    input_signal.data = 448 ;//192;
 
     // Adding a "Send" button to write to serial port
     if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
     {
-        for(int i =0; i<5; i++)
+        for(int i =0; i<10; i++)
         {
-            // Creating the AER packet
-            AER_DECODER_OUTPUT_command decoderOutput;
-            decoderOutput.data = getAERpacket(selection_chipCore, selection_synapseType, selection_neuronNumber, value_synapseNumber);
-
-            // std::cout << "AER packet: ";
-            // printBinaryValue(decoderOutput.data, AER_PACKET_SIZE);
-
-            Pkt p2t_pk(decoderOutput); 
+            Pkt p2t_pk(teacher_signal); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
             serialDataSent++;
+            
         }
+        for(int i =0; i<4; i++)
+        {
+        Pkt p2t_pk(input_signal); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        serialDataSent++;
 
+        }
     }
 
     ImGui::SameLine();
