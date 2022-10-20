@@ -14,41 +14,7 @@
 #define EXISTS_ALIVE
 //#define EXISTS_SPAIC
 
-
-// GUI CONSTANTS
-#define BUTTON_HEIGHT                       20
-#define BUTTON_UPDATE_WIDTH                 100
-#define BUTTON_TOGGLE_WIDTH                 50
-#define WINDOW_HEIGHT                       750
-#define WINDOW_WIDTH                        1670
-#define CLEAR_COLOUR_X                      0.45f
-#define CLEAR_COLOUR_Y                      0.55f
-#define CLEAR_COLOUR_Z                      0.60f
-#define CLEAR_COLOUR_W                      1.00f
-
-// UNIVERSAL CONSTANTS
-#define BINARY_8_BIT_SHIFT                  8
-#define BINARY_255                          0xFF
-
-// PC <-> TEENSY SERIAL COMMUNICATION
-#define SERIAL_COMMS_SHIFT                  8
-#define SERIAL_COMMS_MAX_PKT_LEN            20           // Clarify
 #define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105661701" 
-#define SERIAL_BUFFER_SIZE_BIAS             62
-#define SERIAL_BUFFER_SIZE_DAC              44
-#define SERIAL_BUFFER_SIZE_PORT_OPEN        34
-#define SERIAL_BUFFER_SIZE_AER              44
-#define SERIAL_ASCII_SPACE                  32
-
-// CHIP <-> TEENSY COMMUNICATION
-#define TEENSY_INPUT_C2F                    0
-#define TEENSY_INPUT_ENCODER                1
-#define TEENSY_INPUT_BUFFER_SIZE            1024
-#define TEENSY_OUTPUT_HANDSHAKE_TIMEOUT     10          // microseconds
-
-// TEENSY -> HOST 
-
-#define  MAX_EVENTS_PER_PACKET              256
 
 
 // BIASGEN 
@@ -83,27 +49,9 @@
 
 
 
-// ALIVE
-#define ALIVE_NO_CORES                      2
-#define ALIVE_NO_SYNAPSE_TYPES              4
-#define ALIVE_NO_NEURONS                    4
-#define ALIVE_NO_NMDA_SYNAPSES              39          // 40 in total (including value 0)
-#define ALIVE_NO_GABAa_SYNAPSES             1           // 2 in total (including value 0)
-#define ALIVE_NO_GABAb_SYNAPSES             15          // 16 in total (including value 0)
-#define ALIVE_NO_AMPA_SYNAPSES              5           // 6 in total (including value 0)
-#define ALIVE_NO_AMPA_SYNAPSES_NN           2           // 3 AMPA+ and 3 AMPA- (including value 0)
-
-#define ALIVE_CORE_SHIFT                    8
-#define ALIVE_SYNAPSE_TYPE_SHIFT            6
-#define ALIVE_NEURON_SHIFT                  4
-#define ALIVE_NN_GABAb_BITS_4_5             1
-#define ALIVE_GABAa_BITS_1_2_3              7
-#define ALIVE_AMPA_SHIFT                    3
-#define ALIVE_PACKET_SIZE                   9
-
 // C2F COMMUNICATION
     #define C2F_INPUT_RANGE                 32
-    #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
+    #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/ALIVE_C2F.csv"
 #ifdef EXISTS_C2F
     #define C2F_ACK                         0
     #define C2F_REQ                         35

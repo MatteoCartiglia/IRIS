@@ -7,7 +7,7 @@ The `imgui_frontend` folder contains the source code to run an intuitive GUI to:
 - display and record live events (i.e. neuron firing & C2F current)
 
 The `teesy_backend` folder contains a shared constants file and the source code to be uploaded to the Teensy 4.1 board to:
-- interface between the ALIVE chip and the GUI displayed on the PC. 
+- interface between the ALIVE chip and the GUI displayed on the PC.
 
 
 ## Frontend
@@ -24,15 +24,15 @@ The frontend runs using the 'Dear ImGui' (https://github.com/ocornut/imgui) C++ 
 
 ## Backend
 
-This code is compiled and uploaded using "PlatformIO" plugin on Visual Studio Code. 
+This code is compiled and uploaded using "PlatformIO" plugin on Visual Studio Code.
 
 
 ## Getting Started
 
 1. Install the required dependencies (GLFW, platformIO plugin)
-2. Connect the Teensy to the PC and check how it appears in the /dev/ directory. You can do this by running `ls /dev/`. It will typically appear as "ttyACM0", however it may also appear under another name, depending on your machine. If it does not appear as "ttyACM0", update the SERIAl_PORT_NAME variable in the `teensy_backend/include/constants.h` file. 
+2. Connect the Teensy to the PC and check how it appears in the /dev/ directory. You can do this by running `ls /dev/`. It will typically appear as "ttyACM0", however it may also appear under another name, depending on your machine. If it does not appear as "ttyACM0", update the SERIAl_PORT_NAME variable in the `teensy_backend/include/constants.h` file.
 3. Upload the backend code to Teensy using the PlatformIO plugin.
-4. In the `imgui_frontend` directory, run the shell script `clean_build_ruh.sh`. This will create an `alive_interface` executable. 
+4. In the `imgui_frontend` directory, run the shell script `clean_build_ruh.sh`. This will create an `alive_interface` executable.
 
 
 ## To-Do:

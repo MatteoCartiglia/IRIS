@@ -8,6 +8,7 @@
 #include <Arduino.h>
 #include <vector>
 #include <iostream>
+#include "constants_global.h"
 
 #include "constants.h"
 #include "datatypes.h"
