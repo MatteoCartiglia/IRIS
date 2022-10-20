@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <string>
 #include "constants.h"
+#include "constants_global.h"
 
 static constexpr std::size_t MAX_PKT_BODY_LEN = SERIAL_COMMS_MAX_PKT_LEN - sizeof(std::uint8_t);    // Clarify
 
@@ -119,9 +120,11 @@ struct BIASGEN_command
 struct AER_DECODER_OUTPUT_command
 {
     AER_DECODER_OUTPUT_command() {};
-    AER_DECODER_OUTPUT_command (const Pkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]) {};
+    AER_DECODER_OUTPUT_command (const Pkt& pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), isi((pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]) {};
 
     std::uint16_t data;
+    std::uint16_t isi;
+
 };
 
 

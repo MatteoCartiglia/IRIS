@@ -43,6 +43,11 @@ void loadBiasValues(DAC_command dac[], int serialport);
 void loadBiasValues(BIASGEN_command biasGen[], int serialport);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
+// getIIValues: get II values from csv and return a vector of ii
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+void getIIValues(const std::string filename, std::vector<AER_DECODER_OUTPUT_command> &II_list);
+//---------------------------------------------------------------------------------------------------------------------------------------
 // readSerialPort: Reads data available at the serial port
 //---------------------------------------------------------------------------------------------------------------------------------------
 void readSerialPort();

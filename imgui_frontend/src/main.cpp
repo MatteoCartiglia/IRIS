@@ -28,6 +28,7 @@
 #include "../include/dataFunctions.h"
 #include "../include/serial.h"
 #include "../../teensy_backend/include/constants.h"
+#include "../../teensy_backend/include/constants_global.h"
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -212,17 +213,10 @@ int main(int, char**)
             logEntry = updateSerialOutputWindow(show_Serial_output, logEntry, logString);      
         }
 #ifdef EXISTS_OUTPUT_DECODER
-       
         // Setup AER event logging window
         if (show_AER_config)
         {
-            expectedResponses = setupAerWindow(show_AER_config, serialPort);
-
-            if(expectedResponses > 0)
-            {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_AER);
-                expectedResponses = 0;
-            }
+            setupAerWindow(show_AER_config, serialPort);
         }
 #endif
         // Setup digital-to-analogue convertor configuration window - ok!

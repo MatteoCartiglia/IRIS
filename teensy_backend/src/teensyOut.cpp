@@ -7,6 +7,7 @@
 
 #include "teensyOut.h"
 #include "constants.h"
+#include "constants_global.h"
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // Class constructor; initialises the TeensyOut object and sets up the relevant pins on Teensy
