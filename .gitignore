@@ -1,3 +1,4 @@
+.DS_Store
 
 # Ignore files and directories created by frontend
 imgui_frontend/src/.obj/*
