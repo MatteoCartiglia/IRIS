@@ -1,9 +1,6 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 // Header file for generalised spiConfig class
 // NOTE: Cannot create an SPI class because SPI.h doesn't have a constructur
-//
-// Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
-// Last updated: 16 AUG 2022 (Ciara Giles-Doran)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #ifndef SPICONFIG_H

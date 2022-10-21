@@ -1,8 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 // Source file initialising PC -> Teensy Comm Packets
-//
-// Author: Matteo Cartiglia <camatteo@ini.uzh.ch>
-// Last updated: 15 JUL 2022 (Ciara Giles-Doran <gciara@student.ethz.ch>)
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <cstdint>

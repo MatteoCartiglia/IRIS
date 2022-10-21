@@ -1,7 +1,4 @@
-#---------------------------------------------------------------------------------------------------------------------------------------
-# Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-# Last updated: 
-#---------------------------------------------------------------------------------------------------------------------------------------
+
 
 # Ignore files and directories created by frontend
 imgui_frontend/src/.obj/*
@@ -12,8 +9,13 @@ imgui_frontend/data/inputAER/*
 
 # Ignore directories created by PlatformIO
 teensy_backend/.pio
-#ALIVE
+
+
+# Ignore user specific directories
+documentation/
 alive_plots/
+
+
 # Ignore all vscode directories
 .vscode
 imgui_frontend/.vscode
