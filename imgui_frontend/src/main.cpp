@@ -105,8 +105,6 @@ int main(int, char**)
     spi_command[0].spi_number = 1;
     spi_command[0].value = 100;
     spi_command[0].address = 200;
-#else    
-    bool show_SPI1_config = false;
 #endif
 
 #ifdef EXISTS_SPI2
@@ -115,8 +113,6 @@ int main(int, char**)
     spi2_command[0].spi_number = 2;
     spi2_command[0].value = 1;
     spi2_command[0].address = 200;
-#else    
-    bool show_SPI2_config = false;
 #endif
 
     //--------------------------------------------- Defining & Initialising Decoder Variables -----------------------------------------
