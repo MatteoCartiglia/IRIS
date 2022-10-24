@@ -1,8 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 // main.cpp file containing main function and serial port reading operations
-//
-// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <GLFW/glfw3.h>     // Will drag system OpenGL headers

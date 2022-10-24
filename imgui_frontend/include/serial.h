@@ -1,8 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 // Header file for functions related to serial port reading and writing
-//
-// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated:
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <unistd.h>         // UNIX standard function definitions
