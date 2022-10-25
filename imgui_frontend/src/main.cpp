@@ -42,7 +42,7 @@ int main(int, char**)
     BIASGEN_command biasGen[BIASGEN_CHANNELS];
     getBiasValues(biasGen,  BIASGEN_BIASFILE);
 
-    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
+    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "C2F_", "BUFFER_"};
     bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
     int noRelevantFileRows[BIASGEN_CATEGORIES];
     bool updateValues_BiasGen = false;
