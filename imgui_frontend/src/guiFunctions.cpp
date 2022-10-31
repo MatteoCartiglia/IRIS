@@ -1,8 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 // Source file for functions related to graphical user interface (GUI)
-//
-// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <iostream>
@@ -279,15 +276,15 @@ void setupAerWindow(bool show_AER_config, int serialPort)
     ImGui::InputInt("Second number of times:", &number_ii_input_2);
 
     ImGui::NewLine();
-    AER_DECODER_OUTPUT_command teacher_signal;
-    teacher_signal.data = 296;//8;
 
-    AER_DECODER_OUTPUT_command input_signal;
-    input_signal.data = 448 ;//192;
+     AER_DECODER_OUTPUT_command teacher_signal;
+     teacher_signal.data = 296;//8;
+ 
+     AER_DECODER_OUTPUT_command input_signal;
+     input_signal.data = 448 ;//192;
 
     if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
     {
-        AER_DECODER_OUTPUT_command sender, sender_2;
         sender.data = (uint16_t)ii_input;
         for(int i =0; i<number_ii_input; i++)
         {   

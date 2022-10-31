@@ -1,8 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 // Header file for functions related to file handling and data conversion operations
-//
-// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <vector>
