@@ -14,6 +14,7 @@ The building blocks it supports are:
 - Output Encoder
 
 ![][documentation/interface.png]
+![Interface](documentation/interface.png "Schematic organization of IRIS")
 
 ## Code overview
 
