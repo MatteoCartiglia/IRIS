@@ -39,16 +39,12 @@ This code is compiled and uploaded using "PlatformIO" plugin on Visual Studio Co
 
 
 Current boards that have been tested are:
-
-\item  ALIVE
-
-\item SPIAC
-
-\item AHPC
+- ALIVE
+- SPIAC
+- AHPC
 
 
 ## Contributors:
-\item Matteo Cartiglia
-\item Adrian Whatley
-\item Giacomo Indiveri
+* Matteo Cartiglia
+* Adrian Whatley
 
