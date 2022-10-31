@@ -3,7 +3,8 @@
 ##  Overview
 
 IRIS contains the necessary resources to interface custom ASICS built in the NCS group with Teensy microcontroller boards. 
-IRIS enables novel chips to be prototyped and tested quickly and efficiently without having to deal with tedious interfacing. Moreover, it implements different building blocks that can be reconfigured to meet the demands of any new chip.
+IRIS enables novel chips to be prototyped and tested quickly and efficiently without having to deal with tedious interfacing.  It interfaces seamlessly different communication protocols such as I2C, SPI and custom four phase handshakes. Doing so  different building blocks can be reconfigured to meet the demands of any new chip.
+
 
 The building blocks it supports are:
 - DAC
@@ -38,13 +39,16 @@ This code is compiled and uploaded using "PlatformIO" plugin on Visual Studio Co
 
 
 Current boards that have been tested are:
-- ALIVE
--SPIAC
--AHPC
+
+\item  ALIVE
+
+\item SPIAC
+
+\item AHPC
 
 
 ## Contributors:
-Matteo Cartiglia
-Adrian Whatley
-Giacomo Indiveri
+\item Matteo Cartiglia
+\item Adrian Whatley
+\item Giacomo Indiveri
 
