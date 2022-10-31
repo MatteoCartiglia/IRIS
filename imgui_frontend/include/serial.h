@@ -8,6 +8,7 @@
 #include <unistd.h>         // UNIX standard function definitions
 #include <stdio.h>          // Standard input output
 #include <termios.h>        // POSIX terminal control definitions
+#include <vector>
 
 #include "../../teensy_backend/include/datatypes.h"
 #include "../../teensy_backend/include/constants.h"
