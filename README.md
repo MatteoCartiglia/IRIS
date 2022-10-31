@@ -13,7 +13,7 @@ The building blocks it supports are:
 - BiasGenerator
 - Output Encoder
 
-\includegraphics[]{documentation/interface.pdf}
+![]{documentation/interface.png}
 
 ## Code overview
 
