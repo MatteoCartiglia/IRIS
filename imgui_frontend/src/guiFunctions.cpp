@@ -18,9 +18,7 @@
 #include <thread>
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
-#ifdef EXISTS_BIASGEN
 const char *biasGenHeaderStr[BIASGEN_CATEGORIES] = {"Alpha DPI", "Neurons", "Analogue Synapses", "Digital Synapses", "Synapse Pulse Extension", "Learning Block", "Stop Learning Block", "Current To Frequency", "Buffer"};
-#endif
 
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
     const char *options_biasGenTransistorType[2] = {"nFET", "pFET"};
@@ -38,9 +36,7 @@ bool selectionChange_synapseType  = 0;
 bool selectionChange_neuronNumber = 0;
 bool selectionChange_synapseNumber = 0;
 bool selectionChange_file = 0;
-#ifdef EXISTS_DAC
 bool valueChange_DACbias[DAC_CHANNELS_USED] = {};
-#endif
 bool valueChange_SPIbias_1[2] = {0, 0};
 bool valueChange_SPIbias_2[2] = {0, 0};
 bool valueChange_SaveFilename = false;
@@ -180,7 +176,6 @@ void renderImGui(GLFWwindow* window)
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_DAC
 int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
 {
     int serialDataSent = 0;
@@ -251,12 +246,10 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
     
     return serialDataSent;
 }
-#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_OUTPUT_DECODER
 void setupAerWindow(bool show_AER_config, int serialPort)
 {
     ImGui::Begin(" Input interface", &show_AER_config);  
@@ -319,7 +312,6 @@ void setupAerWindow(bool show_AER_config, int serialPort)
 
 }
 
-#endif
 void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_list)
 {
     std::cout << "Stimulation thread start " << std::endl;
@@ -599,20 +591,15 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
     char *filepath;
     std::string comboLabel_loadFiles_str = "##";
     const char *comboLabel_loadFiles = comboLabel_loadFiles_str.c_str();
-    #ifdef EXISTS_DAC
 
     if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
     {
         filepath = DAC_FILENAME_LOAD;
     }
-    #endif
-    #ifdef EXISTS_BIASGEN
     else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
     {
         filepath = BIASGEN_FILENAME_LOAD;
     }
-    #endif
-
 
     if (ImGui::BeginPopupModal(popupLabel, &openLoadPopup))
     {

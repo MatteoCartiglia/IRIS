@@ -42,8 +42,10 @@ void DAC::setupDAC()
   // Reset the DAC 
   digitalWrite(_dac_rst, HIGH);
   delay(10);
+
   digitalWrite(_dac_rst, LOW);
   delay(10);
+
   digitalWrite(_dac_rst, HIGH);
   delay(10);
 
@@ -75,7 +77,7 @@ void DAC::writeDAC(uint8_t command_addess, uint16_t value)
     int dacDataLowByte = dacData & BINARY_255;
     int dacDataHighByte = (dacData >> BINARY_8_BIT_SHIFT) & BINARY_255; 
 
-    Wire2.beginTransmission(12);
+    Wire2.beginTransmission(DAC_ADDRESS_I2C);
     Wire2.write(commandAddess);
     Wire2.write(dacDataHighByte);
     Wire2.write(dacDataLowByte);
@@ -91,10 +93,16 @@ void DAC::writeDAC(uint8_t command_addess, uint16_t value)
 
 void DAC::turnReferenceOff()
 {
-    Wire2.beginTransmission(12);                 
+
+    Wire2.beginTransmission(DAC_ADDRESS_I2C);                 
     Wire2.write(0x70);             
     Wire2.write(0x00);           
-    Wire2.write(0x00);          
+#if DAC_REFERENCE == 1800    
+    Wire2.write(0x01);    
+#endif
+#if DAC_REFERENCE == 2500  
+    Wire2.write(0x00); 
+#endif
     Wire2.endTransmission(); 
     delay(100);
 }

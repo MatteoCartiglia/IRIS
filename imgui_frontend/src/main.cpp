@@ -1,8 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 // main.cpp file containing main function and serial port reading operations
-//
-// Author: Ciara Giles-Doran <gciara@student.ethz.ch>
-// Last updated: 15 JUL 2022
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <GLFW/glfw3.h>     // Will drag system OpenGL headers
@@ -45,7 +42,7 @@ int main(int, char**)
     BIASGEN_command biasGen[BIASGEN_CHANNELS];
     getBiasValues(biasGen,  BIASGEN_BIASFILE);
 
-    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_", "ST_", "C2F_", "BUFFER_"};
+    std::string substring[BIASGEN_CATEGORIES] = {"DE_", "NEUR_", "SYN_A", "SYN_D", "PWEXT", "LB_ST_", "C2F_", "BUFFER_"};
     bool relevantFileRows[BIASGEN_CATEGORIES][BIASGEN_CHANNELS];
     int noRelevantFileRows[BIASGEN_CATEGORIES];
     bool updateValues_BiasGen = false;
@@ -108,8 +105,6 @@ int main(int, char**)
     spi_command[0].spi_number = 1;
     spi_command[0].value = 100;
     spi_command[0].address = 200;
-#else    
-    bool show_SPI1_config = false;
 #endif
 
 #ifdef EXISTS_SPI2
@@ -118,8 +113,6 @@ int main(int, char**)
     spi2_command[0].spi_number = 2;
     spi2_command[0].value = 1;
     spi2_command[0].address = 200;
-#else    
-    bool show_SPI2_config = false;
 #endif
 
     //--------------------------------------------- Defining & Initialising Decoder Variables -----------------------------------------
