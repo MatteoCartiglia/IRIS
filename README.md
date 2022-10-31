@@ -13,7 +13,7 @@ The building blocks it supports are:
 - BiasGenerator
 - Output Encoder
 
-![]{documentation/interface.png}
+![][documentation/interface.png]
 
 ## Code overview
 
