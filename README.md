@@ -13,6 +13,8 @@ The building blocks it supports are:
 - BiasGenerator
 - Output Encoder
 
+![Interface](documentation/interface.pdf)
+
 
 ## Code overview
 
