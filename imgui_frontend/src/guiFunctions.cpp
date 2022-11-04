@@ -173,6 +173,7 @@ void renderImGui(GLFWwindow* window)
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
+#ifdef EXISTS_DAC
 int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
 {
     int serialDataSent = 0;
@@ -243,10 +244,11 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
     
     return serialDataSent;
 }
-
+#endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
+#ifdef EXISTS_OUTPUT_DECODER
 void setupAerWindow(bool show_AER_config, int serialPort)
 {
     ImGui::Begin(" Input interface", &show_AER_config);  
@@ -285,20 +287,19 @@ void setupAerWindow(bool show_AER_config, int serialPort)
 
     if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
     {
-        sender.data = (uint16_t)ii_input;
+        teacher_signal.data = (uint16_t)ii_input;
         for(int i =0; i<number_ii_input; i++)
         {   
-            Pkt p2t_pk(sender); 
+            Pkt p2t_pk(teacher_signal); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         }
-        sender_2.data = (uint16_t)ii_input_2;
+        input_signal.data = (uint16_t)ii_input_2;
         for(int i =0; i<number_ii_input_2; i++)
         {   
-            Pkt p2t_pk(sender_2); 
+            Pkt p2t_pk(input_signal); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
         }
     }
-    sleep(2);
     ImGui::SameLine();
 
     std::string toggleID_str = "toggleAER";
@@ -308,6 +309,7 @@ void setupAerWindow(bool show_AER_config, int serialPort)
     ImGui::End();
 
 }
+#endif
 
 void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_list)
 {
@@ -448,7 +450,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXIST_SPI1
 int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
@@ -489,12 +491,12 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     ImGui::End();
     return serialDataSent;
 }
-
+#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupSPI2Window: Initialises and updates GUI window displaying SPI2 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-
+#ifdef EXISTS_SPI2
 int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
@@ -536,7 +538,7 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     ImGui::End();
     return serialDataSent;
 }
-
+#endif
 //--------------------------------------------------------------------------------------------------------------------------------------
 // savePopup: Generic popup to handle bias value saving operations
 //--------------------------------------------------------------------------------------------------------------------------------------
@@ -589,14 +591,21 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
     std::string comboLabel_loadFiles_str = "##";
     const char *comboLabel_loadFiles = comboLabel_loadFiles_str.c_str();
 
+    #ifdef EXISTS_DAC
+
     if(typeid(command).hash_code() == typeid(DAC_command*).hash_code())
     {
         filepath = DAC_FILENAME_LOAD;
     }
-    else if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
+    #endif
+    #ifdef EXISTS_BIASGEN
+
+    if(typeid(command).hash_code() == typeid(BIASGEN_command*).hash_code())
     {
         filepath = BIASGEN_FILENAME_LOAD;
     }
+    #endif
+
 
     if (ImGui::BeginPopupModal(popupLabel, &openLoadPopup))
     {

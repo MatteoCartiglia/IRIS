@@ -85,7 +85,7 @@ void DAC::writeDAC(uint8_t command_addess, uint16_t value)
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// turnReferenceOff: Turns off the internal reference voltage
+// turnReferenceOff: Turns off the internal reference voltage if necessary
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void DAC::turnReferenceOff()
@@ -94,12 +94,13 @@ void DAC::turnReferenceOff()
     Wire2.beginTransmission(DAC_ADDRESS_I2C);                 
     Wire2.write(0x70);             
     Wire2.write(0x00);           
-#if DAC_REFERENCE == 1800    
-    Wire2.write(0x01);    
-#endif
+
 #if DAC_REFERENCE == 2500  
     Wire2.write(0x00); 
+#else
+    Wire2.write(0x01); 
 #endif
+
     Wire2.endTransmission(); 
     delay(100);
 }
