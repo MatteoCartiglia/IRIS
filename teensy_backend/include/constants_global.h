@@ -54,7 +54,7 @@
 
 // General DAC configs
 #define DAC_BINARY_RANGE                65536 
-#define DAC_REFERENCE                   1800
+#define DAC_REFERENCE                   2500
 #define DAC_CHANNELS_USED               11
 #define DAC_COMMAND_WRITE_UPDATE        3      // 0011 
 #define DAC_COMMAND_WRITE_SHIFT         4     

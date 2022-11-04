@@ -4,15 +4,15 @@
 // INTERFACE CONFIGURATION - UNCOMMENT AS REQUIRED
 
 #define EXISTS_BIASGEN                   
-#define EXISTS_SPI1                      
-#define EXISTS_SPI2                     
+//#define EXISTS_SPI1                      
+//#define EXISTS_SPI2                     
 #define EXISTS_ENCODER                  
 #define EXISTS_OUTPUT_DECODER                    
 #define EXISTS_DAC      
 
 #define EXISTS_ALIVE
 //#define EXISTS_SPAIC
-#define SERIAl_PORT_NAME                    "/dev/cu.usbmodem116666801"
+#define SERIAl_PORT_NAME                    "/dev/ttyACM0"
 
 // tty.usbmodem116666801 usbmodem105661701  usbmodem119616901
 // tty.usbmodem116666801
@@ -95,7 +95,7 @@
 
 // DAC CONFIGURATION
 
-#define DAC_BIASFILE                    "data/defaultBiasValues/AHPC_DAC_POR.csv"
+#define DAC_BIASFILE                    "data/defaultBiasValues/ALIVE_DAC_POR.csv"
 #define DAC_FILENAME_LOAD               "data/customBiasValues/DAC/"
 #ifdef EXISTS_DAC
     #define DAC_RESET                        33//1//33
