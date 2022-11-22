@@ -344,20 +344,21 @@ static void resetChip()
 // AER Input Interrupt Servie Routine (ISR) for encoder input
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-static void aerInputEncoder_ISR()
+ void aerInputEncoder_ISR()
 {
-    if (!inputEncoder.reqRead()) 
+    if (inputEncoder.reqRead()) 
     {    
         if (inputEncoder.saving_flag  && (inputEncoder.getBufferIndex() < int(MAX_EVENTS_PER_PACKET)) ) 
         { 
             inputEncoder.recordEvent();
         }   
-        inputEncoder.ackWrite(0);
+        inputEncoder.ackWrite(1);
     }
 
-    else if (inputEncoder.reqRead())
+    else if (!inputEncoder.reqRead())
     {
-        inputEncoder.ackWrite(1);
+
+        inputEncoder.ackWrite(0);
     }
 }
 #endif
@@ -372,7 +373,7 @@ static void aerInputC2F_ISR()
     {        
         if(inputC2F.getBufferIndex() < int(MAX_PKT_BODY_LEN))
         {
-            inputC2F.recordEvent();
+            inputC2F.recordEvent();   
         }
         inputC2F.ackWrite(0);
     }

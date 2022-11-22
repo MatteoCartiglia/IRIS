@@ -171,12 +171,12 @@ void AER_in::setupPins()
 unsigned int AER_in::getInputData() 
 {
   unsigned int inputData = 0;
-
   for (int i = 0; i < _inputNumDataPins; i++) 
   {
     inputData |= digitalReadFast(_inputDataPins[i]) << i;
 
   }
+
   if (_inputDataActiveLow) 
   {
     return ~inputData;
