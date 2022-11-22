@@ -450,7 +450,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXIST_SPI1
+#ifdef EXISTS_SPI1
 int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
