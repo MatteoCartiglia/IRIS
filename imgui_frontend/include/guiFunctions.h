@@ -101,6 +101,7 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
 void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int serialPort);
 bool getHandshakeStatus(int inputType);
 
+int setupresetWindow(bool show_reset_config, int serialPort);  
 //---------------------------------------------------------------------------------------------------------------------------------------
 // checkLimits: Checks the user input values do not go out of range and updates the value accordingly
 //---------------------------------------------------------------------------------------------------------------------------------------

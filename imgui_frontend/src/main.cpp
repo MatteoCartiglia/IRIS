@@ -240,6 +240,18 @@ int main(int, char**)
         }
 #endif
 
+        if (1)
+        {   
+               expectedResponses = setupresetWindow(1,serialPort);     
+
+
+            if(expectedResponses > 0)
+            {
+                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
+                expectedResponses = 0;
+            }
+        }
+
        // Setup the SPI1 configuration window 
 #ifdef EXISTS_SPI1
         if (show_SPI1_config)

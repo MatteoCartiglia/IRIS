@@ -25,6 +25,8 @@ struct HANDSHAKE_C2F_command;
 struct HANDSHAKE_ENCODER_command;
 struct AER_out;
 struct GetAerEncoderOutput ;
+struct RESET_command ;
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ENUMERATED DATATYPES
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -50,7 +52,9 @@ enum class PktType
     Pkt_handshakeC2F                = 7U,
     Pkt_handshakeEncoder            = 8U,
     Pkt_aeroevent                   = 9U,
-    PktGetAerEncoderOutput          = 10U
+    PktGetAerEncoderOutput          = 10U,
+    PktResetChip                    = 11U
+
 
 };
 
@@ -74,6 +78,7 @@ struct Pkt
     Pkt(const HANDSHAKE_C2F_command& handshakeC2F);
     Pkt(const HANDSHAKE_ENCODER_command& handshakeEncoder);
     Pkt(const GetAerEncoderOutput& AerEncoderOutput);
+    Pkt(const RESET_command& reset);
 
 
     std::uint8_t header;                                        // Packet length encoded in header excludes size of header
@@ -180,6 +185,11 @@ struct HANDSHAKE_C2F_command
 struct HANDSHAKE_ENCODER_command
 {
     HANDSHAKE_ENCODER_command() {};
+};
+
+struct RESET_command
+{
+    RESET_command() {};
 };
 
 

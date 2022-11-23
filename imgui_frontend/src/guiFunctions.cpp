@@ -926,3 +926,21 @@ void toggleButton(const char* str_id, bool* v)
     draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), col_bg, height * 0.5f);
     draw_list->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255));
 }
+
+int setupresetWindow(bool show_reset_config, int serialPort)
+{
+    int serialDataSent = 0;
+
+    ImGui::Begin("Reset window", &show_reset_config);
+    
+
+    if(ImGui::Button("Reset", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
+    {
+        RESET_command reset;
+        Pkt p2t_pk(reset); 
+        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        serialDataSent++;
+    }
+    ImGui::End();
+    return serialDataSent;
+}

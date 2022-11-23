@@ -35,7 +35,7 @@ static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 #ifdef EXISTS_ENCODER
 #ifdef EXISTS_SPAIC
-    int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN,ENCODER_INPUT_BIT_3_PIN,ENCODER_INPUT_BIT_4_PIN};
+    int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN,ENCODER_INPUT_BIT_3_PIN};
 #endif
 
 #ifdef EXISTS_ALIVE
@@ -83,7 +83,6 @@ static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 void setup() 
 {
-    resetChip();  
     #ifdef EXISTS_ALIVE
     setupLFSR();
     #endif
@@ -113,6 +112,8 @@ delay(5000);
 #ifdef EXISTS_BIASGEN
     biasGen.setupBG();
 #endif
+
+    resetChip();  
 
     Serial.print("********************* Setup complete *********************\n");
 }
@@ -272,6 +273,11 @@ void loop()
                 break;
             }
   
+              case PktType::PktResetChip:
+              {
+                resetChip();
+              }
+
 
 
             default: 
