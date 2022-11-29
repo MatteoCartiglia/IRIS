@@ -3,7 +3,6 @@
 # You will need to install GLFW (http://www.glfw.org)
 #
 # @author Matteo Cartiglia <camatteo@ini.uzh.ch>
-# @updated 22 JUNE 2022 (Ciara Giles Doran, gciara@student.ethz.ch)
 # ------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------
@@ -57,6 +56,8 @@ CXXFLAGS = -std=c++17 -I/imgui -I/backends -g -Wall -Wformat
 ifeq ($(UNAME_S), Linux)
 	ECHO_MESSAGE = "Linux"
 	LIBS += $(LINUX_GL_LIBS) `pkg-config --static --libs glfw3`
+	LIBS += -pthread
+
 	CXXFLAGS += `pkg-config --cflags glfw3` -lstdc++fs
 	CFLAGS = $(CXXFLAGS)
 endif
@@ -65,17 +66,9 @@ endif
 ifeq ($(UNAME_S), Darwin)
 	ECHO_MESSAGE = "Mac OS X"
 	LIBS += -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
-	LIBS += -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib
+	LIBS += -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib 
 	LIBS += -lglfw
 	CXXFLAGS += -I/usr/local/include -I/opt/local/include -I/opt/homebrew/include
-	CFLAGS = $(CXXFLAGS)
-endif
-
-# WINDOWS
-ifeq ($(OS), Windows_NT)
-	ECHO_MESSAGE = "MinGW"
-	LIBS += -lglfw3 -lgdi32 -lopengl32 -limm32
-	CXXFLAGS += `pkg-config --cflags glfw3`
 	CFLAGS = $(CXXFLAGS)
 endif
 
