@@ -52,7 +52,7 @@ void ii_stimulate( int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_l
     //-----------------------------------------------------------------------------------------------------------------------------------
     #ifdef BIASGEN_SET_TRANSISTOR_TYPE
         int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
-            std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[]);
+            std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[],bool updateValues);
     #else
         int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
                 std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool updateValues);
