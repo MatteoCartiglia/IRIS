@@ -342,10 +342,10 @@ void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_li
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_BIASGEN
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
-int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[],bool updateValues)
 #else
-int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool updateValues)
 #endif
 {
@@ -405,7 +405,6 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
                     {
                         Pkt p2t_pk(biasGen[j]); 
                         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-                        serialDataSent++;
                     }
                     
                     ImGui::PopID();
@@ -421,7 +420,6 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
         {
             Pkt p2t_pk(biasGen[k]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-            serialDataSent++;
         }
     }
 
@@ -443,7 +441,6 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
     loadPopup(openSavePopup, popupLoad, biasGen, serialPort);
 
     ImGui::End();
-    return serialDataSent;
 }
 #endif
 

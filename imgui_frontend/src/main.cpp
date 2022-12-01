@@ -232,11 +232,6 @@ int main(int, char**)
         {
             expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, updateValues_BiasGen);
 
-            if(expectedResponses > 0)
-            {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
-                expectedResponses = 0;
-            }
         }
 #endif
 
