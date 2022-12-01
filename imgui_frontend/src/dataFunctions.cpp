@@ -96,7 +96,7 @@ void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
         
         biasGen[i].name = biasGen_BiasName;
         biasGen[i].currentValue_uA = std::stof(parseCSVoutput[i][1]);
-        biasGen[i].transistorType = std::stoi(parseCSVoutput[i][2]);
+        biasGen[i].transistorType = (bool)std::stoi(parseCSVoutput[i][2]);
         biasGen[i].biasNo = std::stoi(parseCSVoutput[i][3]);
         biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uA, biasGen[i].transistorType);
 

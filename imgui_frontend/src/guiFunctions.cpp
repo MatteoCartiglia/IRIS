@@ -374,9 +374,8 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
                     // Adding an input field for changing bias value
                     ImGui::PushItemWidth(150);
-                    float inputField_BiasGenValue = biasGen[j].currentValue_uV;
+                    float inputField_BiasGenValue = biasGen[j].currentValue_uA;
                     inputField_BiasGenValue, selectionChange_BiasGen[i][noRelevantFileRows[i]][0] = ImGui::InputFloat(emptylabel0, &inputField_BiasGenValue, 0.000001, 0, "%.6f", 0);
-                    biasGen[j].currentValue_uV = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT); 
                     ImGui::SameLine();
 
                     std::string emptylabel1_str = "##1";
@@ -392,10 +391,11 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
                     ImGui::PushItemWidth(260);
                     float inputField_BiasGenValue = biasGen[j].currentValue_uA;             
                     inputField_BiasGenValue, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &inputField_BiasGenValue, 0.000001, 0, "%.6f", 0);
+ #endif
                     biasGen[j].currentValue_uA = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT); 
                     biasGen[j].currentValue_binary = getBiasGenPacket(biasGen[j].currentValue_uA, biasGen[j].transistorType);
                     ImGui::SameLine();
-#endif
+
                     // Including units
                     ImGui::Text("uA");
                     ImGui::SameLine();

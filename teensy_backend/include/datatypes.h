@@ -108,13 +108,14 @@ struct DAC_command
 struct BIASGEN_command
 { 
     BIASGEN_command() {};
-    BIASGEN_command ( const Pkt& pkt) : biasNo((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), currentValue_binary(( pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]) {};
+    BIASGEN_command ( const Pkt& pkt) : biasNo((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), currentValue_binary(( pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]), transistorType(pkt.body[4]) {};
 
     std::uint16_t biasNo;
-    std::uint16_t currentValue_binary;
+    std::uint16_t currentValue_binary; 
+    bool transistorType;
+    
     std::string name;
     double currentValue_uA;
-    bool transistorType;
 };
 
 // --------------------------- Struct for Input interface PC -> Teensy -> communication [Input interface: Teensy output] ---------------------
