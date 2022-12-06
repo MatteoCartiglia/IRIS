@@ -35,7 +35,7 @@ void renderImGui(GLFWwindow* window);
     //---------------------------------------------------------------------------------------------------------------------------------------
     // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
     //---------------------------------------------------------------------------------------------------------------------------------------
-    int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues);
+    void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues);
 #endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ void ii_stimulate( int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_l
     // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send. 
     //                  #ifdef condition used to define different definition if transistor type option to be displayed and handled
     //-----------------------------------------------------------------------------------------------------------------------------------
-    int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi_command[], int resolution);
+    void setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi_command[], int resolution);
 #endif
 
 #ifdef EXISTS_SPI2
@@ -73,7 +73,7 @@ void ii_stimulate( int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_l
     // setupSPI2Window: Initialises and updates GUI window displaying SPI2 values to send. 
     //                  #ifdef condition used to define different definition if transistor type option to be displayed and handled
     //-----------------------------------------------------------------------------------------------------------------------------------
-    int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi_command[], int resolution);
+    void setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi_command[], int resolution);
 #endif
 
 #if defined(EXISTS_BIASGEN) || defined(EXISTS_DAC)

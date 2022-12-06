@@ -174,7 +174,7 @@ void renderImGui(GLFWwindow* window)
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_DAC
-int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
+void setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
 {
     int serialDataSent = 0;
 
@@ -213,7 +213,6 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
             }
             Pkt p2t_pk(dac[i]); 
             write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-            serialDataSent++;
         }
 
         ImGui::PopID();
@@ -242,7 +241,6 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
 
     ImGui::End();
     
-    return serialDataSent;
 }
 #endif
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -448,7 +446,7 @@ void setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int
 // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_SPI1
-int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
+void setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
    
@@ -483,10 +481,8 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     {
         Pkt p2t_pk(spi[0]); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-        serialDataSent++;
     }
     ImGui::End();
-    return serialDataSent;
 }
 #endif
 
@@ -494,7 +490,7 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 // setupSPI2Window: Initialises and updates GUI window displaying SPI2 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_SPI2
-int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
+void setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
    
@@ -530,10 +526,8 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     {
         Pkt p2t_pk(spi[0]); 
         write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-        serialDataSent++;
     }
     ImGui::End();
-    return serialDataSent;
 }
 #endif
 //--------------------------------------------------------------------------------------------------------------------------------------
