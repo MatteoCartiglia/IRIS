@@ -1,205 +1,177 @@
-//---------------------------------------------------------------------------------------------------------------------------------------
-// Source file for functions related to serial port reading and writing
-//---------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
+// Source file for serial communication class
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 #include "../include/serial.h"
-#include "../include/guiFunctions.h"
-#include <chrono>
-#include <iostream>
-#include <thread>
-#include <fstream>
 
+//------------------------------------------------------------------------------------------------------------------------------------------
+// Serial constructor: instantiates an object of the Serial class and opens the serial port
+//------------------------------------------------------------------------------------------------------------------------------------------
+Serial::Serial() {
 
-std::vector<AER_out> input_data;    
-std::string popupSave_str_encoder = "Save events";
-const char *popupSave_encoder = popupSave_str_encoder.c_str();                            
-bool savingEnc = false;
+    try {
+        openSerialPort();
+    }
 
-void save_events(const std::string& filename, std::vector<AER_out> input_data);
+    catch(std::exception exception) {
+        printf("Error opening serial port. \t Error %i; '%s'\n", errno, strerror(errno));
+    }
+}
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasValues: Sends the new DAC values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_DAC
+//------------------------------------------------------------------------------------------------------------------------------------------
+// openSerialPort: opens serial port using the device name provided
+//------------------------------------------------------------------------------------------------------------------------------------------
+void Serial::openSerialPort() {
 
-void loadBiasValues(DAC_command dac[], int serialPort )
+    const std::string& deviceName = DEVICE_NAME;
+
+    // Get file attributes for the device filepath
+    if (stat(deviceName.c_str(), &_statinfo) == -1) {
+		throw std::system_error(errno, std::system_category(), "Unable to stat " + deviceName);
+	}
+
+    // Throw an error if the filepath provided does not point to a connected device
+	if ((_statinfo.st_mode & S_IFMT) != S_IFCHR) {
+		throw std::system_error(ENODEV, std::generic_category(), deviceName + " is not a device.");
+	}
+
+    // Open the serial port in read/write mode
+	fd = open(deviceName.c_str(), O_RDWR);
+
+    // Throw error if error occurs opening serial port
+	if (fd == -1) {
+		closeAndThrowError("Invalid file descriptor. Cannot open " + deviceName);
+	}
+
+    // Locking serial port file descriptor to restrict access to this process only
+	if (lockf(fd, F_TLOCK, 0) == -1) {
+		closeAndThrowError("Unable to lock " + deviceName);
+	}
+
+    // Get the current attributes of the Serial port 
+	if (tcgetattr(fd, &_serialPortSettings) == -1) {
+		closeAndThrowError("tcgetattr on " + deviceName);
+	}
+
+    cfmakeraw(&_serialPortSettings);
+    cfsetispeed(&_serialPortSettings, B19200);            // Set Read Speed as 19200                     
+    cfsetospeed(&_serialPortSettings, B19200);            // Set Write Speed as 19200
+    
+    // Set the Serial Port attributes
+	if (tcsetattr(fd, TCSANOW, &_serialPortSettings) == -1) {   
+		closeAndThrowError("tcsetattr on " + deviceName);
+	}
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+// closeSerialPort: Closes the serial port
+//------------------------------------------------------------------------------------------------------------------------------------------
+void Serial::closeSerialPort() {
+
+	if (fd != -1) {
+		close(fd);
+		fd = -1;
+	}
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+// readSerialPort: reads serial buffer until all expected responses have been processed
+//------------------------------------------------------------------------------------------------------------------------------------------
+void Serial::readSerialPort(bool show_Serial_output, int expectedResponses, int bufferSize)
 {
-    for (int i = 0; i< DAC_CHANNELS_USED; i++)
-    {
-        if (dac[i].data==0) 
-        {
+    int serialReadBytes = 0;
+
+if(fd != -1) {
+
+        while(expectedResponses > 0) {
+
+            char serialReadBuffer[bufferSize];
+            std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
+            printf("Before: %s\n", serialReadBuffer);
+
+            try {
+                serialReadBytes = read(fd, &serialReadBuffer, bufferSize);
+                expectedResponses--;
+
+                printf("After: %s\n", serialReadBuffer);
+                
+                // if((serialReadBytes != 0) && (serialReadBytes != -1)) {
+                //     updateSerialOutputWindow(show_Serial_output, true, serialReadBuffer);
+                // }
+                // else {
+                //     throw std::runtime_error("Serial port read error.");
+                // }
+            }
+            
+            catch(std::exception exception) {
+                printf("Error reading from serial port. \t Error %i; '%s' \t Serial read byte: %d\n", errno, strerror(errno), serialReadBytes);
+            }
+        }
+            
+        tcflush(fd, TCIFLUSH);
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+// writeSerialPort: writes nBytes of data buffer to serial port 
+//------------------------------------------------------------------------------------------------------------------------------------------
+void Serial::writeSerialPort(const void *buffer, size_t nBytes)
+{
+    int serialWriteBytes = 0;
+    
+    if(fd != -1) {
+
+        try {
+            serialWriteBytes = write(fd, buffer, nBytes);
+            
+            if((serialWriteBytes == 0) || (serialWriteBytes == -1))
+            {
+                throw std::runtime_error("Serial port write error.");
+            }
+        }
+
+        catch(std::exception exception) {
+            printf("Error writing to serial port. \t\t Error %i; '%s' \t Serial write byte: %d\n", errno, strerror(errno), serialWriteBytes);
+        }
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------
+// writeDACValues: Sends the new DAC values to the Teensy 
+//----------------------------------------------------------------------------------------------------------------------------------
+void Serial::writeBiasValues(DAC_command dac[]) {
+
+    for (int i = 0; i< DAC_CHANNELS_USED; i++) {
+
+        if (dac[i].data == 0) {
             dac[i].data =1;
         }
+
         Pkt p2t_pk(dac[i]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
+        writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
+        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100));
     }
 }
-#endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasGenValues: Sends the new BIASGEN values to the Teensy 
+// writeBiasGenValues: Sends the new BIASGEN values to the Teensy 
 //---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_BIASGEN
+void Serial::writeBiasValues(BIASGEN_command bg[]) {
 
-void loadBiasValues(BIASGEN_command bg[], int serialPort)
-{
-    for (int i = 0; i< BIASGEN_CHANNELS; i++)
-    {
+    for (int i = 0; i< BIASGEN_CHANNELS; i++) {
+
         Pkt p2t_pk(bg[i]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
         std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
-
     }
 }
-#endif
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData: Reads data in serial port and writes entry to Log window
-//---------------------------------------------------------------------------------------------------------------------------------------
 
-void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize)
-{
-    int serialReadBytes = 0;
+//------------------------------------------------------------------------------------------------------------------------------------------
+// closeAndThrowError: Closes serial port and throws the related error
+//------------------------------------------------------------------------------------------------------------------------------------------
+void Serial::closeAndThrowError(const std::string& errorStr) {
 
-    while(expectedResponses > 0)
-    {
-        char serialReadBuffer[bufferSize];
-        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
-
-        serialReadBytes = read(serialPort, &serialReadBuffer, bufferSize);
-        
-        if((serialReadBytes != 0) && (serialReadBytes != -1))
-        {
-            updateSerialOutputWindow(show_Serial_output, true, serialReadBuffer);
-        }
-        else
-        {
-           printf("getSerialData: Error reading serial port. Serial read byte: %d\n", serialReadBytes);
-        }
-
-        expectedResponses--;
-    }
-    
-    tcflush(serialPort, TCIFLUSH);
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getEncoderdata: Reads data in serial port and updates plots displayed
-//---------------------------------------------------------------------------------------------------------------------------------------
-void getEncoderdata(int serialPort, bool show_PlotData)
-{
-    long time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-   // int serialReadBytes = 0;
-   // std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
-    
-    ImGui::Begin("Encoder Output");
-    
-        if(ImGui::Button("Handshake: Encoder", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
-        {
-            HANDSHAKE_ENCODER_command handshakeEncoder;
-            Pkt p2tpk_HandshakeEncoder(handshakeEncoder);  
-            write(serialPort, (void *) &p2tpk_HandshakeEncoder, sizeof(p2tpk_HandshakeEncoder));
-        }
-
-        ImGui::SameLine();
-        ImGui::Text(" Output: Encoder ");  
-        ImGui::SameLine();
-
-        if (ImGui::Button( "Save"))
-        {
-            ENCODER_INPUT_command Enable_Encoder;
-            Pkt p2tpk_Enable_encoder(Enable_Encoder);
-            write(serialPort, (void *) &p2tpk_Enable_encoder, sizeof(p2tpk_Enable_encoder));
-           // handshakeStatusEncoder = getHandshakeReturn(serialPort);
-            savingEnc = !savingEnc;
-            //serialDataSent++;
-        }
-        if(savingEnc)
-        {   
-            GetAerEncoderOutput trasmit;
-            Pkt p2t_pk(trasmit); 
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-            Aer_Data_Pkt aer_data;
-            std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(500) );
-
-            int serialReadBytes = read(serialPort,(void *) &aer_data, sizeof(aer_data));
-            //std::cout << "retval: " << serialReadBytes <<std::endl;
-            if (serialReadBytes==-1)
-            {
-                std::cout <<"Error= -1" << std::endl;
-            }
-            else if (serialReadBytes==0)
-            {
-                std::cout <<"Error = no data read" << std::endl;
-            }
-            else
-            {   
-              //  assert(serialReadBytes == (aer_data.number_events * sizeof(AER_out)) +sizeof(aer_data.number_events));
-                if(aer_data.number_events >0 && aer_data.number_events < MAX_EVENTS_PER_PACKET)
-                {
-                    for (int j=0; j< (aer_data.number_events);j++)
-                    {
-                        input_data.push_back(aer_data.body[j]);
-                        std::cout<< "Data: "<< aer_data.body[j].data<< " Ts: " <<aer_data.body[j].timestamp<< std::endl;
-                    }
-                }
-            }
-        }
-        ImGui::SameLine();
-        ImGui::Checkbox("Saving: ", &savingEnc);
-        ImGui::NewLine();
-
-        if (ImGui::Button( "Save to file"))
-        {
-            save_events(ENCODER_INPUT_SAVE_FILENAME_CSV, input_data);
-        }
-    // Flush the serial port 
-    tcflush(serialPort, TCIFLUSH);
-
-    ImGui::End();
-    
-}
-
-void save_events( const std::string& filename, std::vector<AER_out> input_data)
-{
-    std::ofstream file(filename, std::ios::out | std::ios::app);    
-    if(file.is_open())
-    {
-        file << "data, ts (in micros)" << '\n'; 
-
-        for (int i = 0; i < input_data.size()-1; i++) 
-        {
-            file << input_data[i].data << ','; 
-            file << input_data[i].timestamp << ','; 
-            file << '\n'; 
-        }
-        
-        input_data.clear();
-    }
-
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getHandshakeReturn: Retrieves forced handshake status ??? buggy
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-bool getHandshakeReturn(int serialPort) 
-{
-    int serialReadBytes = 0;
-    int serialRead = false;
-
-    serialReadBytes = read(serialPort, &serialRead, 1); //buggy
-    
-    if((serialReadBytes != 0) && (serialReadBytes != -1))
-    {
-        tcflush(serialPort, TCIFLUSH);
-        return char(serialRead);
-    }
-    else
-    {
-        printf("getHandshakeReturn: Error reading serial port. Serial read byte: %d\n", serialReadBytes);
-        tcflush(serialPort, TCIFLUSH);
-        return false;
-    }
+	int errorNo = errno;
+	closeSerialPort();
+	throw std::system_error(errorNo, std::system_category(), errorStr);
 }

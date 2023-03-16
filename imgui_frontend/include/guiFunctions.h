@@ -15,6 +15,7 @@
 #include "../imgui/imgui_src/implot.h"
 #include "../imgui/imgui_src/implot_internal.h"
 #include "../imgui/imgui_src/imgui.h"
+#include "serial.h"
 
 #include "../../teensy_backend/include/datatypes.h"
 #include "../../teensy_backend/include/constants.h"
@@ -35,7 +36,8 @@ void renderImGui(GLFWwindow* window);
     //---------------------------------------------------------------------------------------------------------------------------------------
     // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
     //---------------------------------------------------------------------------------------------------------------------------------------
-    int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues);
+    // int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues);
+    int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial sPort, bool updateValues);
 #endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------

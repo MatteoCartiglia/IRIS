@@ -5,7 +5,7 @@
 #include <iostream>
 #include "../include/guiFunctions.h"
 #include "../include/dataFunctions.h"
-#include "../include/serial.h"
+#include "../include/serialFunctions.h"
 #include "../../teensy_backend/include/constants.h"
 #include "../../teensy_backend/include/constants_global.h"
 
@@ -174,7 +174,9 @@ void renderImGui(GLFWwindow* window)
 // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_DAC
-int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
+// int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
+int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial sPort, bool updateValues)
+
 {
     int serialDataSent = 0;
 
@@ -204,6 +206,8 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
         ImGui::Text("mV");
         ImGui::SameLine();
 
+        int serialWriteBytes = 0;
+
         // Adding a update button to write to serial port
         if((ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT))) || updateValues)
         {
@@ -212,7 +216,13 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
             dac[i].data =1;
             }
             Pkt p2t_pk(dac[i]); 
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+
+            // serialWriteBytes = write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            // printf("%d\t %d\n", serialPort, serialWriteBytes);
+
+            sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
+            printf("%d\n", sPort.fd);
+            
             serialDataSent++;
         }
 
@@ -238,7 +248,9 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
     }
 
     savePopup(openSavePopup, popupSave, dac);
-    loadPopup(openLoadPopup, popupLoad, dac, serialPort);
+    // loadPopup(openLoadPopup, popupLoad, dac, serialPort);
+    loadPopup(openLoadPopup, popupLoad, dac, sPort.fd);
+
 
     ImGui::End();
     

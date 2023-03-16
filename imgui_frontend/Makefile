@@ -1,8 +1,6 @@
 # ------------------------------------------------------------------------------------------------
 # Cross Platform Makefile. Compatible with MSYS2/MINGW, Ubuntu 14.04.1 and Mac OS X
 # You will need to install GLFW (http://www.glfw.org)
-#
-# @author Matteo Cartiglia <camatteo@ini.uzh.ch>
 # ------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------
@@ -26,6 +24,7 @@ LINUX_GL_LIBS = -lGL
 SOURCES +=  $(SOURCE_DIR)/main.cpp \
 			$(SOURCE_DIR)/guiFunctions.cpp \
 			$(SOURCE_DIR)/dataFunctions.cpp \
+			$(SOURCE_DIR)/serialFunctions.cpp \
 			$(SOURCE_DIR)/serial.cpp \
 			$(IMGUI_DIR)/imgui.cpp \
 			$(IMGUI_DIR)/imgui_demo.cpp \

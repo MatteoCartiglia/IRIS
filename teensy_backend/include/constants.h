@@ -12,14 +12,14 @@
 
 #define EXISTS_ALIVE
 //#define EXISTS_SPAIC
-#define SERIAl_PORT_NAME                    "/dev/ttyACM0"
+#define DEVICE_NAME                         "/dev/ttyACM0"
 
 // tty.usbmodem116666801 usbmodem105661701  usbmodem119616901
 // tty.usbmodem116666801
 
 // BIASGEN 
-#define BIASGEN_BIASFILE                "data/defaultBiasValues/ALIVE_BIASGEN_POR.csv"
-#define BIASGEN_FILENAME_LOAD           "data/customBiasValues/BIASGEN/"
+#define BIASGEN_BIASFILE                    "data/defaultBiasValues/ALIVE_BIASGEN_POR.csv"
+#define BIASGEN_FILENAME_LOAD               "data/customBiasValues/BIASGEN/"
 
 #ifdef EXISTS_BIASGEN
     #define BIASGEN_MOSI_PIN                11

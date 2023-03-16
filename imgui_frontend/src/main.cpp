@@ -21,9 +21,10 @@
 #include "../imgui/imgui_src/implot.h"
 #include "../imgui/imgui_src/implot_internal.h"
 
+#include "../include/serial.h"
 #include "../include/guiFunctions.h"
 #include "../include/dataFunctions.h"
-#include "../include/serial.h"
+#include "../include/serialFunctions.h"
 #include "../../teensy_backend/include/constants.h"
 #include "../../teensy_backend/include/constants_global.h"
 
@@ -152,32 +153,16 @@ int main(int, char**)
     const char* logString;
     bool logEntry = false;
 
-    int serialPort;
     char serialPortOpenStr[SERIAL_BUFFER_SIZE_PORT_OPEN] = {"Serial port opened successfully.\n"};
+    char serialPortErrorStr[SERIAL_BUFFER_SIZE_PORT_ERROR] = {"Serial port NOT opened. No device found."};
     int expectedResponses = 0;
-    struct termios serialPortSettings;
-
 
     //--------------------------------------------------------- Opening Serial Port ------------------------------------------------------
     
-    serialPort = open(SERIAl_PORT_NAME, O_RDWR);
-    tcgetattr(serialPort, &serialPortSettings);         // Get the current attributes of the Serial port 
-    cfsetispeed(&serialPortSettings,B19200);            // Set Read Speed as 19200                     
-    cfsetospeed(&serialPortSettings,B19200);            // Set Write Speed as 19200
-    // serialPortSettings.c_cc[VTIME] = 0;                 // 
-    // serialPortSettings.c_cc[VMIN] = 0;
-
-
-    if (serialPort < 0) 
-    {
-        printf("Error opening serial port. Error: %i %s\n", errno, strerror(errno));
-        // std::thread aerCommThread(readSerialPort);
-    }
-    else 
-    {
-        logString = serialPortOpenStr;
-        logEntry = true;
-    }
+    Serial sPort;
+    int serialPort = sPort.fd;
+    logString = (serialPort != -1)? serialPortOpenStr : serialPortErrorStr;
+    logEntry = true;
 
     //----------------------------------------------------------- Setup GUI Window ------------------------------------------------------- 
         
@@ -216,11 +201,13 @@ int main(int, char**)
 #ifdef EXISTS_DAC
         if (show_DAC_config)
         {
-            expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, updateValues_DAC);
+            // expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, updateValues_DAC);
+            expectedResponses = setupDacWindow(show_DAC_config, dac, sPort, updateValues_DAC);
             
             if(expectedResponses > 0)
             {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
+                // getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
+                sPort.readSerialPort(show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
                 expectedResponses = 0;
             }
         }

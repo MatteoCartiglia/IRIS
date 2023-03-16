@@ -1,39 +1,96 @@
-//---------------------------------------------------------------------------------------------------------------------------------------
-// Header file for functions related to serial port reading and writing
-//---------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------
+// Header file for serial communication class
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+#ifndef SERIAL_H
+#define SERIAL_H
+
+#include <system_error>
+#include <vector>
+#include <chrono>
+#include <thread>
 
 #include <unistd.h>         // UNIX standard function definitions
 #include <stdio.h>          // Standard input output
 #include <termios.h>        // POSIX terminal control definitions
-#include <vector>
+#include <fcntl.h>          // File control definitions
+#include <errno.h>          // Error number definitions
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "../../teensy_backend/include/datatypes.h"
 #include "../../teensy_backend/include/constants.h"
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasValues: Sends the new DAC values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-void loadBiasValues(DAC_command dac[], int serialPort);
+class Serial 
+{
+    public:
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasGenValues: Sends the new BIASGEN values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-void loadBiasValues(BIASGEN_command bg[], int serialPort);
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // Serial constructor: instantiates an object of the Serial class and opens the serial port
+        //----------------------------------------------------------------------------------------------------------------------------------
+        Serial();
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData: Reads data in serial port and writes entry to Log window
-//---------------------------------------------------------------------------------------------------------------------------------------
-void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize);
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // Delete the copy constructor
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // Serial(const Serial&) = delete;
 
-void  save_events( const std::string& filename, std::vector<AER_out> input_data);
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // Serial destructor: destroys instance of class object
+        //----------------------------------------------------------------------------------------------------------------------------------
+        ~Serial() { closeSerialPort(); }
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData_Encoder: Reads data in serial port and updates plots displayed
-//---------------------------------------------------------------------------------------------------------------------------------------
-void getEncoderdata(int serialPort, bool show_PlotData);
-void getSerialData_C2F(int serialPort, bool show_PlotData);
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // openSerialPort: opens serial port using the device name provided
+        //----------------------------------------------------------------------------------------------------------------------------------
+        void openSerialPort();
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getHandshakeReturn: Retrieves forced handshake status
-//---------------------------------------------------------------------------------------------------------------------------------------
-bool getHandshakeReturn(int serialPort);
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // closeSerialPort: Closes the serial port
+        //----------------------------------------------------------------------------------------------------------------------------------
+        void closeSerialPort();
+
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // readSerialPort: reads serial buffer until all expected responses have been processed
+        //----------------------------------------------------------------------------------------------------------------------------------
+        void readSerialPort(bool show_Serial_output, int expectedResponses, int bufferSize);
+
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // writeSerialPort: writes nBytes of data buffer to serial port
+        //----------------------------------------------------------------------------------------------------------------------------------
+        void writeSerialPort(const void *buffer, size_t nBytes);
+
+#ifdef EXISTS_DAC
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // writeBiasValues: Sends the new DAC values to the Teensy 
+        //----------------------------------------------------------------------------------------------------------------------------------
+        void writeBiasValues(DAC_command dac[]);
+#endif
+
+#ifdef EXISTS_BIASGEN
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        // writeBiasValues: Sends the new BIASGEN values to the Teensy 
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        void writeBiasValues(BIASGEN_command bg[]);
+#endif
+
+        // File descriptor: 
+        int fd = -1;
+
+
+    private:
+        
+        //----------------------------------------------------------------------------------------------------------------------------------
+        // closeAndThrowError: Closes serial port and throws the related error
+        //----------------------------------------------------------------------------------------------------------------------------------
+        void closeAndThrowError(const std::string& errorStr);
+
+        // Terminal interface struct
+        struct termios _serialPortSettings;
+
+        // Stat variable for file status information
+        struct stat _statinfo;
+};
+
+#endif

@@ -7,6 +7,7 @@ imgui_frontend/alive_interface
 imgui_frontend/data/customBiasValues/*
 imgui_frontend/data/savedOutput/*
 imgui_frontend/data/inputAER/*
+imgui_frontend/imgui.ini
 
 # Ignore directories created by PlatformIO
 teensy_backend/.pio
