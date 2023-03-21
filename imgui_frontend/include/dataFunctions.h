@@ -98,4 +98,3 @@ int getNoFiles(char *filepath);
 // getFilepathArray: Returns an array containing the files in the specified directory
 //---------------------------------------------------------------------------------------------------------------------------------------
 void getFilepathArray(int noFiles, char *filepath, char* biases_filenames[]);
-

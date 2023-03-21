@@ -176,7 +176,6 @@ void renderImGui(GLFWwindow* window)
 #ifdef EXISTS_DAC
 // int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
 int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial sPort, bool updateValues)
-
 {
     int serialDataSent = 0;
 
@@ -221,7 +220,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial sPort, bool u
             // printf("%d\t %d\n", serialPort, serialWriteBytes);
 
             sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
-            printf("%d\n", sPort.fd);
+            // printf("%d\n", sPort.fd);
             
             serialDataSent++;
         }
@@ -257,6 +256,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial sPort, bool u
     return serialDataSent;
 }
 #endif
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------

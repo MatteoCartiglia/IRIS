@@ -81,31 +81,30 @@ void Serial::readSerialPort(bool show_Serial_output, int expectedResponses, int 
 {
     int serialReadBytes = 0;
 
-if(fd != -1) {
+    if(fd != -1) {
 
         while(expectedResponses > 0) {
 
             char serialReadBuffer[bufferSize];
             std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
-            printf("Before: %s\n", serialReadBuffer);
+            printf("%d\n", fd);
 
             try {
                 serialReadBytes = read(fd, &serialReadBuffer, bufferSize);
-                expectedResponses--;
-
-                printf("After: %s\n", serialReadBuffer);
                 
-                // if((serialReadBytes != 0) && (serialReadBytes != -1)) {
-                //     updateSerialOutputWindow(show_Serial_output, true, serialReadBuffer);
-                // }
-                // else {
-                //     throw std::runtime_error("Serial port read error.");
-                // }
+                if((serialReadBytes != 0) && (serialReadBytes != -1)) {
+                    // updateSerialOutputWindow(show_Serial_output, true, serialReadBuffer);
+                }
+                else {
+                    throw std::runtime_error("Serial port read error.");
+                }
             }
             
             catch(std::exception exception) {
                 printf("Error reading from serial port. \t Error %i; '%s' \t Serial read byte: %d\n", errno, strerror(errno), serialReadBytes);
             }
+
+            expectedResponses--;
         }
             
         tcflush(fd, TCIFLUSH);
@@ -119,21 +118,21 @@ void Serial::writeSerialPort(const void *buffer, size_t nBytes)
 {
     int serialWriteBytes = 0;
     
-    if(fd != -1) {
+    // if(fd != -1) {
 
-        try {
+    //     try {
             serialWriteBytes = write(fd, buffer, nBytes);
             
-            if((serialWriteBytes == 0) || (serialWriteBytes == -1))
-            {
-                throw std::runtime_error("Serial port write error.");
-            }
-        }
+        //     if((serialWriteBytes == 0) || (serialWriteBytes == -1))
+        //     {
+        //         throw std::runtime_error("Serial port write error.");
+        //     }
+        // }
 
-        catch(std::exception exception) {
-            printf("Error writing to serial port. \t\t Error %i; '%s' \t Serial write byte: %d\n", errno, strerror(errno), serialWriteBytes);
-        }
-    }
+    //     catch(std::exception exception) {
+    //         printf("Error writing to serial port. \t\t Error %i; '%s' \t Serial write byte: %d\n", errno, strerror(errno), serialWriteBytes);
+    //     }
+    // }
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
