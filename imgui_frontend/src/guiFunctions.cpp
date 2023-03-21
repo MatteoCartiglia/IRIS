@@ -175,7 +175,7 @@ void renderImGui(GLFWwindow* window)
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_DAC
 // int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
-int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial sPort, bool updateValues)
+int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial& sPort, bool updateValues)
 {
     int serialDataSent = 0;
 

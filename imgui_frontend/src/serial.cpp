@@ -87,7 +87,6 @@ void Serial::readSerialPort(bool show_Serial_output, int expectedResponses, int 
 
             char serialReadBuffer[bufferSize];
             std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
-            printf("%d\n", fd);
 
             try {
                 serialReadBytes = read(fd, &serialReadBuffer, bufferSize);
@@ -118,21 +117,21 @@ void Serial::writeSerialPort(const void *buffer, size_t nBytes)
 {
     int serialWriteBytes = 0;
     
-    // if(fd != -1) {
+    if(fd != -1) {
 
-    //     try {
+        try {
             serialWriteBytes = write(fd, buffer, nBytes);
             
-        //     if((serialWriteBytes == 0) || (serialWriteBytes == -1))
-        //     {
-        //         throw std::runtime_error("Serial port write error.");
-        //     }
-        // }
+            if((serialWriteBytes == 0) || (serialWriteBytes == -1))
+            {
+                throw std::runtime_error("Serial port write error.");
+            }
+        }
 
-    //     catch(std::exception exception) {
-    //         printf("Error writing to serial port. \t\t Error %i; '%s' \t Serial write byte: %d\n", errno, strerror(errno), serialWriteBytes);
-    //     }
-    // }
+        catch(std::exception exception) {
+            printf("Error writing to serial port. \t\t Error %i; '%s' \t Serial write byte: %d\n", errno, strerror(errno), serialWriteBytes);
+        }
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------

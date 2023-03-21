@@ -37,7 +37,7 @@ void renderImGui(GLFWwindow* window);
     // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
     //---------------------------------------------------------------------------------------------------------------------------------------
     // int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues);
-    int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial sPort, bool updateValues);
+    int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial& sPort, bool updateValues);
 #endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------

@@ -206,8 +206,8 @@ int main(int, char**)
             
             if(expectedResponses > 0)
             {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
-                // sPort.readSerialPort(show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
+                // getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
+                sPort.readSerialPort(show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
                 expectedResponses = 0;
             }
         }
