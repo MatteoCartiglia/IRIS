@@ -54,7 +54,7 @@ class Serial
         //----------------------------------------------------------------------------------------------------------------------------------
         // readSerialPort: reads serial buffer until all expected responses have been processed
         //----------------------------------------------------------------------------------------------------------------------------------
-        void readSerialPort(bool show_Serial_output, int expectedResponses, int bufferSize);
+        void readSerialPort(int expectedResponses, int bufferSize, char* logEntry);
 
         //----------------------------------------------------------------------------------------------------------------------------------
         // writeSerialPort: writes nBytes of data buffer to serial port
@@ -77,7 +77,6 @@ class Serial
 
         // File descriptor: 
         int fd = -1;
-
 
     private:
         

@@ -184,6 +184,8 @@ int main(int, char**)
         io.DeltaTime = 1.0f/60.0f;
 
         ImGui::NewFrame();
+        
+        setupResetWindow(1, sPort);     
 
         // Setup the window to show output values
         if(show_Serial_output)
@@ -194,22 +196,26 @@ int main(int, char**)
         // Setup AER event logging window
         if (show_AER_config)
         {
-            setupAerWindow(show_AER_config, serialPort);
+            setupAerWindow(show_AER_config, sPort);
         }
 #endif
         // Setup digital-to-analogue convertor configuration window - ok!
 #ifdef EXISTS_DAC
         if (show_DAC_config)
         {
-            // expectedResponses = setupDacWindow(show_DAC_config, dac, serialPort, updateValues_DAC);
             expectedResponses = setupDacWindow(show_DAC_config, dac, sPort, updateValues_DAC);
+            char logEntry[SERIAL_BUFFER_SIZE_DAC];
             
-            if(expectedResponses > 0)
+            while(expectedResponses > 0)
             {
-                // getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
-                sPort.readSerialPort(show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_DAC);
-                expectedResponses = 0;
+
+                sPort.readSerialPort(expectedResponses, SERIAL_BUFFER_SIZE_DAC, logEntry);
+                updateSerialOutputWindow(show_Serial_output, true, logEntry);
+
+                expectedResponses--;
             }
+
+            tcflush(sPort.fd, TCIFLUSH);
         }
 #endif
 
@@ -217,39 +223,37 @@ int main(int, char**)
 #ifdef EXISTS_BIASGEN
         if (show_BiasGen_config)
         {
-            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, serialPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, updateValues_BiasGen);
+            expectedResponses = setupBiasGenWindow(show_BiasGen_config, biasGen, sPort, relevantFileRows, valueChange_BiasGen, noRelevantFileRows, updateValues_BiasGen);
+            char logEntry[SERIAL_BUFFER_SIZE_BIAS];
 
-            if(expectedResponses > 0)
+            while(expectedResponses > 0)
             {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
-                expectedResponses = 0;
+                sPort.readSerialPort(expectedResponses, SERIAL_BUFFER_SIZE_BIAS, logEntry);
+                updateSerialOutputWindow(show_Serial_output, true, logEntry);
+
+                expectedResponses--;
             }
+            
+            tcflush(sPort.fd, TCIFLUSH);
         }
 #endif
-
-        if (1)
-        {   
-               expectedResponses = setupresetWindow(1,serialPort);     
-
-
-            if(expectedResponses > 0)
-            {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
-                expectedResponses = 0;
-            }
-        }
 
        // Setup the SPI1 configuration window 
 #ifdef EXISTS_SPI1
         if (show_SPI1_config)
         {
-            expectedResponses = setupSPI1Window(show_SPI1_config, serialPort, spi_command, SPI1_RESOLUTION);
+            expectedResponses = setupSPI1Window(show_SPI1_config, sPort, spi_command, SPI1_RESOLUTION);
+            char logEntry[SPI1_RESOLUTION];
 
-            if(expectedResponses > 0)
+            while(expectedResponses > 0)
             {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
-                expectedResponses = 0;
+                sPort.readSerialPort(expectedResponses, SPI1_RESOLUTION, logEntry);
+                updateSerialOutputWindow(show_Serial_output, true, logEntry);
+
+                expectedResponses--;
             }
+            
+            tcflush(sPort.fd, TCIFLUSH);
         }
 #endif
 
@@ -258,13 +262,18 @@ int main(int, char**)
 
         if (show_SPI2_config)
         {
-            expectedResponses = setupSPI2Window(show_SPI2_config, serialPort, spi2_command, SPI2_RESOLUTION);
+            expectedResponses = setupSPI2Window(show_SPI2_config, sPort, spi2_command, SPI2_RESOLUTION);
+            char logEntry[SPI2_RESOLUTION];
 
-            if(expectedResponses > 0)
+            while(expectedResponses > 0)
             {
-                getSerialData(serialPort, show_Serial_output, expectedResponses, SERIAL_BUFFER_SIZE_BIAS);
-                expectedResponses = 0;
+                sPort.readSerialPort(expectedResponses, SPI2_RESOLUTION, logEntry);
+                updateSerialOutputWindow(show_Serial_output, true, logEntry);
+
+                expectedResponses--;
             }
+            
+            tcflush(sPort.fd, TCIFLUSH);
         }
 #endif
 

@@ -77,36 +77,32 @@ void Serial::closeSerialPort() {
 //------------------------------------------------------------------------------------------------------------------------------------------
 // readSerialPort: reads serial buffer until all expected responses have been processed
 //------------------------------------------------------------------------------------------------------------------------------------------
-void Serial::readSerialPort(bool show_Serial_output, int expectedResponses, int bufferSize)
+void Serial::readSerialPort(int expectedResponses, int bufferSize, char* logEntry)
 {
     int serialReadBytes = 0;
 
-    if(fd != -1) {
+    if(fd != -1) 
+    {
+        char serialReadBuffer[bufferSize];
+        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
 
-        while(expectedResponses > 0) {
-
-            char serialReadBuffer[bufferSize];
-            std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
-
-            try {
-                serialReadBytes = read(fd, &serialReadBuffer, bufferSize);
-                
-                if((serialReadBytes != 0) && (serialReadBytes != -1)) {
-                    // updateSerialOutputWindow(show_Serial_output, true, serialReadBuffer);
-                }
-                else {
-                    throw std::runtime_error("Serial port read error.");
-                }
-            }
+        try {
+            serialReadBytes = read(fd, &serialReadBuffer, bufferSize);
             
-            catch(std::exception exception) {
-                printf("Error reading from serial port. \t Error %i; '%s' \t Serial read byte: %d\n", errno, strerror(errno), serialReadBytes);
-            }
+            if((serialReadBytes != 0) && (serialReadBytes != -1)) {
 
-            expectedResponses--;
+                for(int i = 0; i < bufferSize; i++) {
+                    logEntry[i] = serialReadBuffer[i];
+                }
+            }
+            else {
+                throw std::runtime_error("Serial port read error.");
+            }
         }
-            
-        tcflush(fd, TCIFLUSH);
+        
+        catch(std::exception exception) {
+            printf("Error reading from serial port. \t Error %i; '%s' \t Serial read byte: %d\n", errno, strerror(errno), serialReadBytes);
+        }
     }
 }
 

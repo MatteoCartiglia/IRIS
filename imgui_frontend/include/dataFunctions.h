@@ -9,10 +9,12 @@
 #include <iostream>
 #include <errno.h>          // Error number definitions
 #include <cstddef>          // Includes byte data type
+#include <chrono>
+#include <bitset>
+#include <experimental/filesystem>
 
 #include "../../teensy_backend/include/datatypes.h"
 #include "../../teensy_backend/include/constants.h"
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // parseCSV: Parses CSV files containing POR bias value for the DAC and Bias Generator
@@ -29,25 +31,12 @@ void getBiasValues(DAC_command dac[], const std::string filename);
 //---------------------------------------------------------------------------------------------------------------------------------------
 void getBiasValues(BIASGEN_command biasGen[], const std::string filename );
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasValues: Sends the new DAC values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-void loadBiasValues(DAC_command dac[], int serialport);
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasValues: Sends the new BIASGEN values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-void loadBiasValues(BIASGEN_command biasGen[], int serialport);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getIIValues: get II values from csv and return a vector of ii
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 void getIIValues(const std::string filename, std::vector<AER_DECODER_OUTPUT_command> &II_list);
-//---------------------------------------------------------------------------------------------------------------------------------------
-// readSerialPort: Reads data available at the serial port
-//---------------------------------------------------------------------------------------------------------------------------------------
-void readSerialPort();
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getFileLines: Retrieves the number of lines in a given file

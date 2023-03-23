@@ -18,72 +18,6 @@ bool savingEnc = false;
 void save_events(const std::string& filename, std::vector<AER_out> input_data);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasValues: Sends the new DAC values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_DAC
-
-void loadBiasValues(DAC_command dac[], int serialPort )
-{
-    for (int i = 0; i< DAC_CHANNELS_USED; i++)
-    {
-        if (dac[i].data==0) 
-        {
-            dac[i].data =1;
-        }
-        Pkt p2t_pk(dac[i]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
-    }
-}
-#endif
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// loadBiasGenValues: Sends the new BIASGEN values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_BIASGEN
-
-void loadBiasValues(BIASGEN_command bg[], int serialPort)
-{
-    for (int i = 0; i< BIASGEN_CHANNELS; i++)
-    {
-        Pkt p2t_pk(bg[i]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
-
-    }
-}
-#endif
-//---------------------------------------------------------------------------------------------------------------------------------------
-// getSerialData: Reads data in serial port and writes entry to Log window
-//---------------------------------------------------------------------------------------------------------------------------------------
-
-void getSerialData(int serialPort, bool show_Serial_output, int expectedResponses, int bufferSize)
-{
-    int serialReadBytes = 0;
-
-    while(expectedResponses > 0)
-    {
-        char serialReadBuffer[bufferSize];
-        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
-
-        serialReadBytes = read(serialPort, &serialReadBuffer, bufferSize);
-        
-        if((serialReadBytes != 0) && (serialReadBytes != -1))
-        {
-            updateSerialOutputWindow(show_Serial_output, true, serialReadBuffer);
-        }
-        else
-        {
-           printf("getSerialData: Error reading serial port. Serial read byte: %d\n", serialReadBytes);
-        }
-
-        expectedResponses--;
-    }
-    
-    tcflush(serialPort, TCIFLUSH);
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------
 // getEncoderdata: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
 void getEncoderdata(int serialPort, bool show_PlotData)
@@ -163,6 +97,7 @@ void getEncoderdata(int serialPort, bool show_PlotData)
 void save_events( const std::string& filename, std::vector<AER_out> input_data)
 {
     std::ofstream file(filename, std::ios::out | std::ios::app);    
+    
     if(file.is_open())
     {
         file << "data, ts (in micros)" << '\n'; 

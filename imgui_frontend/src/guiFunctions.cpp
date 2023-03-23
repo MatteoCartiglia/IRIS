@@ -247,8 +247,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial& sPort, bool 
     }
 
     savePopup(openSavePopup, popupSave, dac);
-    // loadPopup(openLoadPopup, popupLoad, dac, serialPort);
-    loadPopup(openLoadPopup, popupLoad, dac, sPort.fd);
+    loadPopup(openLoadPopup, popupLoad, dac, sPort);
 
 
     ImGui::End();
@@ -261,23 +260,22 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial& sPort, bool 
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_OUTPUT_DECODER
-void setupAerWindow(bool show_AER_config, int serialPort)
+void setupAerWindow(bool show_AER_config, Serial& sPort)
 {
     ImGui::Begin(" Input interface", &show_AER_config);  
-
     ImGui::NewLine();
-
 
     if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
     {
         ImGui::OpenPopup(popupII);
     }
+
     loadII(openIIPopup, popupII, II_list);
     ImGui::NewLine();
 
     if (ImGui::Button("Start", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))    
     {
-        auto stimulator = std::thread(ii_stimulate, serialPort,  std::ref(II_list));
+        auto stimulator = std::thread(ii_stimulate, std::ref(sPort),  std::ref(II_list));
         
         stimulator.detach();   
     }
@@ -300,18 +298,22 @@ void setupAerWindow(bool show_AER_config, int serialPort)
     if(ImGui::Button("Send Packet to Teensy", ImVec2(ImGui::GetWindowSize().x*0.8, BUTTON_HEIGHT)) || enableCommsAER)
     {
         teacher_signal.data = (uint16_t)ii_input;
+
         for(int i =0; i<number_ii_input; i++)
         {   
             Pkt p2t_pk(teacher_signal); 
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
         }
+
         input_signal.data = (uint16_t)ii_input_2;
+
         for(int i =0; i<number_ii_input_2; i++)
         {   
             Pkt p2t_pk(input_signal); 
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
         }
     }
+
     ImGui::SameLine();
 
     std::string toggleID_str = "toggleAER";
@@ -323,7 +325,7 @@ void setupAerWindow(bool show_AER_config, int serialPort)
 }
 #endif
 
-void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_list)
+void ii_stimulate(Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_list)
 {
     std::cout << "Stimulation thread start " << std::endl;
 
@@ -341,7 +343,7 @@ void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_li
         //std::cout << "Data: " << II_list[i].data <<std::endl;
 
         Pkt p2t_pk(II_list[i]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
     }
 
     std::cout << "Stimulation thread ended " << std::endl;
@@ -354,10 +356,10 @@ void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_li
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_BIASGEN
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
-int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[],bool updateValues)
 #else
-int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int serialPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool updateValues)
 #endif
 {
@@ -416,7 +418,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
                     if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
                     {
                         Pkt p2t_pk(biasGen[j]); 
-                        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+                        sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
                         serialDataSent++;
                     }
                     
@@ -432,7 +434,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
         for(int k=0; k<BIASGEN_CHANNELS; k++)
         {
             Pkt p2t_pk(biasGen[k]); 
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+            sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
             serialDataSent++;
         }
     }
@@ -452,7 +454,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
     }
 
     savePopup(openSavePopup, popupSave, biasGen);
-    loadPopup(openSavePopup, popupLoad, biasGen, serialPort);
+    loadPopup(openSavePopup, popupLoad, biasGen, sPort);
 
     ImGui::End();
     return serialDataSent;
@@ -463,7 +465,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
 // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_SPI1
-int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
+int setupSPI1Window(bool show_SPI_config, Serial& sPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
    
@@ -497,7 +499,7 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
     {
         Pkt p2t_pk(spi[0]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
         serialDataSent++;
     }
     ImGui::End();
@@ -509,7 +511,7 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 // setupSPI2Window: Initialises and updates GUI window displaying SPI2 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_SPI2
-int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[], int resolution)
+int setupSPI2Window(bool show_SPI_config, Serial& sPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
    
@@ -544,7 +546,7 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     if(ImGui::Button("Update", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
     {
         Pkt p2t_pk(spi[0]); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
         serialDataSent++;
     }
     ImGui::End();
@@ -597,7 +599,7 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
 //--------------------------------------------------------------------------------------------------------------------------------------
 // loadPopup: Generic popup to handle bias value loading operations
 //--------------------------------------------------------------------------------------------------------------------------------------
-template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, int serialPort)
+template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, Serial& sPort)
 {
     char *filepath;
     std::string comboLabel_loadFiles_str = "##";
@@ -646,7 +648,7 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
         if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
             getBiasValues(command, (const std::string) biases_filenames[selection_file]);
-            loadBiasValues(command, serialPort);
+            sPort.writeBiasValues(command);
             ImGui::CloseCurrentPopup();
         }
 
@@ -725,7 +727,7 @@ bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry, const char
 //---------------------------------------------------------------------------------------------------------------------------------------
 // updatePlotWindow: Initialises and updates GUI window displaying live output from ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_C2F
+/* #ifdef EXISTS_C2F
 void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int serialPort)
 {
     long valuesToSave[2] = {timeStamp, long(value)};
@@ -791,7 +793,7 @@ void updatePlotWindow_C2F(bool updatePlot, long timeStamp, double value, int ser
 
 void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int serialPort)
 {
-   /*  long valuesToSave[2] = {timeStamp, long(value)};
+    long valuesToSave[2] = {timeStamp, long(value)};
     double timeStamp_s = timeStamp/1000;
 
     ImGui::Begin("ALIVE Output", &updatePlot);  
@@ -852,8 +854,8 @@ void updatePlotWindow_Encoder(bool updatePlot, long timeStamp, double value, int
         ImGui::NewLine();
     }  
 
-    ImGui::End();*/
-}
+    ImGui::End();
+}*/
 
 
 bool getHandshakeStatus(int inputType)
@@ -939,20 +941,17 @@ void toggleButton(const char* str_id, bool* v)
     draw_list->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255));
 }
 
-int setupresetWindow(bool show_reset_config, int serialPort)
+void setupResetWindow(bool show_reset_config, Serial& sPort)
 {
-    int serialDataSent = 0;
-
     ImGui::Begin("Reset window", &show_reset_config);
-    
 
     if(ImGui::Button("Reset", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))  
     {
         RESET_command reset;
         Pkt p2t_pk(reset); 
-        write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-        serialDataSent++;
+        // write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+        sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
     }
+
     ImGui::End();
-    return serialDataSent;
 }
