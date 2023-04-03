@@ -13,7 +13,7 @@ The building blocks it supports are:
 - BiasGenerator
 - Output Encoder
 
-![Interface](documentation/figures/interface.png "Schematic organization of IRIS")
+![Interface](documentation/figures/schematic_interface.png "Schematic organization of IRIS")
 
 ## Code overview
 
