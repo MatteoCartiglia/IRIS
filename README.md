@@ -13,7 +13,7 @@ The building blocks it supports are:
 - BiasGenerator
 - Output Encoder
 
-![Interface](documentation/interface.png "Schematic organization of IRIS")
+![Interface](documentation/figures/interface.png "Schematic organization of IRIS")
 
 ## Code overview
 
@@ -48,4 +48,5 @@ Current boards that have been tested are:
 ## Contributors:
 * Matteo Cartiglia
 * Adrian Whatley
+* Ciara Giles-Doran 
 
