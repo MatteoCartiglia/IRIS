@@ -21,7 +21,7 @@ Install Homebrew (https://brew.sh).
 - Follow the instructions displayed in the terminal
 - Run `brew install glfw` in terminal to install GLFW
 
-![Interface](Pictures/Homebrew.png "Install Homebrew in Terminal")
+![Interface](figures/Homebrew.png "Install Homebrew in Terminal")
 
 3. **Clone GitLab repository**
 
@@ -30,7 +30,7 @@ You can find the required GitLab repository here: https://code.ini.uzh.ch/camatt
 - Run `git clone https://code.ini.uzh.ch/camatteo/ncs_teensy_interface.git` in terminal
 - Give access to the folder and enter your username and password, if necessary
 
-![Interface](Pictures/Repository.png "Clone GitLab Repository")
+![Interface](figures/Repository.png "Clone GitLab Repository")
 
 Note: The cloned repository will automatically be saved in the current folder, with `cd "Folder name"` you can open a folder and therefore change where it should be saved. You can also try to clone the repository with SSH, as this should work as well.
 
@@ -48,12 +48,12 @@ Please note, that the Teensy might appear as something like `tty.usbmodem1234567
 
 Afterward, press `PlatformIO: upload`. The first time, there is often an upload error. Upload it again until it succeeds.
 
-![Interface](Pictures/upload.png "Upload teensy_backend")
+![Interface](figures/upload.png "Upload teensy_backend")
 
 
 Should it not appear in the /dev directory, download Teensyduino (https://www.pjrc.com/teensy/td_download.html). Open the program and choose the correct port under `Tools > Port`. Click on the upload button (it will upload a sketch to the teensy). Rerun `ls /dev` and check if Teensy appears. If not, repeat it with a different port.
 
-![Interface](Pictures/Teensyduino.png "Choose correct port on Teensyduino")
+![Interface](figures/Teensyduino.png "Choose correct port on Teensyduino")
 
 
 In the `imgui_frontend` directory, run the shell script `clean_build_run.sh` by running `./clean_build_run.sh` in the Terminal. This will build and run an `alive_interface` executable. A new window with the `ALIVE Testing Interface` will appear.
@@ -70,7 +70,7 @@ The `ALIVE Testing Interface` has 5 different windows:
 - Log
 - Encoder Output
 
-![Interface](Pictures/Interface.png "ALIVE Testing Interface")
+![Interface](figures/Interface.png "ALIVE Testing Interface")
 
 The Log Window shows the history. The Input Interface is our Decoder, where we can enter which synapse we want to target and how many requests it should send. The Test Structure Biases is used for the two learning blocks LB CC and LB NN outside of the cores, whereas the Bias Generator Configuration can be used to change biases for the neurons, synapses and learning blocks inside the cores. In the Encoder Output, we can use `Handshake: Encoder`, if the connection seems to not work anymore.
 
