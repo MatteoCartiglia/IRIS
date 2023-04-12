@@ -1,0 +1,11 @@
+
+stages:
+  - mirror
+
+mirror_to_github:
+  stage: mirror
+  changes:
+    - "*"
+  script:
+    - git remote add github https://<your-github-username>:<your-personal-access-token>@github.com/MatteoCartiglia/IRIS.git
+    - git push --mirror github
