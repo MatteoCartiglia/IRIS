@@ -17,7 +17,7 @@ The building blocks it supports are:
 
 ## Code overview
 
-A user friendly GUI controls the backend which runs on the teensy board. Communication between these two parts is crucial and ensures accurate transmission of all data.
+A user friendly GUI controls the backend which runs on the teensy board. Communication between these two parts is crucial and ensures accurate transmission of all data. 
 
 
 ## Frontend
