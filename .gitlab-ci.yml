@@ -7,5 +7,5 @@ mirror_to_github:
   changes:
     - "*"
   script:
-    - git remote add github https://<your-github-username>:<your-personal-access-token>@github.com/MatteoCartiglia/IRIS.git
+    - git remote add github https://MatteoCartiglia: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@github.com/MatteoCartiglia/IRIS.git
     - git push --mirror github
