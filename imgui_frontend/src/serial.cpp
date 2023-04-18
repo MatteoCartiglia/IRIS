@@ -77,26 +77,25 @@ void Serial::closeSerialPort() {
 //------------------------------------------------------------------------------------------------------------------------------------------
 // readSerialPort: reads serial buffer until all expected responses have been processed
 //------------------------------------------------------------------------------------------------------------------------------------------
-void Serial::readSerialPort(int expectedResponses, int bufferSize, char* logEntry)
+void Serial::readSerialPort(int expectedResponses, int bufferSize, char* logEntry) const
 {
     int serialReadBytes = 0;
 
     if(fd != -1) 
     {
         char serialReadBuffer[bufferSize];
-        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
+        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, ' ');
 
         try {
             serialReadBytes = read(fd, &serialReadBuffer, bufferSize);
             
-            if((serialReadBytes != 0) && (serialReadBytes != -1)) {
-
-                for(int i = 0; i < bufferSize; i++) {
-                    logEntry[i] = serialReadBuffer[i];
-                }
-            }
-            else {
+            if(serialReadBytes <=0) 
+            {
                 throw std::runtime_error("Serial port read error.");
+            }
+
+            for(int i = 0; i < bufferSize; i++) {
+                logEntry[i] = serialReadBuffer[i];
             }
         }
         
@@ -109,7 +108,7 @@ void Serial::readSerialPort(int expectedResponses, int bufferSize, char* logEntr
 //------------------------------------------------------------------------------------------------------------------------------------------
 // writeSerialPort: writes nBytes of data buffer to serial port 
 //------------------------------------------------------------------------------------------------------------------------------------------
-void Serial::writeSerialPort(const void *buffer, size_t nBytes)
+size_t Serial::writeSerialPort(const void *buffer, size_t nBytes) const
 {
     int serialWriteBytes = 0;
     
@@ -118,46 +117,27 @@ void Serial::writeSerialPort(const void *buffer, size_t nBytes)
         try {
             serialWriteBytes = write(fd, buffer, nBytes);
             
-            if((serialWriteBytes == 0) || (serialWriteBytes == -1))
+            if(serialWriteBytes <= 0)
             {
                 throw std::runtime_error("Serial port write error.");
             }
+
+            return serialWriteBytes;
         }
 
         catch(std::exception &exception) {
             printf("Error writing to serial port. \t\t Error %i; '%s' \t Serial write byte: %d\n", errno, strerror(errno), serialWriteBytes);
+            return serialWriteBytes;
         }
     }
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
-// writeDACValues: Sends the new DAC values to the Teensy 
+// getFileDescriptor: retrieves the private member variable
 //----------------------------------------------------------------------------------------------------------------------------------
-void Serial::writeBiasValues(DAC_command dac[]) {
-
-    for (int i = 0; i< DAC_CHANNELS_USED; i++) {
-
-        if (dac[i].data == 0) {
-            dac[i].data =1;
-        }
-
-        Pkt p2t_pk(dac[i]); 
-        writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
-        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100));
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------
-// writeBiasGenValues: Sends the new BIASGEN values to the Teensy 
-//---------------------------------------------------------------------------------------------------------------------------------------
-void Serial::writeBiasValues(BIASGEN_command bg[]) {
-
-    for (int i = 0; i< BIASGEN_CHANNELS; i++) {
-
-        Pkt p2t_pk(bg[i]); 
-        writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
-        std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
-    }
+int Serial::getFileDescriptor()
+{
+    return fd;
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------

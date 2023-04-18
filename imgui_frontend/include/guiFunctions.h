@@ -36,28 +36,28 @@ void renderImGui(GLFWwindow* window);
     //---------------------------------------------------------------------------------------------------------------------------------------
     // setupDacWindow: Initialises and updates GUI window displaying DAC values to send
     //---------------------------------------------------------------------------------------------------------------------------------------
-    int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial& sPort, bool updateValues);
+    int setupDacWindow(bool show_DAC_config, DAC_command dac[], const Serial& sPort, bool updateValues);
 #endif
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
-void setupAerWindow(bool show_AER_config, Serial& sPort);
+void setupAerWindow(bool show_AER_config, const Serial& sPort);
 
 
 void loadII (bool openLoadPopup, const char *popupLabel, std::vector<AER_DECODER_OUTPUT_command> &II_list);
 
-void ii_stimulate(Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_list);
+void ii_stimulate(const Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_list);
 #ifdef EXISTS_BIASGEN
     //-----------------------------------------------------------------------------------------------------------------------------------
     // setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 
     //                     #ifdef condition used to define different definition if transistor type option to be displayed and handled
     //-----------------------------------------------------------------------------------------------------------------------------------
     #ifdef BIASGEN_SET_TRANSISTOR_TYPE
-        int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+        int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], const Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
             std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[], bool updateValues);
     #else
-        int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+        int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], const Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
                 std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool updateValues);
     #endif
 #endif
@@ -68,7 +68,7 @@ void ii_stimulate(Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_lis
     // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send. 
     //                  #ifdef condition used to define different definition if transistor type option to be displayed and handled
     //-----------------------------------------------------------------------------------------------------------------------------------
-    int setupSPI1Window(bool show_SPI_config, Serial& sPort, SPI_INPUT_command spi_command[], int resolution);
+    int setupSPI1Window(bool show_SPI_config, const Serial& sPort, SPI_INPUT_command spi_command[], int resolution);
 #endif
 
 #ifdef EXISTS_SPI2
@@ -76,7 +76,7 @@ void ii_stimulate(Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_lis
     // setupSPI2Window: Initialises and updates GUI window displaying SPI2 values to send. 
     //                  #ifdef condition used to define different definition if transistor type option to be displayed and handled
     //-----------------------------------------------------------------------------------------------------------------------------------
-    int setupSPI2Window(bool show_SPI_config, Serial& sPort, SPI_INPUT_command spi_command[], int resolution);
+    int setupSPI2Window(bool show_SPI_config, const Serial& sPort, SPI_INPUT_command spi_command[], int resolution);
 #endif
 
 #if defined(EXISTS_BIASGEN) || defined(EXISTS_DAC)
@@ -88,7 +88,7 @@ void ii_stimulate(Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_lis
     //-----------------------------------------------------------------------------------------------------------------------------------
     // loadPopup: Generic popup to handle bias value loading operations
     //-----------------------------------------------------------------------------------------------------------------------------------
-    template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, Serial& sPort);
+    template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, const Serial& sPort);
 #endif
 
 
@@ -105,7 +105,7 @@ bool updateSerialOutputWindow(bool show_Serial_output, bool logEntry = false, co
 bool getHandshakeStatus(int inputType);
 
 
-void setupResetWindow(bool show_reset_config, Serial& sPort);  
+void setupResetWindow(bool show_reset_config, const Serial& sPort);  
 // int setupResetWindow(bool show_reset_config, int serialPort);  
 
 

@@ -4,11 +4,11 @@
 
 #include "../include/dataFunctions.h"
 #include "../include/guiFunctions.h"
-#include <experimental/filesystem>
+#include <filesystem>
 #include <chrono>
 #include <bitset>
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 //----------------------------------------------- Defining global variables -------------------------------------------------------------
 #ifdef EXISTS_BIASGEN
@@ -25,38 +25,36 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
     std::vector<std::vector<std::string>> parsedCSV;
 
     try {
-        if(fs::exists(path)) 
+        if(!fs::exists(path)) 
         {
-            std::ifstream input_file(path);
-            std::string line;
-            int noFileLines = getFileLines(path);
+            throw std::runtime_error("CSV file does not exist.");
+        }
 
-            // Iterating over all lines in the csv file
-            for(int i = 0; i <noFileLines; i++)
+        std::ifstream input_file(path);
+        std::string line;
+        int noFileLines = getNumberOfLinesInFile(path);
+
+        // Iterating over all lines in the csv file
+        for(int i = 0; i <noFileLines; i++)
+        {
+            std::getline(input_file, line);
+            std::stringstream lineStream(line);
+            std::string cellValue;
+            std::vector<std::string> parsedRow;
+
+            // Excluding the first line with column titles
+            if(i > 0)
             {
-                std::getline(input_file, line);
-                std::stringstream lineStream(line);
-                std::string cellValue;
-                std::vector<std::string> parsedRow;
-
-                // Excluding the first line with column titles
-                if(i > 0)
+                // Iterating over the values per row
+                while(std::getline(lineStream, cellValue, ','))
                 {
-                    // Iterating over the values per row
-                    while(std::getline(lineStream, cellValue, ','))
-                    {
-                        parsedRow.push_back(cellValue);
-                    }
-                    parsedCSV.push_back(parsedRow);
+                    parsedRow.push_back(cellValue);
                 }
+                parsedCSV.push_back(parsedRow);
             }
+        }
 
-            return parsedCSV;
-        }
-        else
-        {
-            throw std::runtime_error("Error parsing CSV file.");
-        }
+        return parsedCSV;
     }
 
     catch(std::exception &exception) {
@@ -75,31 +73,31 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
 void getBiasValues(DAC_command dac[], const std::string filename = DAC_BIASFILE )
 {
     try {
-        if(fs::exists(filename)) 
+
+        if(!fs::exists(filename)) 
         {
-            std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
-
-            for (int i = 0; i < (int) parseCSVoutput.size(); i++)
-            {
-                // Defining an string of spaces for consistent sizing in GUI
-                std::string dacBiasName = "                       ";
-
-                for(int j = 0; j < (int) parseCSVoutput[i][0].length(); j++)
-                {
-                    dacBiasName[j] = parseCSVoutput[i][0][j];
-                }
-                dac[i].name = dacBiasName;
-                dac[i].data = (uint16_t) std::stoi(parseCSVoutput[i][1]);
-                dac[i].command_address =DAC_COMMAND_WRITE_UPDATE << DAC_COMMAND_WRITE_SHIFT| (int) std::stoi(parseCSVoutput[i][2]);
-            }
+            throw std::runtime_error("DAC bias file does not exist.");
         }
-        else
+
+        std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
+
+        for (int i = 0; i < (int) parseCSVoutput.size(); i++)
         {
-            throw std::runtime_error("Error reading BiasGen file.");
+            // Defining an string of spaces for consistent sizing in GUI
+            std::string dacBiasName = "                       ";
+
+            for(int j = 0; j < (int) parseCSVoutput[i][0].length(); j++)
+            {
+                dacBiasName[j] = parseCSVoutput[i][0][j];
+            }
+            dac[i].name = dacBiasName;
+            dac[i].data = (uint16_t) std::stoi(parseCSVoutput[i][1]);
+            dac[i].command_address =DAC_COMMAND_WRITE_UPDATE << DAC_COMMAND_WRITE_SHIFT| (int) std::stoi(parseCSVoutput[i][2]);
         }
     }
+
     catch(std::exception &exception) {
-        printf("Error reading BiasGen file. \t\t Error %i; '%s'\n", errno, strerror(errno));
+        printf("Error reading DAC bias file. \t\t Error %i; '%s'\n", errno, strerror(errno));
     }
 }
 #endif
@@ -111,30 +109,28 @@ void getBiasValues(DAC_command dac[], const std::string filename = DAC_BIASFILE 
 void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
 {
     try {
-        if(fs::exists(filename))
+        if(!fs::exists(filename))
         {
-            std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
-
-            for (int i = 0; i < (int) parseCSVoutput.size(); i++)
-            {
-                // Defining an string of spaces for consistent sizing in GUI
-                std::string biasGen_BiasName = "                       ";
-
-                for(int j = 0; j < (int) parseCSVoutput[i][0].length(); j++)
-                {
-                    biasGen_BiasName[j] = parseCSVoutput[i][0][j];
-                }
-                
-                biasGen[i].name = biasGen_BiasName;
-                biasGen[i].currentValue_uA = std::stof(parseCSVoutput[i][1]);
-                biasGen[i].transistorType = (bool)std::stoi(parseCSVoutput[i][2]);
-                biasGen[i].biasNo = std::stoi(parseCSVoutput[i][3]);
-                biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uA, biasGen[i].transistorType);
-            }
+            throw std::runtime_error("BiasGen file does not exist.");
         }
-        else
+
+        std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
+
+        for (int i = 0; i < (int) parseCSVoutput.size(); i++)
         {
-            throw std::runtime_error("Error reading BiasGen file.");
+            // Defining an string of spaces for consistent sizing in GUI
+            std::string biasGen_BiasName = "                       ";
+
+            for(int j = 0; j < (int) parseCSVoutput[i][0].length(); j++)
+            {
+                biasGen_BiasName[j] = parseCSVoutput[i][0][j];
+            }
+            
+            biasGen[i].name = biasGen_BiasName;
+            biasGen[i].currentValue_uA = std::stof(parseCSVoutput[i][1]);
+            biasGen[i].transistorType = (bool)std::stoi(parseCSVoutput[i][2]);
+            biasGen[i].biasNo = std::stoi(parseCSVoutput[i][3]);
+            biasGen[i].currentValue_binary = getBiasGenPacket(biasGen[i].currentValue_uA, biasGen[i].transistorType);
         }
     }
 
@@ -150,23 +146,21 @@ void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
 void getIIValues(const std::string filename, std::vector<AER_DECODER_OUTPUT_command> &II_list)
 {
     try {
-        if(fs::exists(filename))
+        if(!fs::exists(filename))
         {
-            std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
-            AER_DECODER_OUTPUT_command tmp;
-
-            for (int i = 0; i < (int) parseCSVoutput.size(); i++)
-            {   
-                tmp.data = std::stof(parseCSVoutput[i][0]);
-                tmp.isi = std::stof(parseCSVoutput[i][1]);
-                II_list.push_back(tmp);
-
-                std::cout << "Data: " << std::bitset<16> (II_list[i].data) << " ISI: " << II_list[i].isi << std::endl;
-            }
+            throw std::runtime_error("II file does not exist.");
         }
-        else
-        {
-            throw std::runtime_error("Error reading II file.");
+
+        std::vector<std::vector<std::string>> parseCSVoutput = parseCSV(filename);
+        AER_DECODER_OUTPUT_command tmp;
+
+        for (int i = 0; i < (int) parseCSVoutput.size(); i++)
+        {   
+            tmp.data = std::stof(parseCSVoutput[i][0]);
+            tmp.isi = std::stof(parseCSVoutput[i][1]);
+            II_list.push_back(tmp);
+
+            std::cout << "Data: " << std::bitset<16> (II_list[i].data) << " ISI: " << II_list[i].isi << std::endl;
         }
     }
     
@@ -177,30 +171,28 @@ void getIIValues(const std::string filename, std::vector<AER_DECODER_OUTPUT_comm
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getFileLines: Retrieves the number of lines in a given file
+// getNumberOfLinesInFile: Retrieves the number of lines in a given file
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-int getFileLines(const std::string& path)
+int getNumberOfLinesInFile(const std::string& path)
 {
     try 
     {
-        if(fs::exists(path))
+        if(!fs::exists(path))
         {
-            int noRows = 0;
-            std::ifstream input_file(path);
-            std::string line;
-
-            while(std::getline(input_file, line))
-            {
-                noRows++;
-            }    
-
-            return noRows;
+            throw std::runtime_error("File does not exist.");
         }
 
-        else {
-            throw std::runtime_error("Error accessing filepath provided.");
-        }
+        int noRows = 0;
+        std::ifstream input_file(path);
+        std::string line;
+
+        while(std::getline(input_file, line))
+        {
+            noRows++;
+        }    
+
+        return noRows;
     }
 
     catch(std::exception &exception) {
@@ -235,6 +227,7 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
     return counter;
 }
 #endif
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getBiasGenPacket: Converts the bias voltage value into the equivalent binary value to send to the Bias Generator
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -327,28 +320,26 @@ void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename)
     {
         std::ofstream file(filename, std::ios::out | std::ios::app);
 
-        if(file.good() && file.is_open())
-        {
-            for(int i = 0; i < arraySize; i++)
-            {
-                file << valuesToSave[i];
-
-                if(i != arraySize - 1)
-                {
-                    file << ",";
-                }
-                if(i == arraySize - 1)
-                {
-                    file << "\n";
-                }
-            }
-            
-            file.close();
-        }
-        else
+        if(!file.good() || !file.is_open())
         {
             throw std::runtime_error("Error saving to CSV file.");
         }
+        
+        for(int i = 0; i < arraySize; i++)
+        {
+            file << valuesToSave[i];
+
+            if(i != arraySize - 1)
+            {
+                file << ",";
+            }
+            if(i == arraySize - 1)
+            {
+                file << "\n";
+            }
+        }
+        
+        file.close();
     }
 
     catch(std::exception &exception) {
@@ -368,23 +359,22 @@ bool saveBiases(const char *filename, DAC_command* command)
     try {
         std::ofstream fout(filename);
 
-        if(fout.good() && fout.is_open())
+        if(!fout.good() || !fout.is_open())
         {
-            fout << "biasName, value_(mV), address" << '\n'; 
-
-            for (int i = 0; i < DAC_CHANNELS_USED; i++) 
-            {
-                fout << command[i].name << ','; 
-                fout << command[i].data << ','; 
-                fout << int(command[i].command_address); 
-                fout << '\n'; 
-            }
-            
-            return true;
-        }
-        else {
             throw std::runtime_error("Error saving DAC biases.");
         }
+        
+        fout << "biasName, value_(mV), address" << '\n'; 
+
+        for (int i = 0; i < DAC_CHANNELS_USED; i++) 
+        {
+            fout << command[i].name << ','; 
+            fout << command[i].data << ','; 
+            fout << int(command[i].command_address); 
+            fout << '\n'; 
+        }
+        
+        return true;
     }
 
     catch(std::exception &exception) {
@@ -404,24 +394,23 @@ bool saveBiases(const char *filename, BIASGEN_command* command)
     try {
         std::ofstream fout(filename);
 
-        if(fout.good() && fout.is_open())
+        if(!fout.good() || !fout.is_open())
         {
-            fout << "biasName, value_uA, transistorType, biasNo" << '\n'; 
-
-            for (int i = 0; i < BIASGEN_CHANNELS; i++) 
-            {
-                fout << command[i].name << ','; 
-                fout << command[i].currentValue_uA << ','; 
-                fout << command[i].transistorType <<',';
-                fout << command[i].biasNo; 
-                fout << '\n'; 
-            }
-
-            return true;
-        }
-        else {
             throw std::runtime_error("Error saving BiasGen biases.");
         }
+        
+        fout << "biasName, value_uA, transistorType, biasNo" << '\n'; 
+
+        for (int i = 0; i < BIASGEN_CHANNELS; i++) 
+        {
+            fout << command[i].name << ','; 
+            fout << command[i].currentValue_uA << ','; 
+            fout << command[i].transistorType <<',';
+            fout << command[i].biasNo; 
+            fout << '\n'; 
+        }
+
+        return true;
     }
 
     catch(std::exception &exception) {
@@ -439,22 +428,20 @@ int getNoFiles(char *filepath)
 {
     try 
     {
-        if(fs::exists(filepath))
-        {
-            int fileCounter = 0;
-
-            for (const auto& dirEntry: fs::directory_iterator(filepath))
-            {
-                std::string filename_with_path = dirEntry.path();
-                fileCounter++;
-            }
-
-            return fileCounter;
-        }
-        else
+        if(!fs::exists(filepath))
         {
             throw std::runtime_error("Error accessing specified directory.");
         }
+
+        int fileCounter = 0;
+
+        for (const auto& dirEntry: fs::directory_iterator(filepath))
+        {
+            std::string filename_with_path = dirEntry.path();
+            fileCounter++;
+        }
+
+        return fileCounter;
     }
 
     catch(std::exception &exception) {
@@ -468,26 +455,24 @@ int getNoFiles(char *filepath)
 // getFilepathArray: Returns an array containing the files in the specified directory
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void getFilepathArray(int noFiles, char *filepath, char* biases_filenames[])
+void getFilepathArray(char *filepath, char* biases_filenames[])
 {
     try {
-        if(fs::exists(filepath))
-        {
-            int index = 0;
-
-            for (const auto& dirEntry: fs::directory_iterator(filepath))
-            {
-                std::string filename = dirEntry.path();
-                
-                biases_filenames[index] = new char[filename.length() + 1];
-                strcpy(biases_filenames[index], filename.c_str());
-
-                index++;
-            }
-        }
-        else
+        if(!fs::exists(filepath))
         {
             throw std::runtime_error("Error accessing specified directory.");
+        }
+
+        int index = 0;
+
+        for (const auto& dirEntry: fs::directory_iterator(filepath))
+        {
+            std::string filename = dirEntry.path();
+            
+            biases_filenames[index] = new char[filename.length() + 1];
+            strcpy(biases_filenames[index], filename.c_str());
+
+            index++;
         }
     }
 

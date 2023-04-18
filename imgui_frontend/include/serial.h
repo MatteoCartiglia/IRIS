@@ -7,15 +7,13 @@
 
 #include <system_error>
 #include <vector>
-#include <chrono>
-#include <thread>
+#include <cstdio>           // Standard input output
+#include <cerrno>           // Error number definitions
+#include <cstring>
 
 #include <unistd.h>         // UNIX standard function definitions
-#include <stdio.h>          // Standard input output
 #include <termios.h>        // POSIX terminal control definitions
 #include <fcntl.h>          // File control definitions
-#include <errno.h>          // Error number definitions
-#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -54,29 +52,17 @@ class Serial
         //----------------------------------------------------------------------------------------------------------------------------------
         // readSerialPort: reads serial buffer until all expected responses have been processed
         //----------------------------------------------------------------------------------------------------------------------------------
-        void readSerialPort(int expectedResponses, int bufferSize, char* logEntry);
+        void readSerialPort(int expectedResponses, int bufferSize, char* logEntry) const;
 
         //----------------------------------------------------------------------------------------------------------------------------------
         // writeSerialPort: writes nBytes of data buffer to serial port
         //----------------------------------------------------------------------------------------------------------------------------------
-        void writeSerialPort(const void *buffer, size_t nBytes);
+        size_t writeSerialPort(const void *buffer, size_t nBytes) const;
 
-#ifdef EXISTS_DAC
         //----------------------------------------------------------------------------------------------------------------------------------
-        // writeBiasValues: Sends the new DAC values to the Teensy 
+        // getFileDescriptor: retrieves the private member variable
         //----------------------------------------------------------------------------------------------------------------------------------
-        void writeBiasValues(DAC_command dac[]);
-#endif
-
-#ifdef EXISTS_BIASGEN
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        // writeBiasValues: Sends the new BIASGEN values to the Teensy 
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        void writeBiasValues(BIASGEN_command bg[]);
-#endif
-
-        // File descriptor: 
-        int fd = -1;
+        int getFileDescriptor();
 
     private:
         
@@ -90,6 +76,9 @@ class Serial
 
         // Stat variable for file status information
         struct stat _statinfo;
+
+        // File descriptor: 
+        int fd = -1;
 };
 
 #endif

@@ -175,7 +175,7 @@ void renderImGui(GLFWwindow* window)
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_DAC
 // int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool updateValues)
-int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial& sPort, bool updateValues)
+int setupDacWindow(bool show_DAC_config, DAC_command dac[], const Serial& sPort, bool updateValues)
 {
     int serialDataSent = 0;
 
@@ -260,7 +260,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], Serial& sPort, bool 
 // setupAerWindow: Initialises and updates GUI window displaying AER values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_OUTPUT_DECODER
-void setupAerWindow(bool show_AER_config, Serial& sPort)
+void setupAerWindow(bool show_AER_config, const Serial& sPort)
 {
     ImGui::Begin(" Input interface", &show_AER_config);  
     ImGui::NewLine();
@@ -325,7 +325,7 @@ void setupAerWindow(bool show_AER_config, Serial& sPort)
 }
 #endif
 
-void ii_stimulate(Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_list)
+void ii_stimulate(const Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_list)
 {
     std::cout << "Stimulation thread start " << std::endl;
 
@@ -356,10 +356,10 @@ void ii_stimulate(Serial& sPort, std::vector<AER_DECODER_OUTPUT_command> &II_lis
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_BIASGEN
 #ifdef BIASGEN_SET_TRANSISTOR_TYPE
-int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], const Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
     std::vector<std::vector<std::vector<int>>> selectionChange_BiasGen, int noRelevantFileRows[],bool updateValues)
 #else
-int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
+int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], const Serial& sPort, bool relevantFileRows[][BIASGEN_CHANNELS], 
         std::vector<std::vector<int>> selectionChange_BiasGen, int noRelevantFileRows[], bool updateValues)
 #endif
 {
@@ -465,7 +465,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], Seri
 // setupSPI1Window: Initialises and updates GUI window displaying SPI1 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_SPI1
-int setupSPI1Window(bool show_SPI_config, Serial& sPort, SPI_INPUT_command spi[], int resolution)
+int setupSPI1Window(bool show_SPI_config, const Serial& sPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
    
@@ -511,7 +511,7 @@ int setupSPI1Window(bool show_SPI_config, Serial& sPort, SPI_INPUT_command spi[]
 // setupSPI2Window: Initialises and updates GUI window displaying SPI2 values to send
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_SPI2
-int setupSPI2Window(bool show_SPI_config, Serial& sPort, SPI_INPUT_command spi[], int resolution)
+int setupSPI2Window(bool show_SPI_config, const Serial& sPort, SPI_INPUT_command spi[], int resolution)
 {
     int serialDataSent = 0;  
    
@@ -599,7 +599,7 @@ template <typename T> void savePopup(bool openPopup, const char *popupLabel, T c
 //--------------------------------------------------------------------------------------------------------------------------------------
 // loadPopup: Generic popup to handle bias value loading operations
 //--------------------------------------------------------------------------------------------------------------------------------------
-template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, Serial& sPort)
+template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel, T command, const Serial& sPort)
 {
     char *filepath;
     std::string comboLabel_loadFiles_str = "##";
@@ -627,7 +627,7 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
 
         int noFiles = getNoFiles(filepath);
         char* biases_filenames[noFiles];
-        getFilepathArray(noFiles, filepath, biases_filenames);
+        getFilepathArray(filepath, biases_filenames);
 
         // Select file from comboBox
         
@@ -648,7 +648,7 @@ template <typename T> void loadPopup(bool openLoadPopup, const char *popupLabel,
         if (ImGui::Button("Load", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
         {
             getBiasValues(command, (const std::string) biases_filenames[selection_file]);
-            sPort.writeBiasValues(command);
+            writeBiasValues(command, sPort);
             ImGui::CloseCurrentPopup();
         }
 
@@ -667,7 +667,7 @@ void loadII (bool openLoadPopup, const char *popupLabel, std::vector<AER_DECODER
         filepath = INPUT_INTERFACE_FILENAME_LOAD;
         int noFiles = getNoFiles(filepath);
         char* biases_filenames[noFiles];
-        getFilepathArray(noFiles, filepath, biases_filenames);
+        getFilepathArray(filepath, biases_filenames);
 
         // Select file from comboBox
         
@@ -941,7 +941,7 @@ void toggleButton(const char* str_id, bool* v)
     draw_list->AddCircleFilled(ImVec2(p.x + radius + t * (width - radius * 2.0f), p.y + radius), radius - 1.5f, IM_COL32(255, 255, 255, 255));
 }
 
-void setupResetWindow(bool show_reset_config, Serial& sPort)
+void setupResetWindow(bool show_reset_config, const Serial& sPort)
 {
     ImGui::Begin("Reset window", &show_reset_config);
 

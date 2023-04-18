@@ -11,7 +11,6 @@
 #include <cstddef>          // Includes byte data type
 #include <chrono>
 #include <bitset>
-#include <experimental/filesystem>
 
 #include "../../teensy_backend/include/datatypes.h"
 #include "../../teensy_backend/include/constants.h"
@@ -31,17 +30,15 @@ void getBiasValues(DAC_command dac[], const std::string filename);
 //---------------------------------------------------------------------------------------------------------------------------------------
 void getBiasValues(BIASGEN_command biasGen[], const std::string filename );
 
-
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getIIValues: get II values from csv and return a vector of ii
 //---------------------------------------------------------------------------------------------------------------------------------------
-
 void getIIValues(const std::string filename, std::vector<AER_DECODER_OUTPUT_command> &II_list);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
-// getFileLines: Retrieves the number of lines in a given file
+// getNumberOfLinesInFile: Retrieves the number of lines in a given file
 //---------------------------------------------------------------------------------------------------------------------------------------
-int getFileLines(const std::string& path);
+int getNumberOfLinesInFile(const std::string& path);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getRelevantFileRows_BiasGen: Retrieves the number of file lines containing the specified substring 
@@ -86,4 +83,4 @@ int getNoFiles(char *filepath);
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getFilepathArray: Returns an array containing the files in the specified directory
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getFilepathArray(int noFiles, char *filepath, char* biases_filenames[]);
+void getFilepathArray(char *filepath, char* biases_filenames[]);

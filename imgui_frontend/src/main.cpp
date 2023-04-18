@@ -160,7 +160,7 @@ int main(int, char**)
     //--------------------------------------------------------- Opening Serial Port ------------------------------------------------------
     
     Serial sPort;
-    int serialPort = sPort.fd;
+    int serialPort = sPort.getFileDescriptor();
     logString = (serialPort != -1)? serialPortOpenStr : serialPortErrorStr;
     logEntry = true;
 
@@ -174,7 +174,7 @@ int main(int, char**)
     while (!glfwWindowShouldClose(window))
     {
         // Flush serial input buffer
-        tcflush(serialPort, TCIFLUSH);
+        tcflush(sPort.getFileDescriptor(), TCIFLUSH);
 
         glfwPollEvents();
 
@@ -215,7 +215,7 @@ int main(int, char**)
                 expectedResponses--;
             }
 
-            tcflush(sPort.fd, TCIFLUSH);
+            tcflush(sPort.getFileDescriptor(), TCIFLUSH);
         }
 #endif
 
@@ -234,7 +234,7 @@ int main(int, char**)
                 expectedResponses--;
             }
             
-            tcflush(sPort.fd, TCIFLUSH);
+            tcflush(sPort.getFileDescriptor(), TCIFLUSH);
         }
 #endif
 
@@ -253,7 +253,7 @@ int main(int, char**)
                 expectedResponses--;
             }
             
-            tcflush(sPort.fd, TCIFLUSH);
+            tcflush(sPort.getFileDescriptor(), TCIFLUSH);
         }
 #endif
 
@@ -273,7 +273,7 @@ int main(int, char**)
                 expectedResponses--;
             }
             
-            tcflush(sPort.fd, TCIFLUSH);
+            tcflush(sPort.getFileDescriptor(), TCIFLUSH);
         }
 #endif
 

@@ -24,7 +24,6 @@
 #define SERIAL_BUFFER_SIZE_PORT_OPEN        34
 #define SERIAL_BUFFER_SIZE_PORT_ERROR       41
 #define SERIAL_BUFFER_SIZE_AER              44
-#define SERIAL_ASCII_SPACE                  32
 
 // CHIP <-> TEENSY COMMUNICATION
 #define TEENSY_INPUT_C2F                    0

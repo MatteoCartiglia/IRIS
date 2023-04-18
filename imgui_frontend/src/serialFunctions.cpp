@@ -9,6 +9,8 @@
 #include <thread>
 #include <fstream>
 
+using namespace std::chrono_literals;
+
 
 std::vector<AER_out> input_data;    
 std::string popupSave_str_encoder = "Save events";
@@ -136,5 +138,35 @@ bool getHandshakeReturn(int serialPort)
         printf("getHandshakeReturn: Error reading serial port. Serial read byte: %d\n", serialReadBytes);
         tcflush(serialPort, TCIFLUSH);
         return false;
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------
+// writeDACValues: Sends the new DAC values to the Teensy 
+//----------------------------------------------------------------------------------------------------------------------------------
+void writeBiasValues(DAC_command dac[], const Serial& sPort) 
+{
+    for (int i = 0; i< DAC_CHANNELS_USED; i++) {
+
+        if (dac[i].data == 0) {
+            dac[i].data =1;
+        }
+
+        Pkt p2t_pk(dac[i]); 
+        sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
+        std::this_thread::sleep_for(100us);
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+// writeBiasGenValues: Sends the new BIASGEN values to the Teensy 
+//---------------------------------------------------------------------------------------------------------------------------------------
+void writeBiasValues(BIASGEN_command bg[], const Serial& sPort) 
+{
+    for (int i = 0; i< BIASGEN_CHANNELS; i++) {
+
+        Pkt p2t_pk(bg[i]); 
+        sPort.writeSerialPort((void *) &p2t_pk, sizeof(p2t_pk));
+        std::this_thread::sleep_for(100us);
     }
 }
