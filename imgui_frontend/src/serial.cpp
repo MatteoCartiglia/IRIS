@@ -15,6 +15,7 @@ std::string popupSave_str_encoder = "Save events";
 const char *popupSave_encoder = popupSave_str_encoder.c_str();                            
 bool savingEnc = false;
 
+void saveEncoderEvents(int serialPort);
 void save_events(const std::string& filename, std::vector<AER_out> input_data);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -114,37 +115,13 @@ void getEncoderdata(int serialPort, bool show_PlotData)
             savingEnc = !savingEnc;
             //serialDataSent++;
         }
+
         if(savingEnc)
         {   
-            GetAerEncoderOutput trasmit;
-            Pkt p2t_pk(trasmit); 
-            write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-            Aer_Data_Pkt aer_data;
-            std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(500) );
-
-            int serialReadBytes = read(serialPort,(void *) &aer_data, sizeof(aer_data));
-            //std::cout << "retval: " << serialReadBytes <<std::endl;
-            if (serialReadBytes==-1)
-            {
-                std::cout <<"Error= -1" << std::endl;
-            }
-            else if (serialReadBytes==0)
-            {
-                std::cout <<"Error = no data read" << std::endl;
-            }
-            else
-            {   
-              //  assert(serialReadBytes == (aer_data.number_events * sizeof(AER_out)) +sizeof(aer_data.number_events));
-                if(aer_data.number_events >0 && aer_data.number_events < MAX_EVENTS_PER_PACKET)
-                {
-                    for (int j=0; j< (aer_data.number_events);j++)
-                    {
-                        input_data.push_back(aer_data.body[j]);
-                        std::cout<< "Data: "<< aer_data.body[j].data<< " Ts: " <<aer_data.body[j].timestamp<< std::endl;
-                    }
-                }
-            }
+            auto saveEventsThread = std::thread(saveEncoderEvents, serialPort);
+            saveEventsThread.detach();              
         }
+
         ImGui::SameLine();
         ImGui::Checkbox("Saving: ", &savingEnc);
         ImGui::NewLine();
@@ -153,6 +130,7 @@ void getEncoderdata(int serialPort, bool show_PlotData)
         {
             save_events(ENCODER_INPUT_SAVE_FILENAME_CSV, input_data);
         }
+
     // Flush the serial port 
     tcflush(serialPort, TCIFLUSH);
 
@@ -160,9 +138,46 @@ void getEncoderdata(int serialPort, bool show_PlotData)
     
 }
 
+void saveEncoderEvents(int serialPort)
+{
+    GetAerEncoderOutput trasmit;
+    Pkt p2t_pk(trasmit); 
+    Aer_Data_Pkt aer_data;
+
+    write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
+    std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(500) );
+
+    int serialReadBytes = read(serialPort,(void *) &aer_data, sizeof(aer_data));
+
+    if (serialReadBytes==-1)
+    {
+        std::cout <<"Error= -1" << std::endl;
+    }
+    else if (serialReadBytes==0)
+    {
+        std::cout <<"Error = no data read" << std::endl;
+    }
+    else
+    {   
+        printf("%d\n", aer_data.number_events);
+
+        //  assert(serialReadBytes == (aer_data.number_events * sizeof(AER_out)) +sizeof(aer_data.number_events));
+        if(aer_data.number_events >0 && aer_data.number_events < MAX_EVENTS_PER_PACKET)
+        {
+            for (int j=0; j< (aer_data.number_events);j++)
+            {
+                input_data.push_back(aer_data.body[j]);
+                std::cout<< "Data: "<< aer_data.body[j].data<< " Ts: " <<aer_data.body[j].timestamp<< std::endl;
+            }
+        }
+    }
+}
+
+
 void save_events( const std::string& filename, std::vector<AER_out> input_data)
 {
     std::ofstream file(filename, std::ios::out | std::ios::app);    
+
     if(file.is_open())
     {
         file << "data, ts (in micros)" << '\n'; 
@@ -176,7 +191,6 @@ void save_events( const std::string& filename, std::vector<AER_out> input_data)
         
         input_data.clear();
     }
-
 }
 
 

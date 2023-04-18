@@ -51,7 +51,7 @@
 #endif
 
 // ENCODER COMMUNICATION
-#define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/recordings/"
+#define ENCODER_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/recordings/untitled.csv"
 #ifdef EXISTS_ENCODER
     #define ENCODER_ACK                     30
     #define ENCODER_REQ                     29
