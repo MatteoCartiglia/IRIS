@@ -13,7 +13,7 @@ Serial::Serial() {
         openSerialPort();
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error opening serial port. \t Error %i; '%s'\n", errno, strerror(errno));
     }
 }
@@ -100,7 +100,7 @@ void Serial::readSerialPort(int expectedResponses, int bufferSize, char* logEntr
             }
         }
         
-        catch(std::exception exception) {
+        catch(std::exception &exception) {
             printf("Error reading from serial port. \t Error %i; '%s' \t Serial read byte: %d\n", errno, strerror(errno), serialReadBytes);
         }
     }
@@ -124,7 +124,7 @@ void Serial::writeSerialPort(const void *buffer, size_t nBytes)
             }
         }
 
-        catch(std::exception exception) {
+        catch(std::exception &exception) {
             printf("Error writing to serial port. \t\t Error %i; '%s' \t Serial write byte: %d\n", errno, strerror(errno), serialWriteBytes);
         }
     }

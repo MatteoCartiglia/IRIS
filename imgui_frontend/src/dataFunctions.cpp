@@ -59,7 +59,7 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& path)
         }
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error parsing CSV file. \t\t Error %i; '%s'\n", errno, strerror(errno));
         return parsedCSV;
     }
@@ -98,7 +98,7 @@ void getBiasValues(DAC_command dac[], const std::string filename = DAC_BIASFILE 
             throw std::runtime_error("Error reading BiasGen file.");
         }
     }
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error reading BiasGen file. \t\t Error %i; '%s'\n", errno, strerror(errno));
     }
 }
@@ -138,7 +138,7 @@ void getBiasValues(BIASGEN_command biasGen[], const std::string filename)
         }
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error reading BiasGen file. \t\t Error %i; '%s'\n", errno, strerror(errno));
     }
 }
@@ -170,7 +170,7 @@ void getIIValues(const std::string filename, std::vector<AER_DECODER_OUTPUT_comm
         }
     }
     
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error reading II file. \t\t Error %i; '%s'\n", errno, strerror(errno));
     }
 }
@@ -203,7 +203,7 @@ int getFileLines(const std::string& path)
         }
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error accessing filepath provided. \t\t Error %i; '%s'\n", errno, strerror(errno));
         return -1;
     }
@@ -351,7 +351,7 @@ void saveToCSV(long valuesToSave[], int arraySize, const std::string& filename)
         }
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error saving to CSV file. \t\t Error %i; '%s'\n", errno, strerror(errno));
     }
 
@@ -387,7 +387,7 @@ bool saveBiases(const char *filename, DAC_command* command)
         }
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error saving DAC biases. \t\t Error %i; '%s'\n", errno, strerror(errno));
         return false;
     }
@@ -424,7 +424,7 @@ bool saveBiases(const char *filename, BIASGEN_command* command)
         }
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error saving BiasGen biases. \t\t Error %i; '%s'\n", errno, strerror(errno));
         return false;
     }
@@ -457,7 +457,7 @@ int getNoFiles(char *filepath)
         }
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error accessing specified directory. \t\t Error %i; '%s'\n", errno, strerror(errno));
         return -1;
     }
@@ -491,7 +491,7 @@ void getFilepathArray(int noFiles, char *filepath, char* biases_filenames[])
         }
     }
 
-    catch(std::exception exception) {
+    catch(std::exception &exception) {
         printf("Error accessing specified directory. \t\t Error %i; '%s'\n", errno, strerror(errno));
     }
 }
