@@ -6,6 +6,7 @@
 #include <stdio.h>          // Standard input output
 #include <termios.h>        // POSIX terminal control definitions
 #include <vector>
+#include <mutex>
 
 #include "../../teensy_backend/include/datatypes.h"
 #include "../../teensy_backend/include/constants.h"
@@ -30,8 +31,8 @@ void  save_events( const std::string& filename, std::vector<AER_out> input_data)
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getSerialData_Encoder: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getEncoderdata(int serialPort, bool show_PlotData);
-void saveEncoderEvents(int serialPort);
+void getEncoderdata(int serialPort, bool show_PlotData, std::mutex& threadLock);
+void saveEncoderEvents(int serialPort, std::mutex& threadLock);
 
 void getSerialData_C2F(int serialPort, bool show_PlotData);
 

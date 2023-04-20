@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>          // For formatting system time
+#include <mutex>
 
 #include "../imgui/imgui_backend/imgui_impl_glfw.h"
 #include "../imgui/imgui_backend/imgui_impl_opengl3.h"
@@ -44,7 +45,7 @@ void renderImGui(GLFWwindow* window);
 void setupAerWindow(bool show_AER_config, int serialPort);
 
 void loadII (bool openLoadPopup, const char *popupLabel, std::vector<AER_DECODER_OUTPUT_command> &II_list);
-void ii_stimulate( int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_list);
+void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_list);
 #ifdef EXISTS_BIASGEN
     //-----------------------------------------------------------------------------------------------------------------------------------
     // setupBiasGenWindow: Initialises and updates GUI window displaying Bias Generator values to send. 

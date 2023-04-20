@@ -15,7 +15,7 @@ std::string popupSave_str_encoder = "Save events";
 const char *popupSave_encoder = popupSave_str_encoder.c_str();                            
 bool savingEnc = false;
 
-void saveEncoderEvents(int serialPort);
+void saveEncoderEvents(int serialPort, std::mutex& threadLock);
 void save_events(const std::string& filename, std::vector<AER_out> input_data);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -87,12 +87,8 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getEncoderdata: Reads data in serial port and updates plots displayed
 //---------------------------------------------------------------------------------------------------------------------------------------
-void getEncoderdata(int serialPort, bool show_PlotData)
-{
-    long time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-   // int serialReadBytes = 0;
-   // std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
-    
+void getEncoderdata(int serialPort, bool show_PlotData, std::mutex& threadLock)
+{    
     ImGui::Begin("Encoder Output");
     
         if(ImGui::Button("Handshake: Encoder", ImVec2(ImGui::GetWindowSize().x*0.48, BUTTON_HEIGHT)))
@@ -118,15 +114,15 @@ void getEncoderdata(int serialPort, bool show_PlotData)
 
         if(savingEnc)
         {   
-            auto saveEventsThread = std::thread(saveEncoderEvents, serialPort);
-            saveEventsThread.detach();              
+            auto saveEventsThread = std::thread(saveEncoderEvents, serialPort, std::ref(threadLock));
+            saveEventsThread.join();         
         }
 
         ImGui::SameLine();
         ImGui::Checkbox("Saving: ", &savingEnc);
         ImGui::NewLine();
 
-        if (ImGui::Button( "Save to file"))
+        if ((ImGui::Button( "Save to file")) && (input_data.size() > 0))
         {
             save_events(ENCODER_INPUT_SAVE_FILENAME_CSV, input_data);
         }
@@ -138,15 +134,15 @@ void getEncoderdata(int serialPort, bool show_PlotData)
     
 }
 
-void saveEncoderEvents(int serialPort)
+void saveEncoderEvents(int serialPort, std::mutex& threadLock)
 {
+    threadLock.lock();
+
     GetAerEncoderOutput trasmit;
     Pkt p2t_pk(trasmit); 
     Aer_Data_Pkt aer_data;
 
     write(serialPort, (void *) &p2t_pk, sizeof(p2t_pk));
-    std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(500) );
-
     int serialReadBytes = read(serialPort,(void *) &aer_data, sizeof(aer_data));
 
     if (serialReadBytes==-1)
@@ -159,9 +155,8 @@ void saveEncoderEvents(int serialPort)
     }
     else
     {   
-        printf("%d\n", aer_data.number_events);
+        // printf("Number of events: %d\t", aer_data.number_events);
 
-        //  assert(serialReadBytes == (aer_data.number_events * sizeof(AER_out)) +sizeof(aer_data.number_events));
         if(aer_data.number_events >0 && aer_data.number_events < MAX_EVENTS_PER_PACKET)
         {
             for (int j=0; j< (aer_data.number_events);j++)
@@ -171,11 +166,13 @@ void saveEncoderEvents(int serialPort)
             }
         }
     }
+
+    threadLock.unlock();
 }
 
 
 void save_events( const std::string& filename, std::vector<AER_out> input_data)
-{
+{    
     std::ofstream file(filename, std::ios::out | std::ios::app);    
 
     if(file.is_open())

@@ -14,6 +14,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <mutex>
 
 #include "../imgui/imgui_backend/imgui_impl_opengl3.h"
 #include "../imgui/imgui_backend/imgui_impl_glfw.h"
@@ -28,12 +29,14 @@
 #include "../../teensy_backend/include/constants_global.h"
 
 
+std::mutex threadLock;
+
 //---------------------------------------------------------------------------------------------------------------------------------------
 // main: program execution starts here
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 int main(int, char**)
-{
+{  
     //----------------------------------------------- Defining & Initialising BiasGen Variables -----------------------------------------
 
 #ifdef EXISTS_BIASGEN
@@ -297,8 +300,7 @@ int main(int, char**)
   // Encoder outputs
         if(show_Encoder)
         {
-            getEncoderdata(serialPort, show_Encoder);
-            
+            getEncoderdata(serialPort, show_Encoder, threadLock);
         }
 #endif
         // Render the window       

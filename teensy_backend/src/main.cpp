@@ -174,8 +174,8 @@ void loop()
                 AER_DECODER_OUTPUT_command decoder(inputBuffer);
                 outputDecoder.dataWrite(decoder.data);            
 
-                Serial.print("AER command received. Binary value: ");
-                Serial.print(decoder.data, BIN);
+                // Serial.print("AER command received. Binary value: ");
+                // Serial.print(decoder.data, BIN);
                 break;
             }
 #endif
@@ -213,7 +213,7 @@ void loop()
                 if (inputEncoder.saving_flag)
                 {
                     inputEncoder.sendEventBuffer();
-    
+                    
                 }
             break;
             }

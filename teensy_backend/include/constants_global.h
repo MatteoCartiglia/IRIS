@@ -32,7 +32,7 @@
 #define TEENSY_OUTPUT_HANDSHAKE_TIMEOUT     10          // microseconds
 
 // TEENSY -> HOST 
-#define  MAX_EVENTS_PER_PACKET              256
+#define  MAX_EVENTS_PER_PACKET              128
 
 // General BiasGen configs
 #define BIASGEN_SCALING_FACTOR          256
