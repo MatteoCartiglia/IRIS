@@ -47,6 +47,3 @@ Current boards that have been tested are:
 
 ## Contributors:
 * Matteo Cartiglia
-* Adrian Whatley
-* Ciara Giles-Doran 
-
