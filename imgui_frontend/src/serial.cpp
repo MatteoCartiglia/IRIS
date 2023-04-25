@@ -14,6 +14,7 @@ std::vector<AER_out> input_data;
 std::string popupSave_str_encoder = "Save events";
 const char *popupSave_encoder = popupSave_str_encoder.c_str();                            
 bool savingEnc = false;
+bool savingInit = false;
 
 void saveEncoderEvents(int serialPort, std::mutex& threadLock);
 void save_events(const std::string& filename, std::vector<AER_out> input_data);
@@ -99,32 +100,41 @@ void getEncoderdata(int serialPort, bool show_PlotData, std::mutex& threadLock)
         }
 
         ImGui::SameLine();
-        ImGui::Text(" Output: Encoder ");  
+        ImGui::Text("Save:");  
         ImGui::SameLine();
 
-        if (ImGui::Button( "Save"))
+        std::string toggleID_str = "toggleSave";
+        const char *toggleID = toggleID_str.c_str();
+        toggleButton(toggleID, &savingEnc);
+
+        ImGui::SameLine();
+
+        // Send a command to clear the saved AER events on ALIVE
+        if ((savingEnc && !savingInit) || (!savingEnc && savingInit))
         {
             ENCODER_INPUT_command Enable_Encoder;
             Pkt p2tpk_Enable_encoder(Enable_Encoder);
             write(serialPort, (void *) &p2tpk_Enable_encoder, sizeof(p2tpk_Enable_encoder));
-           // handshakeStatusEncoder = getHandshakeReturn(serialPort);
-            savingEnc = !savingEnc;
-            //serialDataSent++;
+            savingInit = !savingInit;
         }
-
-        if(savingEnc)
-        {   
+        
+        // If saving has been initialised and selected as ON
+        if(savingEnc && savingInit)
+        {
             auto saveEventsThread = std::thread(saveEncoderEvents, serialPort, std::ref(threadLock));
             saveEventsThread.join();         
         }
 
-        ImGui::SameLine();
-        ImGui::Checkbox("Saving: ", &savingEnc);
-        ImGui::NewLine();
-
-        if ((ImGui::Button( "Save to file")) && (input_data.size() > 0))
+        if ((ImGui::Button( "Save to file")))
         {
-            save_events(ENCODER_INPUT_SAVE_FILENAME_CSV, input_data);
+            if(input_data.size() > 0)
+            {
+                save_events(ENCODER_INPUT_SAVE_FILENAME_CSV, input_data);
+            }
+            else
+            {
+                std::cout << "Save UNSUCCESSFUL. No AER events registered." << std::endl;
+            }
         }
 
     // Flush the serial port 
