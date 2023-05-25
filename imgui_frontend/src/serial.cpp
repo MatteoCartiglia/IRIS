@@ -152,6 +152,7 @@ void getEncoderdata(int serialPort, bool show_PlotData)
         if (ImGui::Button( "Save to file"))
         {
             save_events(ENCODER_INPUT_SAVE_FILENAME_CSV, input_data);
+            input_data.clear();
         }
     // Flush the serial port 
     tcflush(serialPort, TCIFLUSH);
@@ -170,7 +171,7 @@ void save_events( const std::string& filename, std::vector<AER_out> input_data)
         for (int i = 0; i < input_data.size()-1; i++) 
         {
             file << input_data[i].data << ','; 
-            file << input_data[i].timestamp << ','; 
+            file << input_data[i].timestamp;
             file << '\n'; 
         }
         
