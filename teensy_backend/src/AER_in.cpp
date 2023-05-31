@@ -32,32 +32,32 @@ AER_in::AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputN
   setupPins();
 }
 
-
-
 //---------------------------------------------------------------------------------------------------------------------------------------
 // reqRead: Reads REQ pin state
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-bool AER_in::reqRead() 
+bool AER_in::reqRead()
 {
-  return digitalReadFast(_inputReqPin)^_inputHandshakeActiveLow;
+  return digitalReadFast(_inputReqPin) ^ _inputHandshakeActiveLow;
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // ackWrite: Writes to ACK pin
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void AER_in::ackWrite(bool val) 
+void AER_in::ackWrite(bool val)
 {
-  digitalWriteFast(_inputAckPin, val^_inputHandshakeActiveLow);
 
-  if (_inputDelay) 
+  if (_inputDelay)
   {
     delayMicroseconds(_inputDelay);
+    digitalWriteFast(_inputAckPin, val ^ _inputHandshakeActiveLow);
+  }
+  else
+  {
+    digitalWriteFast(_inputAckPin, val ^ _inputHandshakeActiveLow);
   }
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // getBufferIndex: Retreives the current index of the buffer
@@ -68,25 +68,21 @@ int AER_in::getBufferIndex()
   return _inputBufferIndex;
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------------------
 // setBufferIndex: Set the index of the buffer
 //----------------------------------------------------------------------------------------------------------------------------------
 
 void AER_in::setBufferIndex(int x)
 {
-   _inputBufferIndex = x;
-   
+  _inputBufferIndex = x;
 }
-
-
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // recordEvent: Records ALIVE output events as they occur
 //----------------------------------------------------------------------------------------------------------------------------------
 void AER_in::recordEvent()
 {
-  
+
   AER_out newEvent;
   newEvent.data = getInputData();
   newEvent.timestamp = (micros() - _t0);
@@ -102,25 +98,25 @@ void AER_in::recordEvent()
 //----------------------------------------------------------------------------------------------------------------------------------
 void AER_in::sendEventBuffer()
 {
-  //Serial.print("index: ");
- // Serial.print(_inputBufferIndex);
+  // Serial.print("index: ");
+  // Serial.print(_inputBufferIndex);
 
   Aer_Data_Pkt pkt_out(_inputEventBuffer, _inputBufferIndex);
-  //Serial.print("Num of events: ");
- // Serial.println(pkt_out.number_events, DEC);
-  usb_serial_write((const void*) &pkt_out, sizeof(pkt_out));  
+  // Serial.print("Num of events: ");
+  // Serial.println(pkt_out.number_events, DEC);
+  usb_serial_write((const void *)&pkt_out, sizeof(pkt_out));
 
   resetBuffer();
-} 
+}
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // handshake: Executes REQ/ACK handshake between Teensy and ALIVE
 //----------------------------------------------------------------------------------------------------------------------------------
 void AER_in::handshake()
 {
-  if(_inputHandshakeActiveLow)
+  if (_inputHandshakeActiveLow)
   {
-    if (!reqRead()) 
+    if (!reqRead())
     {
 
       ackWrite(0);
@@ -130,12 +126,11 @@ void AER_in::handshake()
     {
       ackWrite(1);
     }
-
   }
 
-  else if(!_inputHandshakeActiveLow)
+  else if (!_inputHandshakeActiveLow)
   {
-    if (!reqRead()) 
+    if (!reqRead())
     {
       ackWrite(0);
     }
@@ -146,7 +141,6 @@ void AER_in::handshake()
     }
   }
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // setupPins: Sets up the relevant pins for communication
@@ -157,36 +151,33 @@ void AER_in::setupPins()
   pinMode(_inputReqPin, INPUT);
   pinMode(_inputAckPin, OUTPUT);
 
-  for(int i = 0; i < _inputNumDataPins; i++)
+  for (int i = 0; i < _inputNumDataPins; i++)
   {
     pinMode(_inputDataPins[i], INPUT);
   }
 }
 
-
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getInputData: Retrieves input from ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-unsigned int AER_in::getInputData() 
+unsigned int AER_in::getInputData()
 {
   unsigned int inputData = 0;
-  for (int i = 0; i < _inputNumDataPins; i++) 
+  for (int i = 0; i < _inputNumDataPins; i++)
   {
     inputData |= digitalReadFast(_inputDataPins[i]) << i;
-
   }
 
-  if (_inputDataActiveLow) 
+  if (_inputDataActiveLow)
   {
     return ~inputData;
   }
-  else 
+  else
   {
     return inputData;
   }
 }
-
 
 //--------------------------------------------------------------------------------------------------------------------------------------
 // resetBuffer: (Re)Initialises the ALIVE output buffer and (re)sets buffer index counter variable
@@ -194,7 +185,7 @@ unsigned int AER_in::getInputData()
 
 void AER_in::resetBuffer()
 {
-  for(int i = 0; i < int(MAX_EVENTS_PER_PACKET); i++)
+  for (int i = 0; i < int(MAX_EVENTS_PER_PACKET); i++)
   {
     _inputEventBuffer[i].data = 0;
     _inputEventBuffer[i].timestamp = 0;
@@ -205,23 +196,25 @@ void AER_in::resetBuffer()
 //
 //--------------------------------------------------------------------------------------------------------------------------------------
 
-void AER_in::set_t0(int t0) {
+void AER_in::set_t0(int t0)
+{
   _t0 = t0;
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------
-//toggle_saving_flag : enable/disable saving flag
+// toggle_saving_flag : enable/disable saving flag
 //--------------------------------------------------------------------------------------------------------------------------------------
 
-void AER_in::toggle_saving_flag() {
+void AER_in::toggle_saving_flag()
+{
   bool new_saving_flag;
-  if (saving_flag) 
+  if (saving_flag)
   {
     new_saving_flag = 0;
   }
-   if (saving_flag ==0)
-     {
+  if (saving_flag == 0)
+  {
     new_saving_flag = 1;
-    }
+  }
   saving_flag = new_saving_flag;
 }
