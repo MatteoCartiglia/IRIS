@@ -102,8 +102,8 @@ void AER_in::sendEventBuffer()
   // Serial.print(_inputBufferIndex);
 
   Aer_Data_Pkt pkt_out(_inputEventBuffer, _inputBufferIndex);
-  // Serial.print("Num of events: ");
-  // Serial.println(pkt_out.number_events, DEC);
+  //Serial.println("Num of events: ");
+  //Serial.println(pkt_out.number_events, DEC);
   usb_serial_write((const void *)&pkt_out, sizeof(pkt_out));
 
   resetBuffer();

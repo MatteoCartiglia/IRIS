@@ -135,7 +135,7 @@ void getEncoderdata(int serialPort, bool show_PlotData)
             //  assert(serialReadBytes == (aer_data.number_events * sizeof(AER_out)) +sizeof(aer_data.number_events));
             // if (aer_data.number_events > MAX_EVENTS_PER_PACKET)
 
-            std::cout << " number_events: " << static_cast<int8_t>(aer_data.number_events) << std::endl;
+            std::cout << " number_events: " << static_cast<int16_t>(aer_data.number_events) << std::endl;
 
             if (aer_data.number_events > 0 && aer_data.number_events < MAX_EVENTS_PER_PACKET)
             {
