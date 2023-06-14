@@ -7,10 +7,10 @@
 // #define EXISTS_SPI1
 // #define EXISTS_SPI2
 #define EXISTS_ENCODER
-#define EXISTS_OUTPUT_DECODER
-#define EXISTS_DAC
+//#define EXISTS_OUTPUT_DECODER
+//#define EXISTS_DAC
 
-#define EXISTS_ALIVE
+#define EXISTS_BIOAMP
 // #define EXISTS_SPAIC
 #define SERIAl_PORT_NAME "/dev/ttyACM0"
 
@@ -19,7 +19,7 @@
 // "/dev/cu.usbmodem130123101"
 
 // BIASGEN
-#define BIASGEN_BIASFILE "data/defaultBiasValues/ALIVE_BIASGEN_POR.csv"
+#define BIASGEN_BIASFILE "data/defaultBiasValues/BIASGEN_BIASGEN_POR.csv"
 #define BIASGEN_FILENAME_LOAD "data/customBiasValues/BIASGEN/"
 
 #ifdef EXISTS_BIASGEN
@@ -54,15 +54,28 @@
 // ENCODER COMMUNICATION
 #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/recordings/untitled.csv"
 #ifdef EXISTS_ENCODER
-#define ENCODER_ACK 30
-#define ENCODER_REQ 29
-#define ENCODER_INPUT_NO_PIN 3
+#define ENCODER_ACK 24
+#define ENCODER_REQ 25
+#define ENCODER_INPUT_NO_PIN 5
 #define ENCODER_INPUT_BIT_0_PIN 26
 #define ENCODER_INPUT_BIT_1_PIN 27
 #define ENCODER_INPUT_BIT_2_PIN 28
+#define ENCODER_INPUT_BIT_3_PIN 29
+#define ENCODER_INPUT_BIT_4_PIN 30
 #define ENCODER_HANDSHAKE_ACTIVE_LOW true
 #define ENCODER_DATA_ACTIVE_LOW false
 #define ENCODER_DELAY 50
+#endif
+
+#ifdef EXISTS_ENCODER_2
+#define ENCODER_ACK 6
+#define ENCODER_REQ 5
+#define ENCODER_INPUT_NO_PIN 5
+#define ENCODER_INPUT_BIT_0_PIN 4
+#define ENCODER_INPUT_BIT_1_PIN 3
+#define ENCODER_INPUT_BIT_2_PIN 2
+#define ENCODER_INPUT_BIT_3_PIN 1
+#define ENCODER_INPUT_BIT_4_PIN 0
 #endif
 
 // DECODER COMMUNICATION -- INPUT INTERFACE
@@ -85,14 +98,10 @@
 #endif
 
 // RESET PINS
-#define P_RST_PIN 2
-#define S_RST_PIN 3
-#define SYN_RST_GABGA_PIN 17
-#define SYN_RST_NMDA_PIN 18
+#define P_RST_PIN 22
+#define S_RST_PIN 23
 
-// LEARNING BLOCK LFSR PINS
-#define LB_LFSR_RST 31
-#define LB_LFSR_CLK 32
+
 
 // DAC CONFIGURATION
 
@@ -103,5 +112,10 @@
 #define DAC_A1 36    // 3//36
 #define DAC_A0 37    // 4//37
 #endif
+
+#ifdef EXISTS_BIOAMP
+
+#define DLY_CTL_0 20
+#define DLY_CTL_1 21
 
 #endif
