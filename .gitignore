@@ -21,3 +21,7 @@ alive_plots/
 .vscode
 imgui_frontend/.vscode
 teensy_backend/.vscode
+
+
+# Ignore CMake build directory
+build/
