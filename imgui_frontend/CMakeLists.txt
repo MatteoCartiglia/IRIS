@@ -44,3 +44,10 @@ target_link_libraries(alive_interface
 	stdc++fs
 )
 
+# ${CMAKE_DL_LIBS} is needed for dlopen() and dlclose()
+
+# stdc++fs is needed for things in the std::experimental::filesystem namespace,
+# at least for GCC < 9.1 and LLVM < 9.0, but maybe not on Mac, so maybe linking
+# with that actually needs to be conditional.
+# See the 'Notes' at https://en.cppreference.com/w/cpp/filesystem and also 
+# https://discourse.cmake.org/t/correct-way-to-link-std-filesystem-with-gcc-8/4121
