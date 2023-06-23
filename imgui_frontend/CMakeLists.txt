@@ -1,5 +1,14 @@
 find_package(Threads REQUIRED)
 find_package(glfw3 REQUIRED)
+
+# Set policy CMP0072 to old to make sure that we link to libGL rather than
+# libOpenGL / libGLX (and without getting a dev warning) as libGL is what the
+# manually written Makefile was calling for.
+# This can be re-examined in the future, as the OLD behaviour for this policy is
+# deprecated, but building with libOpenGL needs testing first.
+
+cmake_policy(SET CMP0072 OLD)
+
 find_package(OpenGL REQUIRED)
 
 set (IMGUI_DIR imgui/imgui_src)
