@@ -78,11 +78,13 @@ else()
         set(LINKER_FILE ${COREPATH}imxrt1062_t41.ld)
     endif()
 
-    set(TEENSY_DEFINITIONS USB_SERIAL
-            LAYOUT_US_ENGLISH
-            F_CPU=${CPU_CORE_SPEED}
-            ${CPU_DEFINE}
-            ARDUINO_TEENSY41)
+    set(TEENSY_DEFINITIONS
+        USB_SERIAL
+        LAYOUT_US_ENGLISH
+        F_CPU=${CPU_CORE_SPEED}
+        ${CPU_DEFINE}
+        ARDUINO_TEENSY41
+        )
 
     message("TEENSY_DEFINITIONS " ${TEENSY_DEFINITIONS} )
     # Macros to wrap add_[executable|library] for seamless Teensy integration
@@ -99,10 +101,11 @@ else()
         set_target_properties(${ELFTARGET} PROPERTIES LINK_FLAGS "-Os -Wl,--gc-sections,--defsym=__rtc_localtime=0 --specs=nano.specs -mcpu=${CPU} -mthumb -T${LINKER_FILE}")
 
         add_custom_command(OUTPUT ${TARGET}.hex
-                COMMAND ${COMPILERPATH}arm-none-eabi-size ${ELFTARGET}
-                COMMAND ${COMPILERPATH}arm-none-eabi-objcopy -O ihex -R .eeprom ${ELFTARGET} ${TARGET}.hex
-                DEPENDS ${ELFTARGET}
-                COMMENT "Creating HEX file for ${ELFTARGET}")
+            COMMAND ${COMPILERPATH}arm-none-eabi-size ${ELFTARGET}
+            COMMAND ${COMPILERPATH}arm-none-eabi-objcopy -O ihex -R .eeprom ${ELFTARGET} ${TARGET}.hex
+            DEPENDS ${ELFTARGET}
+            COMMENT "Creating HEX file for ${ELFTARGET}"
+            )
 
         add_custom_target(hex ALL DEPENDS ${TARGET}.hex)
     endfunction()
@@ -149,7 +152,7 @@ else()
         src/teensyOut.cpp
 #        lib/mcp/Adafruit_MCP23017.cpp
 #        lib/mcp/Adafruit_MCP23017.h
-    )
+        )
 
     teensy_add_executable(main ${MAIN_SRCS})
     include_directories(include)

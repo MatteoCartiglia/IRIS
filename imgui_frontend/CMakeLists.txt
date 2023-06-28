@@ -25,12 +25,12 @@ set (IMGUI_SOURCES
 	${IMGUI_DIR}/implot.cpp
 	${IMGUI_DIR}/implot_items.cpp
 	${IMGUI_DIR}/implot_demo.cpp
-)
+	)
 
 set (IMGUI_BACKENDS
 	${BACKENDS_DIR}/imgui_impl_glfw.cpp
 	${BACKENDS_DIR}/imgui_impl_opengl3.cpp
-)
+	)
 
 set (ALIVE_SOURCES
 	src/main.cpp
@@ -40,7 +40,7 @@ set (ALIVE_SOURCES
 	${IMGUI_SOURCES}
 	${TEENSY_BACKEND_DIR}/datatypes.cpp
 	${IMGUI_BACKENDS}
-)
+	)
 
 add_executable(alive_interface ${ALIVE_SOURCES})
 set_property(TARGET alive_interface PROPERTY CXX_STANDARD 17)
@@ -51,7 +51,7 @@ target_link_libraries(alive_interface
 	OpenGL::GL
 	${CMAKE_DL_LIBS}
 	stdc++fs
-)
+	)
 
 # ${CMAKE_DL_LIBS} is needed for dlopen() and dlclose()
 
