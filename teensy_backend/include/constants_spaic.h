@@ -9,7 +9,6 @@
 //#define EXISTS_C2F                     
 //#define EXISTS_OUTPUT_DECODER                    
 #define EXISTS_DAC       
-#define EXISTS_SPAIC      
 
 #define SERIAl_PORT_NAME                    "/dev/cu.usbmodem105661701" 
 

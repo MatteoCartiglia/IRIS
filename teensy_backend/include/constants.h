@@ -10,9 +10,6 @@
 #define EXISTS_OUTPUT_DECODER
 #define EXISTS_DAC
 
-#define EXISTS_ALIVE
-// #define EXISTS_SPAIC
-
 #define SERIAl_PORT_NAME "/dev/ttyACM0"
 
 // tty.usbmodem116666801 usbmodem105661701  usbmodem119616901

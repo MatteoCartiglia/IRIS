@@ -16,7 +16,7 @@
 #include "teensyOut.h"
 
 // Declaring function prototypes in order of definition
-#ifdef EXISTS_ALIVE
+#ifdef TARGET_ALIVE
 static void setupLFSR();
 #endif
 
@@ -35,11 +35,11 @@ static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 #ifdef EXISTS_ENCODER
 
-#ifdef EXISTS_SPAIC
+#ifdef TARGET_SPAIC
 int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN, ENCODER_INPUT_BIT_3_PIN};
 #endif
 
-#ifdef EXISTS_ALIVE
+#ifdef TARGET_ALIVE
 int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
 #endif
 
@@ -83,7 +83,7 @@ SPIConfig spi2{SPI2_SCK_PIN, SPI2_RESET_PIN, SPI2_MOSI_PIN, 2};
 
 void setup()
 {
-#ifdef EXISTS_ALIVE
+#ifdef TARGET_ALIVE
     setupLFSR();
 #endif
 
@@ -292,7 +292,7 @@ void loop()
     }
 };
 
-#ifdef EXISTS_ALIVE
+#ifdef TARGET_ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupLFSR: Sets up Linear Feedback Shift Register
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -324,7 +324,7 @@ static void resetChip()
     digitalWrite(S_RST_PIN, HIGH);
     delay(100);
 
-#ifdef EXISTS_ALIVE
+#ifdef TARGET_ALIVE
     pinMode(SYN_RST_NMDA_PIN, OUTPUT);
     pinMode(SYN_RST_GABGA_PIN, OUTPUT);
     pinMode(LB_LFSR_RST, OUTPUT);

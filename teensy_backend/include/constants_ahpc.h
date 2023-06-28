@@ -11,10 +11,6 @@
 //#define EXISTS_OUTPUT_DECODER                    
 #define EXISTS_DAC       
 
-//#define EXISTS_ALIVE
-//#define EXISTS_SPAIC
-#define EXISTS_AHPC
-
 #define SERIAl_PORT_NAME                    "/dev/cu.usbmodem119616901" 
 
 // BIASGEN 
