@@ -81,7 +81,7 @@ else()
             COMMAND ${COMPILERPATH}arm-none-eabi-size ${ELFTARGET}
             COMMAND ${COMPILERPATH}arm-none-eabi-objcopy -O ihex -R .eeprom ${ELFTARGET} ${TARGET}.hex
             DEPENDS ${ELFTARGET}
-            COMMENT "Creating HEX file for ${ELFTARGET}"
+            COMMENT "Translating ${ELFTARGET} to ${TARGET}.hex"
             )
 
         add_custom_target(hex ALL DEPENDS ${TARGET}.hex)
