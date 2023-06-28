@@ -1,26 +1,21 @@
-
+# Ignore .DS_Store files anywhere
 **/.DS_Store
 
-# Ignore files and directories created by frontend
-imgui_frontend/src/.obj/*
-imgui_frontend/alive_interface
-imgui_frontend/data/customBiasValues/*
-imgui_frontend/data/savedOutput/*
-imgui_frontend/data/inputAER/*
+# Ignore files and directories created by building or running frontend in situ 
+/imgui_frontend/src/.obj/*
+/imgui_frontend/alive_interface
+/imgui_frontend/data/customBiasValues/*
+/imgui_frontend/data/savedOutput/*
+/imgui_frontend/data/inputAER/*
 
-# Ignore directories created by PlatformIO
-teensy_backend/.pio
-
+# Ignore directories created by PlatformIO under teensy_backend
+/teensy_backend/.pio
 
 # Ignore user specific directories
-alive_plots/
-
+/alive_plots/
 
 # Ignore all vscode directories
-.vscode
-imgui_frontend/.vscode
-teensy_backend/.vscode
-
+**/.vscode/
 
 # Ignore CMake build directory
 /build/
