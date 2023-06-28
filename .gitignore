@@ -24,4 +24,4 @@ teensy_backend/.vscode
 
 
 # Ignore CMake build directory
-build/
+/build/
