@@ -86,7 +86,6 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
 //---------------------------------------------------------------------------------------------------------------------------------------
 void getEncoderdata(int serialPort, bool show_PlotData)
 {
-    long time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     // int serialReadBytes = 0;
     // std::this_thread::sleep_until(std::chrono::system_clock::now()+ std::chrono::microseconds(100) );
 
