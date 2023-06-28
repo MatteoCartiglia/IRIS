@@ -12,7 +12,7 @@ else()
     # User configurable variables
     # (show up in cmake-gui)
     #
-    set(TEENSY_VERSION 40 CACHE STRING "Set to the Teensy version corresponding to your board (30 or 31 allowed)" FORCE)
+    set(TEENSY_VERSION 41 CACHE STRING "Set to the Teensy version corresponding to your board" FORCE)
     set(CPU_CORE_SPEED 600000000 CACHE STRING "Set to 24000000, 48000000, 72000000 or 96000000 to set CPU core speed" FORCE)
 
 
@@ -63,21 +63,26 @@ else()
         set(LINKER_FILE ${COREPATH}mk20dx128.ld)
     endif()
 
+    if(TEENSY_VERSION EQUAL 31)
+        set(CPU_DEFINE __MK20DX256__)
+        set(LINKER_FILE ${COREPATH}mk20dx256.ld)
+    endif()
+
     if (TEENSY_VERSION EQUAL 40)
         set(CPU_DEFINE __IMXRT1062__)
         set(LINKER_FILE ${COREPATH}imxrt1062.ld)
     endif()
 
-    if(TEENSY_VERSION EQUAL 31)
-        set(CPU_DEFINE __MK20DX256__)
-        set(LINKER_FILE ${COREPATH}mk20dx256.ld)
+    if (TEENSY_VERSION EQUAL 41)
+        set(CPU_DEFINE __IMXRT1062__)
+        set(LINKER_FILE ${COREPATH}imxrt1062_t41.ld)
     endif()
 
     set(TEENSY_DEFINITIONS USB_SERIAL
             LAYOUT_US_ENGLISH
             F_CPU=${CPU_CORE_SPEED}
             ${CPU_DEFINE}
-            ARDUINO_TEENSY40)
+            ARDUINO_TEENSY41)
 
     message("TEENSY_DEFINITIONS " ${TEENSY_DEFINITIONS} )
     # Macros to wrap add_[executable|library] for seamless Teensy integration
