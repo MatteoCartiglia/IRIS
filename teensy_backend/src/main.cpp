@@ -19,12 +19,14 @@
 #ifdef EXISTS_ALIVE
 static void setupLFSR();
 #endif
+
 static void resetChip();
 static void aerInputEncoder_ISR();
-#ifdef EXISTS_C2F
 
+#ifdef EXISTS_C2F
 static void aerInputC2F_ISR();
 #endif
+
 static void sendTeensyStatus(TeensyStatus status);
 
 //------------------------------------------------------- Defining Global Variables ------------------------------------------------------
@@ -32,14 +34,15 @@ static void sendTeensyStatus(TeensyStatus status);
 static Pkt inputBuffer; // missnomer. Input command would be more appropriate
 
 #ifdef EXISTS_ENCODER
+
 #ifdef EXISTS_SPAIC
 int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN, ENCODER_INPUT_BIT_3_PIN};
 #endif
 
 #ifdef EXISTS_ALIVE
 int inputEncoder_dataPins[ENCODER_INPUT_NO_PIN] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
-
 #endif
+
 AER_in inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NO_PIN, ENCODER_DELAY, ENCODER_HANDSHAKE_ACTIVE_LOW, ENCODER_DATA_ACTIVE_LOW);
 int enc_since_blank_milli = 0;
 bool enc_aero_flag = true;
@@ -104,7 +107,9 @@ void setup()
     dac.join_I2C_bus();
     dac.turnReferenceOff();
 #endif
+
     delay(5000);
+
 #ifdef EXISTS_BIASGEN
     biasGen.setupBG();
 #endif
@@ -145,8 +150,8 @@ void loop()
             Serial.print(" mV.");
             break;
         }
-#ifdef EXISTS_BIASGEN
 
+#ifdef EXISTS_BIASGEN
         // Setup bias generator
         case PktType::Pkt_setBiasGen:
         {
@@ -162,6 +167,7 @@ void loop()
             break;
         }
 #endif
+
 #ifdef EXISTS_OUTPUT_DECODER
         // Request decoder output
         case PktType::Pkt_reqOutputDecoder:
@@ -174,8 +180,8 @@ void loop()
             break;
         }
 #endif
-#ifdef EXISTS_ENCODER
 
+#ifdef EXISTS_ENCODER
         // Get encoder input value
         case PktType::P2tRequestAerEncoderOutput:
         {
@@ -199,8 +205,8 @@ void loop()
             break;
         }
 #endif
-#ifdef EXISTS_ENCODER
 
+#ifdef EXISTS_ENCODER
         case PktType::PktGetAerEncoderOutput:
         {
             //  Serial.println("Get number of events");
@@ -237,8 +243,8 @@ void loop()
             inputC2F.handshake();
             break;
         }
-
 #endif
+
         // Setup SPIs
         case PktType::Pkt_setSPI:
         {
@@ -286,10 +292,10 @@ void loop()
     }
 };
 
+#ifdef EXISTS_ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
 // setupLFSR: Sets up Linear Feedback Shift Register
 //---------------------------------------------------------------------------------------------------------------------------------------
-#ifdef EXISTS_ALIVE
 static void setupLFSR()
 {
     pinMode(LB_LFSR_CLK, OUTPUT);
@@ -317,8 +323,8 @@ static void resetChip()
     delay(100);
     digitalWrite(S_RST_PIN, HIGH);
     delay(100);
-#ifdef EXISTS_ALIVE
 
+#ifdef EXISTS_ALIVE
     pinMode(SYN_RST_NMDA_PIN, OUTPUT);
     pinMode(SYN_RST_GABGA_PIN, OUTPUT);
     pinMode(LB_LFSR_RST, OUTPUT);
@@ -341,11 +347,9 @@ static void resetChip()
 }
 
 #ifdef EXISTS_ENCODER
-
 //---------------------------------------------------------------------------------------------------------------------------------------
 // AER Input Interrupt Servie Routine (ISR) for encoder input
 //---------------------------------------------------------------------------------------------------------------------------------------
-
 void aerInputEncoder_ISR()
 {
     if (inputEncoder.reqRead())

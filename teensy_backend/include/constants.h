@@ -12,6 +12,7 @@
 
 #define EXISTS_ALIVE
 // #define EXISTS_SPAIC
+
 #define SERIAl_PORT_NAME "/dev/ttyACM0"
 
 // tty.usbmodem116666801 usbmodem105661701  usbmodem119616901
@@ -27,7 +28,6 @@
 #define BIASGEN_SCK_PIN 13
 #define BIASGEN_ENABLE_PIN 10
 #define BIASGEN_RESET_PIN 41
-
 // ENVIRONMENT CONDITIONS - UNCOMMENT TO ENABLE
 // #define BIASGEN_SEND_POR                1
 // #define BIASGEN_SET_TRANSISTOR_TYPE     1
@@ -36,6 +36,7 @@
 // C2F COMMUNICATION
 #define C2F_INPUT_RANGE 32
 #define C2F_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/recordings/C2F.csv"
+
 #ifdef EXISTS_C2F
 #define C2F_ACK 0
 #define C2F_REQ 35
@@ -53,6 +54,7 @@
 
 // ENCODER COMMUNICATION
 #define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/recordings/untitled.csv"
+
 #ifdef EXISTS_ENCODER
 #define ENCODER_ACK 30
 #define ENCODER_REQ 29
@@ -67,6 +69,7 @@
 
 // DECODER COMMUNICATION -- INPUT INTERFACE
 #define INPUT_INTERFACE_FILENAME_LOAD "data/IIValues/"
+
 #ifdef EXISTS_OUTPUT_DECODER
 #define DECODER_ACK 34
 #define DECODER_REQ 1
@@ -98,6 +101,7 @@
 
 #define DAC_BIASFILE "data/defaultBiasValues/ALIVE_DAC_POR.csv"
 #define DAC_FILENAME_LOAD "data/customBiasValues/DAC/"
+
 #ifdef EXISTS_DAC
 #define DAC_RESET 33 // 1//33
 #define DAC_A1 36    // 3//36

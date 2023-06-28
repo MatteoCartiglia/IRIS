@@ -17,14 +17,12 @@
 // BIASGEN 
 #define BIASGEN_BIASFILE                "data/defaultBiasValues/SPAIC_BIASGEN_POR.csv"
 #define BIASGEN_FILENAME_LOAD           "data/customBiasValues/BIASGEN/"
+
 #ifdef EXISTS_BIASGEN
     #define BIASGEN_MOSI_PIN                11
     #define BIASGEN_SCK_PIN                 13
     #define BIASGEN_ENABLE_PIN              10
     #define BIASGEN_RESET_PIN               9
-    
-
-
     // ENVIRONMENT CONDITIONS - UNCOMMENT TO ENABLE
     // #define BIASGEN_SEND_POR                1
     // #define BIASGEN_SET_TRANSISTOR_TYPE     1
@@ -68,14 +66,15 @@
 #define P_RST_PIN                           3 
 #define S_RST_PIN                           2 
 
-
 // DAC CONFIGURATION
 
 #define DAC_BIASFILE                    "data/defaultBiasValues/SPAIC_DAC_POR.csv"
 #define DAC_FILENAME_LOAD               "data/customBiasValues/DAC/"
+
 #ifdef EXISTS_DAC
     #define DAC_RESET                       33    
     #define DAC_A1                          31    
     #define DAC_A0                          30    
 #endif
-#endif 
+
+#endif
