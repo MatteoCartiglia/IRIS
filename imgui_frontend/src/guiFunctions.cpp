@@ -177,7 +177,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
         ImGui::PushID(i);
 
         // Labelling the DAC input channel
-        ImGui::Text(dac[i].name.c_str());
+        ImGui::Text("%s", dac[i].name.c_str());
         ImGui::SameLine();
 
         // Setting an invisible label for the input field
@@ -353,7 +353,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
                     ImGui::PushID(j);
 
                     // Labelling the DAC input channel
-                    ImGui::Text(biasGen[j].name.c_str());
+                    ImGui::Text("%s", biasGen[j].name.c_str());
                     ImGui::SameLine();
 
                     // Setting an invisible label for the input field
