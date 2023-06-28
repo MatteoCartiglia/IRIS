@@ -187,7 +187,7 @@ int setupDacWindow(bool show_DAC_config, DAC_command dac[], int serialPort, bool
         // Adding an input field for changing bias value
         ImGui::PushItemWidth(120);
         int inputField_BiasValue = static_cast<int>(dac[i].data);
-        inputField_BiasValue, valueChange_DACbias[i] = ImGui::InputInt(emptylabel, &inputField_BiasValue);
+        valueChange_DACbias[i] = ImGui::InputInt(emptylabel, &inputField_BiasValue);
         dac[i].data = static_cast<std::uint16_t>(checkLimits(inputField_BiasValue, DAC_MAX_VOLTAGE));
         ImGui::SameLine();
 
@@ -379,7 +379,7 @@ int setupBiasGenWindow(bool show_biasGen_config, BIASGEN_command biasGen[], int 
                     // Adding an input field for changing bias value
                     ImGui::PushItemWidth(260);
                     float inputField_BiasGenValue = biasGen[j].currentValue_uA;
-                    inputField_BiasGenValue, selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &inputField_BiasGenValue, 0.000001, 0, "%.6f", 0);
+                    selectionChange_BiasGen[i][noRelevantFileRows[i]] = ImGui::InputFloat(emptylabel0, &inputField_BiasGenValue, 0.000001, 0, "%.6f", 0);
 #endif
                     biasGen[j].currentValue_uA = checkLimits(inputField_BiasGenValue, BIASGEN_MAX_CURRENT);
                     biasGen[j].currentValue_binary = getBiasGenPacket(biasGen[j].currentValue_uA, biasGen[j].transistorType);
@@ -551,7 +551,7 @@ void savePopup(bool openPopup, const char *popupLabel, T command)
         ImGui::NewLine();
         ImGui::Text("Filename: ");
         ImGui::SameLine();
-        filename, valueChange_SaveFilename = ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
+        valueChange_SaveFilename = ImGui::InputText(" ", filename, IM_ARRAYSIZE(filename));
         ImGui::NewLine();
         if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x * 0.48, BUTTON_HEIGHT)))
         {
@@ -608,7 +608,7 @@ void loadPopup(bool openLoadPopup, const char *popupLabel, T command, int serial
         ImGui::NewLine();
         ImGui::Text("Select file: ");
         ImGui::SameLine();
-        selection_file, selectionChange_file = ImGui::Combo(comboLabel_loadFiles, &selection_file, biases_filenames, noFiles);
+        selectionChange_file = ImGui::Combo(comboLabel_loadFiles, &selection_file, biases_filenames, noFiles);
 
         ImGui::NewLine();
 
@@ -648,7 +648,7 @@ void loadII(bool openLoadPopup, const char *popupLabel, std::vector<AER_DECODER_
         ImGui::NewLine();
         ImGui::Text("Select file: ");
         ImGui::SameLine();
-        selection_file, selectionChange_file = ImGui::Combo(comboLabel_loadFiles, &selection_file, biases_filenames, noFiles);
+        selectionChange_file = ImGui::Combo(comboLabel_loadFiles, &selection_file, biases_filenames, noFiles);
         ImGui::NewLine();
 
         if (ImGui::Button("Close", ImVec2(ImGui::GetWindowSize().x * 0.48, BUTTON_HEIGHT)))
