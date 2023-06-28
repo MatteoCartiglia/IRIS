@@ -71,9 +71,10 @@ else()
         set(ELFTARGET ${TARGET}.elf)
         message("mm ${ELFTARGET} ${ARGN} ${TEENSY_SOURCES}")
         add_executable(${ELFTARGET} ${ARGN} ${TEENSY_SOURCES} ${TEENSY_LIB_SOURCES})
+        string(TOUPPER ${TARGET} UCTARGET)
 
         set_target_properties(${ELFTARGET} PROPERTIES COMPILE_FLAGS "-Wall -g -Os -mcpu=${CPU} -mthumb -nostdlib -MMD -felide-constructors -fno-exceptions -fno-rtti -std=gnu++0x")
-        set_target_properties(${ELFTARGET} PROPERTIES COMPILE_DEFINITIONS "${TEENSY_DEFINITIONS} ${INCLUDE_DIRECTORIES} -D__arm__ -DTEENSYDUINO=151 ")
+        set_target_properties(${ELFTARGET} PROPERTIES COMPILE_DEFINITIONS "${TEENSY_DEFINITIONS} ${INCLUDE_DIRECTORIES} -DTARGET_${UCTARGET} -D__arm__ -DTEENSYDUINO=151")
         set_target_properties(${ELFTARGET} PROPERTIES INCLUDE_DIRECTORIES "${COREPATH}")
         set_target_properties(${ELFTARGET} PROPERTIES LINK_FLAGS "-Os -Wl,--gc-sections,--defsym=__rtc_localtime=0 --specs=nano.specs -mcpu=${CPU} -mthumb -T${LINKER_FILE}")
 
@@ -84,7 +85,7 @@ else()
             COMMENT "Translating ${ELFTARGET} to ${TARGET}.hex"
             )
 
-        add_custom_target(hex ALL DEPENDS ${TARGET}.hex)
+        add_custom_target(${TARGET} ALL DEPENDS ${TARGET}.hex)
     endfunction()
 
     macro(import_arduino_library LIB_ROOT LIB_NAME)
@@ -132,6 +133,7 @@ else()
         )
 
     teensy_add_executable(alive ${MAIN_SRCS})
+#    teensy_add_executable(spaic ${MAIN_SRCS})
     include_directories(include)
 
 endif()
