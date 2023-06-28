@@ -13,7 +13,6 @@ teensy_backend/.pio
 
 
 # Ignore user specific directories
-documentation/
 alive_plots/
 
 
