@@ -576,7 +576,7 @@ void savePopup(bool openPopup, const char *popupLabel, T command)
 template <typename T>
 void loadPopup(bool openLoadPopup, const char *popupLabel, T command, int serialPort)
 {
-    char *filepath;
+    const char *filepath;
     std::string comboLabel_loadFiles_str = "##";
     const char *comboLabel_loadFiles = comboLabel_loadFiles_str.c_str();
 
@@ -634,7 +634,7 @@ void loadII(bool openLoadPopup, const char *popupLabel, std::vector<AER_DECODER_
 {
     if (ImGui::BeginPopupModal(popupLabel, &openLoadPopup))
     {
-        char *filepath;
+        const char *filepath;
         std::string comboLabel_loadFiles_str = "##";
         const char *comboLabel_loadFiles = comboLabel_loadFiles_str.c_str();
 

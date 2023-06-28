@@ -341,7 +341,7 @@ bool saveBiases(const char *filename, BIASGEN_command* command)
 // getNoFiles: Returns the number of files in the specified directory
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-int getNoFiles(char *filepath)
+int getNoFiles(const char *filepath)
 {
     int fileCounter = 0;
 
@@ -359,7 +359,7 @@ int getNoFiles(char *filepath)
 // getFilepathArray: Returns an array containing the files in the specified directory
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void getFilepathArray(int noFiles, char *filepath, char* biases_filenames[])
+void getFilepathArray(int noFiles, const char *filepath, char* biases_filenames[])
 {
     int index = 0;
 
