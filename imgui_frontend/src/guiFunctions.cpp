@@ -304,7 +304,7 @@ void ii_stimulate(int serialPort, std::vector<AER_DECODER_OUTPUT_command> &II_li
 {
     std::cout << "Stimulation thread start " << std::endl;
 
-    for (int i = 0; i < II_list.size(); i++)
+    for (unsigned int i = 0; i < II_list.size(); i++)
     {
 
         // std::chrono::high_resolution_clock::time_point start =  std::chrono::high_resolution_clock::now();

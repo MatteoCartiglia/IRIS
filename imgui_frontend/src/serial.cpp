@@ -169,7 +169,7 @@ void save_events(const std::string &filename, std::vector<AER_out> input_data)
     {
         file << "data, ts (in micros)" << '\n';
 
-        for (int i = 0; i < input_data.size(); i++)
+        for (unsigned i = 0; i < input_data.size(); i++)
         {
             file << input_data[i].data << ',';
             file << input_data[i].timestamp;
