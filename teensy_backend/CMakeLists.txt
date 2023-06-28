@@ -9,11 +9,8 @@ else()
     include(CMakeForceCompiler)
 
 
-    # User configurable variables
-    # (show up in cmake-gui)
-    #
-    set(TEENSY_VERSION 41 CACHE STRING "Set to the Teensy version corresponding to your board" FORCE)
-    set(CPU_CORE_SPEED 600000000 CACHE STRING "Set to 24000000, 48000000, 72000000 or 96000000 to set CPU core speed" FORCE)
+    set(TEENSY_VERSION 41)
+    set(CPU_CORE_SPEED 600000000)
 
 
     # Derived variables
@@ -55,28 +52,8 @@ else()
     #list(REMOVE_ITEM TEENSY_SOURCES ${COREPATH}main.cpp)
 
 
-    # Teensy 3.0 and 3.1 differentiation
-    #
-    message("TEENSY_VERSION ${TEENSY_VERSION}")
-    if (TEENSY_VERSION EQUAL 30)
-        set(CPU_DEFINE __MK20DX128__)
-        set(LINKER_FILE ${COREPATH}mk20dx128.ld)
-    endif()
-
-    if(TEENSY_VERSION EQUAL 31)
-        set(CPU_DEFINE __MK20DX256__)
-        set(LINKER_FILE ${COREPATH}mk20dx256.ld)
-    endif()
-
-    if (TEENSY_VERSION EQUAL 40)
-        set(CPU_DEFINE __IMXRT1062__)
-        set(LINKER_FILE ${COREPATH}imxrt1062.ld)
-    endif()
-
-    if (TEENSY_VERSION EQUAL 41)
-        set(CPU_DEFINE __IMXRT1062__)
-        set(LINKER_FILE ${COREPATH}imxrt1062_t41.ld)
-    endif()
+    set(CPU_DEFINE __IMXRT1062__)
+    set(LINKER_FILE ${COREPATH}imxrt1062_t41.ld)
 
     set(TEENSY_DEFINITIONS
         USB_SERIAL
