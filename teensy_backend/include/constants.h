@@ -4,17 +4,11 @@
 // INTERFACE CONFIGURATION - UNCOMMENT AS REQUIRED
 
 #define EXISTS_BIASGEN
-// #define EXISTS_SPI1
-// #define EXISTS_SPI2
 #define EXISTS_ENCODER
 #define EXISTS_OUTPUT_DECODER
 #define EXISTS_DAC
 
 #define SERIAl_PORT_NAME "/dev/ttyACM0"
-
-// tty.usbmodem116666801 usbmodem105661701  usbmodem119616901
-// tty.usbmodem116666801
-// "/dev/cu.usbmodem130123101"
 
 // BIASGEN
 #define BIASGEN_BIASFILE "data/defaultBiasValues/ALIVE_BIASGEN_POR.csv"
@@ -95,14 +89,13 @@
 #define LB_LFSR_CLK 32
 
 // DAC CONFIGURATION
-
 #define DAC_BIASFILE "data/defaultBiasValues/ALIVE_DAC_POR.csv"
 #define DAC_FILENAME_LOAD "data/customBiasValues/DAC/"
 
 #ifdef EXISTS_DAC
-#define DAC_RESET 33 // 1//33
-#define DAC_A1 36    // 3//36
-#define DAC_A0 37    // 4//37
+#define DAC_RESET 33
+#define DAC_A1 36
+#define DAC_A0 37
 #endif
 
 #endif

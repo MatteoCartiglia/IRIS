@@ -1,16 +1,14 @@
-
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
 // INTERFACE CONFIGURATION - UNCOMMENT AS REQUIRED
-#define EXISTS_BIASGEN
 
+#define EXISTS_BIASGEN
 #define EXISTS_ENCODER
-// #define EXISTS_C2F
 #define EXISTS_OUTPUT_DECODER
 #define EXISTS_DAC
 
-#define SERIAl_PORT_NAME "/dev/cu.usbmodem105661701"
+#define SERIAl_PORT_NAME "/dev/ttyACM0"
 
 // BIASGEN
 #define BIASGEN_BIASFILE "data/defaultBiasValues/ALIVE_BIASGEN_POR.csv"
@@ -28,7 +26,7 @@
 
 // C2F COMMUNICATION
 #define C2F_INPUT_RANGE 32
-#define C2F_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/C2F/ALIVE_C2F.csv"
+#define C2F_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/recordings/C2F.csv"
 
 #ifdef EXISTS_C2F
 #define C2F_ACK 0
@@ -40,15 +38,13 @@
 #define C2F_INPUT_BIT_3_PIN 22
 #define C2F_INPUT_BIT_4_PIN 23
 #define C2F_INPUT_RANGE 32
-#define C2F_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
-#define C2F_INPUT_SAVE_FILENAME "../imgui_frontend/data/savedOutput/C2F/C2F"
 #define C2F_HANDSHAKE_ACTIVE_LOW true
 #define C2F_DATA_ACTIVE_LOW false
 #define C2F_DELAY 1
 #endif
 
 // ENCODER COMMUNICATION
-#define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/savedOutput/Encoder/ALIVE_outputEncoder.csv"
+#define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/recordings/untitled.csv"
 
 #ifdef EXISTS_ENCODER
 #define ENCODER_ACK 30
