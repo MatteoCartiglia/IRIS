@@ -61,6 +61,8 @@
     #define ENCODER_DELAY                   10000
 #endif
 
+#define INPUT_INTERFACE_FILENAME_LOAD "data/IIValues/"
+
 // RESET PINS
 #define P_RST_PIN                           3 
 #define S_RST_PIN                           2 
