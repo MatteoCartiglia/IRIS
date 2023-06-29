@@ -455,7 +455,7 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 
     ImGui::PushItemWidth(120);
     int inputField_value = static_cast<int>(spi[0].value);
-    inputField_value, valueChange_SPIbias_1[0] = ImGui::InputInt(emptylabel_v1, &inputField_value);
+    valueChange_SPIbias_1[0] = ImGui::InputInt(emptylabel_v1, &inputField_value);
     spi[0].value = static_cast<std::uint16_t>(checkLimits(inputField_value, resolution));
 
     ImGui::Text(" Address:");
@@ -467,7 +467,7 @@ int setupSPI1Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 
     ImGui::PushItemWidth(120);
     int inputField_add = static_cast<int>(spi[0].address);
-    inputField_add, valueChange_SPIbias_1[1] = ImGui::InputInt(emptylabel_a1, &inputField_add);
+    valueChange_SPIbias_1[1] = ImGui::InputInt(emptylabel_a1, &inputField_add);
     spi[0].address = static_cast<std::uint16_t>(checkLimits(inputField_add, resolution));
     ImGui::SameLine();
 
@@ -501,7 +501,7 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
 
     ImGui::PushItemWidth(120);
     int inputField_value = static_cast<int>(spi[0].value);
-    inputField_value, valueChange_SPIbias_2[0] = ImGui::InputInt(emptylabel_v2, &inputField_value);
+    valueChange_SPIbias_2[0] = ImGui::InputInt(emptylabel_v2, &inputField_value);
     spi[0].value = static_cast<std::uint16_t>(checkLimits(inputField_value, resolution));
 
     ImGui::Text(" Address:");
@@ -514,7 +514,7 @@ int setupSPI2Window(bool show_SPI_config, int serialPort, SPI_INPUT_command spi[
     ImGui::PushItemWidth(120);
 
     int inputField_add = static_cast<int>(spi[0].address);
-    inputField_add, valueChange_SPIbias_2[1] = ImGui::InputInt(emptylabels_a2, &inputField_add);
+    valueChange_SPIbias_2[1] = ImGui::InputInt(emptylabels_a2, &inputField_add);
     spi[0].address = static_cast<std::uint16_t>(checkLimits(inputField_add, resolution));
     ImGui::SameLine();
 
