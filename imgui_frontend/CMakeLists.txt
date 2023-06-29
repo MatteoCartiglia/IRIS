@@ -44,6 +44,7 @@ set (ALIVE_SOURCES
 
 add_executable(alive_interface ${ALIVE_SOURCES})
 set_property(TARGET alive_interface PROPERTY CXX_STANDARD 17)
+target_compile_definitions(alive_interface PRIVATE TARGET_ALIVE)
 target_compile_options(alive_interface PRIVATE -Wall -Wformat)
 target_link_libraries(alive_interface
 	Threads::Threads
