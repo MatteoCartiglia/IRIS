@@ -93,8 +93,6 @@ int main(int, char **)
         valueChange_BiasGen.push_back(valueChange_BiasGen_Category);
     }
 #endif
-#else
-    bool show_BiasGen_config = false;
 #endif
 
     //------------------------------------------------ Defining & Initialising SPI Variables ------------------------------------------

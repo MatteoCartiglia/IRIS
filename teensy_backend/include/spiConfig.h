@@ -57,10 +57,10 @@ class SPIConfig {
     int _mosi;
     int _enable = 0;
     int _SPInumber;
-    #ifdef EXISTS_BIASGEN
+#ifdef EXISTS_BIASGEN
     double _masterCurrent[BIASGEN_NO_MASTER_CURRENTS] = {BIASGEN_MASTER_CURRENT_0, BIASGEN_MASTER_CURRENT_1, BIASGEN_MASTER_CURRENT_2,
                                                       BIASGEN_MASTER_CURRENT_3, BIASGEN_MASTER_CURRENT_4, BIASGEN_MASTER_CURRENT_5}; // uA
-    #endif
+#endif
    };
 
 #endif

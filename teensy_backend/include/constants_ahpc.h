@@ -1,6 +1,5 @@
-
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef CONSTANTS_AHPC_H
+#define CONSTANTS_AHPC_H
 
 // INTERFACE CONFIGURATION - UNCOMMENT AS REQUIRED
 //#define EXISTS_BIASGEN                   
@@ -11,32 +10,25 @@
 //#define EXISTS_OUTPUT_DECODER                    
 #define EXISTS_DAC       
 
-//#define EXISTS_ALIVE
-//#define EXISTS_SPAIC
-#define EXISTS_AHPC
-
 #define SERIAl_PORT_NAME                    "/dev/cu.usbmodem119616901" 
 
 // BIASGEN 
 #define BIASGEN_BIASFILE                "data/defaultBiasValues/AHPC_BIASGEN_POR.csv"
 #define BIASGEN_FILENAME_LOAD           "data/customBiasValues/BIASGEN/"
+
 #ifdef EXISTS_BIASGEN
     #define BIASGEN_MOSI_PIN                11
     #define BIASGEN_SCK_PIN                 13
     #define BIASGEN_ENABLE_PIN              10
     #define BIASGEN_RESET_PIN               41
-    
-
     // ENVIRONMENT CONDITIONS - UNCOMMENT TO ENABLE
     // #define BIASGEN_SEND_POR                1
     // #define BIASGEN_SET_TRANSISTOR_TYPE     1
 #endif
 
-
-
-
 // C2F COMMUNICATION
-    #define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
+#define C2F_INPUT_SAVE_FILENAME_CSV     "../imgui_frontend/data/savedOutput/C2F/C2F.csv"
+
 #ifdef EXISTS_C2F
     #define C2F_ACK                         0
     #define C2F_REQ                         35
@@ -71,7 +63,7 @@
 
 
 // DECODER COMMUNICATION -- INPUT INTERFACE
- #define INPUT_INTERFACE_FILENAME_LOAD   "data/IIValues/"
+#define INPUT_INTERFACE_FILENAME_LOAD   "data/IIValues/"
 
 #ifdef EXISTS_OUTPUT_DECODER
     #define DECODER_ACK                     34
@@ -86,7 +78,6 @@
     #define DECODER_OUTPUT_BIT_6_PIN        14
     #define DECODER_OUTPUT_BIT_7_PIN        15
     #define DECODER_OUTPUT_BIT_8_PIN        16
-
     #define DECODER_ACTIVE_LOW              false // ALIVE is ACTIVE HIGH
     #define DECODER_DELAY                   10
 #endif
@@ -95,10 +86,10 @@
 #define P_RST_PIN                           2 
 #define S_RST_PIN                           3 
 
-
 // DAC CONFIGURATION
 #define DAC_BIASFILE                    "data/defaultBiasValues/AHPC_DAC_POR.csv"
 #define DAC_FILENAME_LOAD               "data/customBiasValues/DAC/"
+
 #ifdef EXISTS_DAC
     #define DAC_RESET                       33    
     #define DAC_A1                          36    
