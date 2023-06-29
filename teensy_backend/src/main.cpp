@@ -21,7 +21,10 @@ static void setupLFSR();
 #endif
 
 static void resetChip();
+
+#ifdef EXISTS_ENCODER
 static void aerInputEncoder_ISR();
+#endif
 
 #ifdef EXISTS_C2F
 static void aerInputC2F_ISR();
