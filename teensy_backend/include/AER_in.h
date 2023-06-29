@@ -2,8 +2,8 @@
 // Header file for TeensyIn class
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-#ifndef AER_in_H
-#define AER_in_H
+#ifndef AER_IN_H
+#define AER_IN_H
 
 #include <Arduino.h>
 #include "../include/datatypes.h"
