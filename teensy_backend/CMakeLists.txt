@@ -132,8 +132,9 @@ else()
 #        lib/mcp/Adafruit_MCP23017.h
         )
 
+    teensy_add_executable(ahpc ${MAIN_SRCS})
     teensy_add_executable(alive ${MAIN_SRCS})
-#    teensy_add_executable(spaic ${MAIN_SRCS})
+    teensy_add_executable(spaic ${MAIN_SRCS})
     include_directories(include)
 
 endif()
