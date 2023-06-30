@@ -136,6 +136,8 @@ void loop()
         // Interpret the input data
         switch ((PktType)inputBuffer.header)
         {
+            
+#ifdef EXISTS_DAC
         // Setup DAC
         case PktType::Pkt_setDACvoltage:
         {
@@ -153,6 +155,7 @@ void loop()
             Serial.print(" mV.");
             break;
         }
+#endif
 
 #ifdef EXISTS_BIASGEN
         // Setup bias generator
