@@ -50,7 +50,7 @@
 #ifdef EXISTS_ENCODER
     #define ENCODER_ACK                     29
     #define ENCODER_REQ                     28
-    #define ENCODER_INPUT_NO_PIN            5  
+    #define ENCODER_INPUT_NUM_PINS  5  
     #define ENCODER_INPUT_BIT_0_PIN         4
     #define ENCODER_INPUT_BIT_1_PIN         5
     #define ENCODER_INPUT_BIT_2_PIN         6
