@@ -328,6 +328,11 @@ static void setupLFSR()
 
 static void resetChip(uint8_t parameter)
 {
+#ifdef TARGET_TEXEL
+    texel.reset(parameter);
+    return;
+#endif
+
 #ifdef EXISTS_PSRESET
     pinMode(P_RST_PIN, OUTPUT);
     pinMode(S_RST_PIN, OUTPUT);
