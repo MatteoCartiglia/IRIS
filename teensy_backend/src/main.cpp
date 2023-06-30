@@ -317,6 +317,7 @@ static void setupLFSR()
 
 static void resetChip()
 {
+#ifdef EXISTS_PSRESET
     pinMode(P_RST_PIN, OUTPUT);
     pinMode(S_RST_PIN, OUTPUT);
 
@@ -329,6 +330,7 @@ static void resetChip()
     delay(100);
     digitalWrite(S_RST_PIN, HIGH);
     delay(100);
+#endif
 
 #ifdef TARGET_ALIVE
     pinMode(SYN_RST_NMDA_PIN, OUTPUT);

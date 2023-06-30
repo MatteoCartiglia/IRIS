@@ -2,6 +2,7 @@
 #define CONSTANTS_AHPC_H
 
 // INTERFACE CONFIGURATION - UNCOMMENT AS REQUIRED
+#define EXISTS_PSRESET
 //#define EXISTS_BIASGEN                   
 //#define EXISTS_SPI1                      
 //#define EXISTS_SPI2                     
