@@ -135,7 +135,7 @@ else()
     teensy_add_executable(ahpc ${MAIN_SRCS})
     teensy_add_executable(alive ${MAIN_SRCS})
     teensy_add_executable(spaic ${MAIN_SRCS})
-    teensy_add_executable(texel ${MAIN_SRCS})
+    teensy_add_executable(texel ${MAIN_SRCS} src/texel.cpp)
     include_directories(include)
 
 endif()

@@ -3,19 +3,20 @@
 //---------------------------------------------------------------------------------------------------------------------------------------
 
 #include <Arduino.h>
-#include <vector>
 #include <iostream>
-#include "constants_global.h"
+#include <vector>
 
+#include "AER_in.h"
+#include "constants_global.h"
 #include "constants.h"
+#include "dac.h"
 #include "datatypes.h"
 #include "spiConfig.h"
-
-#include "dac.h"
-#include "AER_in.h"
 #include "teensyOut.h"
+#include "texel.h"
 
-// Declaring function prototypes in order of definition
+// Forward declarations of function prototypes
+
 #ifdef TARGET_ALIVE
 static void setupLFSR();
 #endif
@@ -32,9 +33,13 @@ static void aerInputC2F_ISR();
 
 static void sendTeensyStatus(TeensyStatus status);
 
-//------------------------------------------------------- Defining Global Variables ------------------------------------------------------
+// Global variables
 
-static Pkt inputBuffer; // missnomer. Input command would be more appropriate
+static Pkt inputBuffer;
+
+#ifdef TARGET_TEXEL
+static Texel texel;
+#endif
 
 #ifdef EXISTS_ENCODER
 
@@ -49,6 +54,7 @@ int inputEncoder_dataPins[ENCODER_INPUT_NUM_PINS] = {ENCODER_INPUT_BIT_0_PIN, EN
 AER_in inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NUM_PINS, ENCODER_DELAY, ENCODER_HANDSHAKE_ACTIVE_LOW, ENCODER_DATA_ACTIVE_LOW);
 int enc_since_blank_milli = 0;
 bool enc_aero_flag = true;
+
 #endif
 
 #ifdef EXISTS_C2F
@@ -88,6 +94,10 @@ void setup()
 {
 #ifdef TARGET_ALIVE
     setupLFSR();
+#endif
+
+#ifdef TARGET_TEXEL
+    texel.setup();
 #endif
 
 #ifdef EXISTS_SPI1
