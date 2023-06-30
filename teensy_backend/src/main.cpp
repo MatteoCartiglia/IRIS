@@ -13,6 +13,7 @@
 #include "datatypes.h"
 #include "spiConfig.h"
 #include "teensyOut.h"
+#include "texel.h"
 
 // Forward declarations of function prototypes
 
@@ -35,6 +36,10 @@ static void sendTeensyStatus(TeensyStatus status);
 // Global variables
 
 static Pkt inputBuffer;
+
+#ifdef TARGET_TEXEL
+static Texel texel;
+#endif
 
 #ifdef EXISTS_ENCODER
 
@@ -89,6 +94,10 @@ void setup()
 {
 #ifdef TARGET_ALIVE
     setupLFSR();
+#endif
+
+#ifdef TARGET_TEXEL
+    texel.setup();
 #endif
 
 #ifdef EXISTS_SPI1
