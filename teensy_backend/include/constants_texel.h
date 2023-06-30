@@ -11,11 +11,15 @@
 #define SERIAl_PORT_NAME "/dev/ttyACM0"
 
 
-// RESET PINS
+// RESET PINS - all active low
 
 #define RESET_PIN   33
 #define REGRST_PIN  41
 #define SYNRST_PIN  40
+
+// Each of the resets should be held low for 100µs to be effective.
+
+#define RESET_DELAY_US  100
 
 
 // ENCODER
