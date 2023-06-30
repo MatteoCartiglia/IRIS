@@ -84,4 +84,8 @@ Aer_Data_Pkt::Aer_Data_Pkt(AER_out event_buffer[], int8_t n) : number_events(n)
 Pkt::Pkt(const HANDSHAKE_C2F_command &handshakeC2F) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeC2F)){};
 Pkt::Pkt(const HANDSHAKE_ENCODER_command &handshakeEncoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_handshakeEncoder)){};
 Pkt::Pkt(const GetAerEncoderOutput &GetAerEncoderOutput) : header(static_cast<std::underlying_type<PktType>::type>(PktType::PktGetAerEncoderOutput)){};
-Pkt::Pkt(const RESET_command &reset) : header(static_cast<std::underlying_type<PktType>::type>(PktType::PktResetChip)){};
+
+Pkt::Pkt(const RESET_command &reset) : header(static_cast<std::underlying_type<PktType>::type>(PktType::PktResetChip))
+{
+    body[0] = reset.parameter;
+};

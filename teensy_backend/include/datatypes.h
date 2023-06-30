@@ -176,6 +176,9 @@ struct HANDSHAKE_ENCODER_command
 struct RESET_command
 {
     RESET_command(){};
+    RESET_command(const Pkt& pkt) : parameter(pkt.body[0]){}
+    
+    uint8_t parameter;
 };
 
 struct Aer_Data_Pkt

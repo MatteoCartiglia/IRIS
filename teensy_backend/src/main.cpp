@@ -21,7 +21,7 @@
 static void setupLFSR();
 #endif
 
-static void resetChip();
+static void resetChip(uint8_t parameter = 0);
 
 #ifdef EXISTS_ENCODER
 static void aerInputEncoder_ISR();
@@ -296,7 +296,8 @@ void loop()
 
         case PktType::PktResetChip:
         {
-            resetChip();
+            RESET_command resetCommand(inputBuffer);
+            resetChip(resetCommand.parameter);
         }
 
         default:
@@ -325,7 +326,7 @@ static void setupLFSR()
 // resetChip: Sets up and executes chip reset pattern
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-static void resetChip()
+static void resetChip(uint8_t parameter)
 {
 #ifdef EXISTS_PSRESET
     pinMode(P_RST_PIN, OUTPUT);
