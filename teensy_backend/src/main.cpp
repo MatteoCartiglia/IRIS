@@ -21,7 +21,7 @@
 static void setupLFSR();
 #endif
 
-static void resetChip(uint8_t parameter = 0);
+static void resetChip(uint8_t parameter = ResetTypeDefault);
 
 #ifdef EXISTS_ENCODER
 static void aerInputEncoder_ISR();
