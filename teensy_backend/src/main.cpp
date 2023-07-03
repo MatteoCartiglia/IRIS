@@ -13,7 +13,9 @@
 #include "datatypes.h"
 #include "spiConfig.h"
 #include "teensyOut.h"
+#ifdef TARGET_TEXEL
 #include "texel.h"
+#endif
 
 // Forward declarations of function prototypes
 
