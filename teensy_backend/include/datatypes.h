@@ -52,8 +52,12 @@ enum class PktType
     Pkt_aeroevent = 9U,
     PktGetAerEncoderOutput = 10U,
     PktResetChip = 11U
-
 };
+
+constexpr uint8_t ResetTypeDefault     = 0;
+constexpr uint8_t ResetTypeTexelReset  = 0b001;
+constexpr uint8_t ResetTypeTexelRegRst = 0b010;
+constexpr uint8_t ResetTypeTexelSynRst = 0b100;
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // STRUCTURED DATATYPES
@@ -176,6 +180,9 @@ struct HANDSHAKE_ENCODER_command
 struct RESET_command
 {
     RESET_command(){};
+    RESET_command(const Pkt& pkt) : parameter(pkt.body[0]){}
+    
+    uint8_t parameter;
 };
 
 struct Aer_Data_Pkt

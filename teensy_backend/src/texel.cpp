@@ -52,3 +52,20 @@ void Texel::setup()
 
     pinMode(NC_PIN_29, OUTPUT);
 }
+
+void Texel::reset(uint8_t parameter)
+{
+    if (parameter & ResetTypeTexelReset)
+        digitalWrite(RESET_PIN, LOW);
+    if (parameter & ResetTypeTexelRegRst)
+        digitalWrite(REGRST_PIN, LOW);
+    if (parameter & ResetTypeTexelSynRst)
+        digitalWrite(SYNRST_PIN, LOW);
+    delayMicroseconds(RESET_DELAY_US);
+    if (parameter & ResetTypeTexelSynRst)
+        digitalWrite(SYNRST_PIN, HIGH);
+    if (parameter & ResetTypeTexelRegRst)
+        digitalWrite(REGRST_PIN, HIGH);
+    if (parameter & ResetTypeTexelReset)
+        digitalWrite(RESET_PIN, HIGH);
+}

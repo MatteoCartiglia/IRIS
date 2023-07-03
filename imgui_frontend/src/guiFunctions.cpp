@@ -909,13 +909,25 @@ void toggleButton(const char *str_id, bool *v)
 
 int setupresetWindow(bool show_reset_config, int serialPort)
 {
+    uint8_t resetParameter = 0;
     int serialDataSent = 0;
 
     ImGui::Begin("Reset window", &show_reset_config);
 
+#ifdef TARGET_TEXEL
+    static bool texelReset = true;
+    static bool texelRegRst;
+    static bool texelSynRst;
+    ImGui::Checkbox("RESET", &texelReset);
+    ImGui::Checkbox("REGRST", &texelRegRst);
+    ImGui::Checkbox("SYNRST", &texelSynRst);
+    resetParameter = texelSynRst * ResetTypeTexelSynRst | texelRegRst * ResetTypeTexelRegRst | texelReset * ResetTypeTexelReset;
+#endif
+
     if (ImGui::Button("Reset", ImVec2(BUTTON_UPDATE_WIDTH, BUTTON_HEIGHT)))
     {
         RESET_command reset;
+        reset.parameter = resetParameter;
         Pkt p2t_pk(reset);
         write(serialPort, (void *)&p2t_pk, sizeof(p2t_pk));
         serialDataSent++;
