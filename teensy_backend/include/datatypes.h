@@ -117,9 +117,11 @@ struct BIASGEN_command
 struct AER_DECODER_OUTPUT_command
 {
     AER_DECODER_OUTPUT_command(){};
-    AER_DECODER_OUTPUT_command(const Pkt &pkt) : data((pkt.body[0] << 8) | pkt.body[1]), isi((pkt.body[2] << 8) | pkt.body[3]){};
+    AER_DECODER_OUTPUT_command(const Pkt &pkt) : data((pkt.body[0] << 24) | (pkt.body[1] << 16) | (pkt.body[2] << 8) | pkt.body[3]), isi(0) {};
+        // ISI delays are currently implemented in the frontend and the ISI is not recorded in PktType::Pkt_reqOutputDecoder packets.
+        // See datatypes.cpp Pkt::Pkt(const AER_DECODER_OUTPUT_command&).
 
-    std::uint16_t data;
+    std::uint32_t data;
     std::uint16_t isi;
 };
 

@@ -36,8 +36,10 @@ Pkt::Pkt(const BIASGEN_command &biasGen) : header(static_cast<std::underlying_ty
 
 Pkt::Pkt(const AER_DECODER_OUTPUT_command &outputDecoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_reqOutputDecoder))
 {
-    body[0] = outputDecoder.data >> 8;
-    body[1] = outputDecoder.data & 0xFF;
+    body[0] = outputDecoder.data >> 24;
+    body[1] = outputDecoder.data >> 16;
+    body[2] = outputDecoder.data >> 8;
+    body[3] = outputDecoder.data & 0xFF;
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
