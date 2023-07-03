@@ -17,7 +17,7 @@ class TeensyOut
     //-----------------------------------------------------------------------------------------------------------------------------------
     // Class constructor; initialises the TeensyOut object and sets up the relevant pins on Teensy
     //-----------------------------------------------------------------------------------------------------------------------------------
-    TeensyOut(const int outputReqPin, const int outputAckPin, int outputDataPins[], int outputNumDataPins, int outputDelay = 0, bool outputActiveLow = false);
+    TeensyOut(int outputReqPin, int outputAckPin, const int outputDataPins[], int outputNumDataPins, int outputDelay = 0, bool outputActiveLow = false);
 
     //----------------------------------------------------------------------------------------------------------------------------------
     // dataWrite: Executes REQ/ACK handshake and writes output to ALIVE
@@ -54,7 +54,7 @@ class TeensyOut
 
     int _outputReqPin;
     int _outputAckPin;
-    int* _outputDataPins;
+    const int* _outputDataPins;
     int _outputNumDataPins;
     int _outputDelay;
     bool _outputActiveLow;

@@ -10,7 +10,7 @@
 // Class constructor; initialises the TeensyOut object and sets up the relevant pins on Teensy
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-TeensyOut::TeensyOut(const int outputReqPin, const int outputAckPin, int outputDataPins[], int outputNumDataPins, int outputDelay, bool outputActiveLow)
+TeensyOut::TeensyOut(int outputReqPin, int outputAckPin, const int outputDataPins[], int outputNumDataPins, int outputDelay, bool outputActiveLow)
 {
   _outputReqPin = outputReqPin;
   _outputAckPin = outputAckPin;
