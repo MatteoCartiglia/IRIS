@@ -26,7 +26,7 @@ TeensyOut::TeensyOut(int outputReqPin, int outputAckPin, const int outputDataPin
 // dataWrite: Executes REQ/ACK handshake and writes output to ALIVE
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-bool TeensyOut::dataWrite(unsigned int data) 
+bool TeensyOut::dataWrite(uint32_t data) 
 {
   unsigned long t0 = millis();
   bool handshakeStatus = true;
@@ -93,7 +93,7 @@ void TeensyOut::reqWrite(bool val)
 // setOutputData: Write data to output pins
 //---------------------------------------------------------------------------------------------------------------------------------------
 
-void TeensyOut::setOutputData(unsigned int data) 
+void TeensyOut::setOutputData(uint32_t data) 
 {
   for (int i=0; i<_outputNumDataPins; i++) 
   {
