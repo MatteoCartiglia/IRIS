@@ -19,7 +19,7 @@ TeensyOut::TeensyOut(int outputReqPin, int outputAckPin, const int outputDataPin
   _outputDelay = outputDelay;
   _outputActiveLow = outputActiveLow;
 
-  setupPins();
+  setupPins(); // See Issue #38
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------

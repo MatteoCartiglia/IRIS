@@ -17,7 +17,7 @@ void Texel::setup()
 
     // Setup of 'DECODER' pins, i.e. the pins for the Teensy->Texel AE bus is done in the TeensyOut constructor
     // which makes me [amw] nervous, since the time at which file-scope objects are constructed is ill-defined and maybe
-    // the setup should only be done during the framework's call to setup().
+    // the setup should only be done during the framework's call to setup(). - Issue #38
     
     pinMode(NC_PIN_29, OUTPUT);
 }
