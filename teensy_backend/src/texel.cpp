@@ -15,41 +15,10 @@ void Texel::setup()
     pinMode(ENCODER_SCL, OUTPUT);
     pinMode(ENCODER_SDA, INPUT);
 
-    pinMode(DECODER_REQ, OUTPUT);
-    pinMode(DECODER_ACK, INPUT);
-    pinMode(DECODER_OUTPUT_BIT_0_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_1_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_2_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_3_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_4_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_5_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_6_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_7_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_8_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_9_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_10_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_11_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_12_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_13_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_14_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_15_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_16_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_17_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_18_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_19_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_20_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_21_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_22_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_23_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_24_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_25_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_26_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_27_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_28_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_29_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_30_PIN, OUTPUT);
-    pinMode(DECODER_OUTPUT_BIT_31_PIN, OUTPUT);
-
+    // Setup of 'DECODER' pins, i.e. the pins for the Teensy->Texel AE bus is done in the TeensyOut constructor
+    // which makes me [amw] nervous, since the time at which file-scope objects are constructed is ill-defined and maybe
+    // the setup should only be done during the framework's call to setup(). - Issue #38
+    
     pinMode(NC_PIN_29, OUTPUT);
 }
 

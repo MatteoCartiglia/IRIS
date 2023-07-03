@@ -71,8 +71,8 @@ void DAC::writeDAC(uint8_t command_addess, uint16_t value)
 
     // Scaling decimal value to DAC binary value 
     uint16_t dacData = (value * DAC_BINARY_RANGE) / DAC_REFERENCE - 1 ; 
-    int dacDataLowByte = dacData & BINARY_255;
-    int dacDataHighByte = (dacData >> BINARY_8_BIT_SHIFT) & BINARY_255; 
+    int dacDataLowByte = dacData & 0xFF;
+    int dacDataHighByte = (dacData >> 8) & 0xFF; 
 
     Wire2.beginTransmission(DAC_ADDRESS_I2C);
     Wire2.write(commandAddess);

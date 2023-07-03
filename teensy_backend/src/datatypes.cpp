@@ -13,8 +13,8 @@ Pkt::Pkt(const DAC_command &dac) : header(static_cast<std::underlying_type<PktTy
 {
     body[0] = dac.dac_number;
     body[1] = dac.command_address;
-    body[2] = dac.data >> SERIAL_COMMS_SHIFT;
-    body[3] = dac.data & BINARY_255;
+    body[2] = dac.data >> 8;
+    body[3] = dac.data & 0xFF;
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -23,10 +23,10 @@ Pkt::Pkt(const DAC_command &dac) : header(static_cast<std::underlying_type<PktTy
 
 Pkt::Pkt(const BIASGEN_command &biasGen) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_setBiasGen))
 {
-    body[0] = biasGen.biasNo >> SERIAL_COMMS_SHIFT;
-    body[1] = biasGen.biasNo & BINARY_255;
-    body[2] = biasGen.currentValue_binary >> SERIAL_COMMS_SHIFT;
-    body[3] = biasGen.currentValue_binary & BINARY_255;
+    body[0] = biasGen.biasNo >> 8;
+    body[1] = biasGen.biasNo & 0xFF;
+    body[2] = biasGen.currentValue_binary >> 8;
+    body[3] = biasGen.currentValue_binary & 0xFF;
     body[4] = biasGen.transistorType;
 };
 
@@ -36,8 +36,10 @@ Pkt::Pkt(const BIASGEN_command &biasGen) : header(static_cast<std::underlying_ty
 
 Pkt::Pkt(const AER_DECODER_OUTPUT_command &outputDecoder) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_reqOutputDecoder))
 {
-    body[0] = outputDecoder.data >> SERIAL_COMMS_SHIFT;
-    body[1] = outputDecoder.data & BINARY_255;
+    body[0] = outputDecoder.data >> 24;
+    body[1] = outputDecoder.data >> 16;
+    body[2] = outputDecoder.data >> 8;
+    body[3] = outputDecoder.data & 0xFF;
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -59,10 +61,10 @@ Pkt::Pkt(const C2F_INPUT_command &inputC2F) : header(static_cast<std::underlying
 Pkt::Pkt(const SPI_INPUT_command &spi_command) : header(static_cast<std::underlying_type<PktType>::type>(PktType::Pkt_setSPI))
 {
     body[0] = spi_command.spi_number;
-    body[1] = spi_command.address >> SERIAL_COMMS_SHIFT;
-    body[2] = spi_command.address & BINARY_255;
-    body[3] = spi_command.value >> SERIAL_COMMS_SHIFT;
-    body[4] = spi_command.value & BINARY_255;
+    body[1] = spi_command.address >> 8;
+    body[2] = spi_command.address & 0xFF;
+    body[3] = spi_command.value >> 8;
+    body[4] = spi_command.value & 0xFF;
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------

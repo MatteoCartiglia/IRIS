@@ -13,7 +13,9 @@
 #include "datatypes.h"
 #include "spiConfig.h"
 #include "teensyOut.h"
+#ifdef TARGET_TEXEL
 #include "texel.h"
+#endif
 
 // Forward declarations of function prototypes
 
@@ -64,7 +66,7 @@ int c2f_since_blank_milli = 0;
 bool c2f_aero_flag = true;
 #endif
 
-#ifdef EXISTS_OUTPUT_DECODER
+#if defined(EXISTS_OUTPUT_DECODER) && !defined(TARGET_TEXEL)
 int outputDecoder_dataPins[DECODER_OUTPUT_NUM_PINS] = {DECODER_OUTPUT_BIT_0_PIN, DECODER_OUTPUT_BIT_1_PIN, DECODER_OUTPUT_BIT_2_PIN, DECODER_OUTPUT_BIT_3_PIN,
                                                      DECODER_OUTPUT_BIT_4_PIN, DECODER_OUTPUT_BIT_5_PIN, DECODER_OUTPUT_BIT_6_PIN, DECODER_OUTPUT_BIT_7_PIN, DECODER_OUTPUT_BIT_8_PIN};
 TeensyOut outputDecoder(DECODER_REQ, DECODER_ACK, outputDecoder_dataPins, DECODER_OUTPUT_NUM_PINS, DECODER_DELAY, DECODER_ACTIVE_LOW);
@@ -189,8 +191,11 @@ void loop()
         case PktType::Pkt_reqOutputDecoder:
         {
             AER_DECODER_OUTPUT_command decoder(inputBuffer);
+#ifdef TARGET_TEXEL
+            texel.write(decoder.data);
+#else
             outputDecoder.dataWrite(decoder.data);
-
+#endif
             //Serial.print("AER command received. Binary value: ");
             //Serial.print(decoder.data, BIN);
             break;
