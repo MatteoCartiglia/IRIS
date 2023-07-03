@@ -12,6 +12,7 @@ public:
     
     void setup();
     void reset(uint8_t parameter);
+    void write(uint32_t data) { aerToTexel.dataWrite(data); }
 private:
     TeensyOut aerToTexel;
 };

@@ -191,7 +191,9 @@ void loop()
         case PktType::Pkt_reqOutputDecoder:
         {
             AER_DECODER_OUTPUT_command decoder(inputBuffer);
-#ifndef TARGET_TEXEL
+#ifdef TARGET_TEXEL
+            texel.write(decoder.data);
+#else
             outputDecoder.dataWrite(decoder.data);
 #endif
             //Serial.print("AER command received. Binary value: ");
