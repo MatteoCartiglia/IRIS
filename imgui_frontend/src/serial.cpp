@@ -62,7 +62,7 @@ void getSerialData(int serialPort, bool show_Serial_output, int expectedResponse
     while (expectedResponses > 0)
     {
         char serialReadBuffer[bufferSize];
-        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, SERIAL_ASCII_SPACE);
+        std::fill(serialReadBuffer, serialReadBuffer + bufferSize, ' ');
 
         serialReadBytes = read(serialPort, &serialReadBuffer, bufferSize);
 

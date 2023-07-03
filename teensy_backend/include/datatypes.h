@@ -89,7 +89,7 @@ struct Pkt
 struct DAC_command
 {
     DAC_command(){};
-    DAC_command(const Pkt &pkt) : dac_number(pkt.body[0]), command_address(pkt.body[1]), data(pkt.body[2] << SERIAL_COMMS_SHIFT | pkt.body[3]){};
+    DAC_command(const Pkt &pkt) : dac_number(pkt.body[0]), command_address(pkt.body[1]), data(pkt.body[2] << 8 | pkt.body[3]){};
 
     std::uint8_t dac_number;
     std::uint8_t command_address;
@@ -102,7 +102,7 @@ struct DAC_command
 struct BIASGEN_command
 {
     BIASGEN_command(){};
-    BIASGEN_command(const Pkt &pkt) : biasNo((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), currentValue_binary((pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]), transistorType(pkt.body[4]){};
+    BIASGEN_command(const Pkt &pkt) : biasNo((pkt.body[0] << 8) | pkt.body[1]), currentValue_binary((pkt.body[2] << 8) | pkt.body[3]), transistorType(pkt.body[4]){};
 
     std::uint16_t biasNo;
     std::uint16_t currentValue_binary;
@@ -117,7 +117,7 @@ struct BIASGEN_command
 struct AER_DECODER_OUTPUT_command
 {
     AER_DECODER_OUTPUT_command(){};
-    AER_DECODER_OUTPUT_command(const Pkt &pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), isi((pkt.body[2] << SERIAL_COMMS_SHIFT) | pkt.body[3]){};
+    AER_DECODER_OUTPUT_command(const Pkt &pkt) : data((pkt.body[0] << 8) | pkt.body[1]), isi((pkt.body[2] << 8) | pkt.body[3]){};
 
     std::uint16_t data;
     std::uint16_t isi;
@@ -149,7 +149,7 @@ struct C2F_INPUT_command
 struct AER_out
 {
     AER_out(){};
-    AER_out(const Pkt &pkt) : data((pkt.body[0] << SERIAL_COMMS_SHIFT) | pkt.body[1]), timestamp((pkt.body[2] << SERIAL_COMMS_SHIFT * 3) | pkt.body[3] << SERIAL_COMMS_SHIFT * 2 | pkt.body[4] << SERIAL_COMMS_SHIFT * 3 | pkt.body[5]){};
+    AER_out(const Pkt &pkt) : data((pkt.body[0] << 8) | pkt.body[1]), timestamp((pkt.body[2] << 24) | pkt.body[3] << 16 | pkt.body[4] << 8 | pkt.body[5]){};
 
     uint16_t data = 0;
     uint32_t timestamp = 0;
@@ -160,7 +160,7 @@ struct AER_out
 struct SPI_INPUT_command
 {
     SPI_INPUT_command(){};
-    SPI_INPUT_command(const Pkt &pkt) : spi_number(pkt.body[0]), address((pkt.body[1] << SERIAL_COMMS_SHIFT) | pkt.body[2]), value((pkt.body[3] << SERIAL_COMMS_SHIFT) | pkt.body[4]){};
+    SPI_INPUT_command(const Pkt &pkt) : spi_number(pkt.body[0]), address((pkt.body[1] << 8) | pkt.body[2]), value((pkt.body[3] << 8) | pkt.body[4]){};
 
     uint8_t spi_number;
     uint16_t address;
