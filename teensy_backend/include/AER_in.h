@@ -17,7 +17,7 @@ public:
     // Class constructor; initialises the AER_in object and sets up the relevant pins on Teensy
     //-----------------------------------------------------------------------------------------------------------------------------------
     AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay = 0,
-           bool inputActiveLow = false, bool inputDataActiveLow = false);
+           bool inputHandshakeActiveLow = false, bool inputDataActiveLow = false);
 
     //----------------------------------------------------------------------------------------------------------------------------------
     // reqRead: Reads REQ pin state
