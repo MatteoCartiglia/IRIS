@@ -14,6 +14,7 @@ public:
     void setup();
     void reset(uint8_t parameter);
     void write(uint32_t data) { aerToTexel.dataWrite(data); }
+    uint32_t readAObus() { return U8_AO00_15.readGPIOAB() | (U9_AO16_31.readGPIOAB() << 16); }
 private:
     TeensyOut aerToTexel;
     Adafruit_MCP23017 U8_AO00_15;
