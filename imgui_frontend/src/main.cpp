@@ -129,8 +129,8 @@ int main(int, char **)
 
 #ifdef EXISTS_ENCODER
     bool show_Encoder = true;
-
 #endif
+
 #ifdef EXISTS_C2F
     bool show_C2F = true;
 
@@ -282,8 +282,8 @@ int main(int, char **)
             getSerialData_C2F(serialPort, show_C2F);
         }
 #endif
-#ifdef EXISTS_ENCODER
 
+#ifdef EXISTS_ENCODER
         // Encoder outputs
         if (show_Encoder)
         {

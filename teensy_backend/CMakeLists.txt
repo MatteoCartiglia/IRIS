@@ -128,14 +128,12 @@ else()
         src/datatypes.cpp
         src/spiConfig.cpp
         src/teensyOut.cpp
-#        lib/mcp/Adafruit_MCP23017.cpp
-#        lib/mcp/Adafruit_MCP23017.h
         )
 
     teensy_add_executable(ahpc ${MAIN_SRCS})
     teensy_add_executable(alive ${MAIN_SRCS})
     teensy_add_executable(spaic ${MAIN_SRCS})
-    teensy_add_executable(texel ${MAIN_SRCS} src/texel.cpp)
-    include_directories(include)
+    teensy_add_executable(texel ${MAIN_SRCS} src/texel.cpp libraries/Adafruit_MCP23017/Adafruit_MCP23017.cpp)
+    include_directories(include libraries/Adafruit_MCP23017)
 
 endif()

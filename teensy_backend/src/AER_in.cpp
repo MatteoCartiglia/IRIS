@@ -10,10 +10,6 @@
 
 bool startRecording = false;
 
-//---------------------------------------------------------------------------------------------------------------------------------------
-// AER_in constructor
-//---------------------------------------------------------------------------------------------------------------------------------------
-
 AER_in::AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay, bool inputHandshakeActiveLow, bool inputDataActiveLow)
 {
   _inputReqPin = inputReqPin;
@@ -23,13 +19,33 @@ AER_in::AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputN
   _inputDelay = inputDelay;
   _inputHandshakeActiveLow = inputHandshakeActiveLow;
   _inputDataActiveLow = inputDataActiveLow;
+  _readCallback = NULL;
+  _callbackData = NULL;
 
-  _inputBufferIndex = 0;
-  _t0 = 0;
-  saving_flag = false;
+  commonConstruction();
+}
 
-  resetBuffer();
-  setupPins();
+AER_in::AER_in(int inputReqPin, int inputAckPin, unsigned int (*readCallback)(void *), void *callbackData, int inputDelay, bool inputHandshakeActiveLow)
+{
+    _inputReqPin = inputReqPin;
+    _inputAckPin = inputAckPin;
+    _inputDataPins = NULL;
+    _inputNumDataPins = 0;
+    _inputDelay = inputDelay;
+    _inputHandshakeActiveLow = inputHandshakeActiveLow;
+    _readCallback = readCallback;
+    _callbackData = callbackData;
+    
+    commonConstruction();
+}
+
+void AER_in::commonConstruction()
+{
+    saving_flag = false;
+    _t0 = 0;
+    _inputBufferIndex = 0;
+    resetBuffer();
+    setupPins();
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------
@@ -84,7 +100,11 @@ void AER_in::recordEvent()
 {
 
   AER_out newEvent;
-  newEvent.data = getInputData();
+  if (!_readCallback)
+      newEvent.data = getInputData();
+  else
+      newEvent.data = _readCallback(_callbackData);
+
   newEvent.timestamp = (micros() - _t0);
   /*Serial.print("Data & ts ");
   Serial.print(newEvent.data, DEC);

@@ -151,9 +151,10 @@ struct C2F_INPUT_command
 struct AER_out
 {
     AER_out(){};
-    AER_out(const Pkt &pkt) : data((pkt.body[0] << 8) | pkt.body[1]), timestamp((pkt.body[2] << 24) | pkt.body[3] << 16 | pkt.body[4] << 8 | pkt.body[5]){};
+    AER_out(const Pkt &pkt) : data((pkt.body[0] << 24) | (pkt.body[1] << 16) | (pkt.body[2] << 8) | pkt.body[3]),
+                              timestamp((pkt.body[4] << 24) | (pkt.body[5] << 16) | (pkt.body[6] << 8) | pkt.body[7]){};
 
-    uint16_t data = 0;
+    uint32_t data = 0;
     uint32_t timestamp = 0;
 } __attribute__((packed));
 

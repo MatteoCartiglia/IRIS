@@ -14,10 +14,19 @@ class AER_in
 
 public:
     //-----------------------------------------------------------------------------------------------------------------------------------
-    // Class constructor; initialises the AER_in object and sets up the relevant pins on Teensy
+    // Class constructors
+    // The first initialises the AER_in object in the case that data is to be read from a set of pins on the Teensy given by inputDataPins[].
+    // The second provides a callback function which the class will use in place of its private getInputData() method to be able to read
+    // data by any arbitrary, caller defined method in case the data bus in not connected directly to the Teensy.
+    // In both cases REQ and ACK must be connected to the Teensy directly.
+    // And in both cases, the constructor calls pinMode to set up the pin direction for REQ and ACK, and in the case of the first
+    // constructor for the data pins too, despite the fact that this might not be a good thing to do in terms of timing, see Issue #38.
     //-----------------------------------------------------------------------------------------------------------------------------------
     AER_in(int inputReqPin, int inputAckPin, int inputDataPins[], int inputNumDataPins, int inputDelay = 0,
-           bool inputActiveLow = false, bool inputDataActiveLow = false);
+           bool inputHandshakeActiveLow = false, bool inputDataActiveLow = false);
+           
+    AER_in(int inputReqPin, int inputAckPin, unsigned int (*readCallback)(void *), void *callbackData, int inputDelay = 0,
+           bool inputHandshakeActiveLow = false);
 
     //----------------------------------------------------------------------------------------------------------------------------------
     // reqRead: Reads REQ pin state
@@ -67,6 +76,8 @@ public:
 
     // ---------------------------------------------------- Declaring private methods --------------------------------------------------
 private:
+    void commonConstruction();
+
     //----------------------------------------------------------------------------------------------------------------------------------
     // setupPins: Sets up the relevant pins for communication
     //----------------------------------------------------------------------------------------------------------------------------------
@@ -91,6 +102,8 @@ private:
     int _inputDelay;
     bool _inputHandshakeActiveLow;
     bool _inputDataActiveLow;
+    unsigned int (*_readCallback)(void *);
+    void *_callbackData;
 
     unsigned long _t0;
 

@@ -2,8 +2,8 @@
 #define CONSTANTS_TEXEL_H
 
 //#define EXISTS_BIASGEN
-//#define EXISTS_ENCODER
 
+#define EXISTS_ENCODER
 #define EXISTS_OUTPUT_DECODER
 
 #define SERIAl_PORT_NAME "/dev/ttyACM0"
@@ -30,7 +30,8 @@
 #define ENCODER_ACK  3
 #define ENCODER_SCL 19
 #define ENCODER_SDA 18
-
+#define U8_I2C_ADDRESS 0b000
+#define U9_I2C_ADDRESS 0b001
 
 // DECODER
 // Teensy -> Texel => AI bus
