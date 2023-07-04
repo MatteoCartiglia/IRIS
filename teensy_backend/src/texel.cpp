@@ -17,8 +17,12 @@ void Texel::setup()
     pinMode(REGRST_PIN, OUTPUT);
     pinMode(SYNRST_PIN, OUTPUT);
 
-    pinMode(ENCODER_REQ, INPUT);
-    pinMode(ENCODER_ACK, OUTPUT);
+    // pinMode(ENCODER_REQ, INPUT);
+    // pinMode(ENCODER_ACK, OUTPUT);
+    // Setup of ENCODER_REQ and ENCODER_ACK pins are done in the AER_in constructor
+    // which makes me [amw] nervous, since the order in which file-scope objects are constructed is ill-defined and
+    //  maybe the setup should only be done during the framework's call to setup(). - Issue #38
+    
     Wire.setSCL(ENCODER_SCL);
     Wire.setSDA(ENCODER_SDA);
     U8_AO00_15.begin(U8_I2C_ADDRESS, &Wire);
@@ -26,9 +30,8 @@ void Texel::setup()
     pinModeAll23017Pins(U8_AO00_15, INPUT);
     pinModeAll23017Pins(U9_AO16_31, INPUT);
     
-    // Setup of 'DECODER' pins, i.e. the pins for the Teensy->Texel AE bus is done in the TeensyOut constructor
-    // which makes me [amw] nervous, since the time at which file-scope objects are constructed is ill-defined and maybe
-    // the setup should only be done during the framework's call to setup(). - Issue #38
+    // Setup of 'DECODER' pins, i.e. the pins for the Teensy->Texel AE bus is done in the TeensyOut constructor.
+    // Another instance of Issue #38.    
     
     pinMode(NC_PIN_29, OUTPUT);
 }

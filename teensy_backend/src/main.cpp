@@ -41,6 +41,7 @@ static Pkt inputBuffer;
 
 #ifdef TARGET_TEXEL
 static Texel texel;
+static unsigned int readTexelAObus(void *texel) { return static_cast<Texel *>(texel)->readAObus(); }
 #endif
 
 #ifdef EXISTS_ENCODER
@@ -53,7 +54,12 @@ int inputEncoder_dataPins[ENCODER_INPUT_NUM_PINS] = {ENCODER_INPUT_BIT_0_PIN, EN
 int inputEncoder_dataPins[ENCODER_INPUT_NUM_PINS] = {ENCODER_INPUT_BIT_0_PIN, ENCODER_INPUT_BIT_1_PIN, ENCODER_INPUT_BIT_2_PIN};
 #endif
 
+#ifdef TARGET_TEXEL
+AER_in inputEncoder(ENCODER_REQ, ENCODER_ACK, readTexelAObus, &texel);
+#else
 AER_in inputEncoder(ENCODER_REQ, ENCODER_ACK, inputEncoder_dataPins, ENCODER_INPUT_NUM_PINS, ENCODER_DELAY, ENCODER_HANDSHAKE_ACTIVE_LOW, ENCODER_DATA_ACTIVE_LOW);
+#endif
+
 int enc_since_blank_milli = 0;
 bool enc_aero_flag = true;
 

@@ -2,8 +2,8 @@
 #define CONSTANTS_TEXEL_H
 
 //#define EXISTS_BIASGEN
-//#define EXISTS_ENCODER
 
+#define EXISTS_ENCODER
 #define EXISTS_OUTPUT_DECODER
 
 #define SERIAl_PORT_NAME "/dev/ttyACM0"
