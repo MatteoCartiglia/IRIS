@@ -170,10 +170,12 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
 #endif
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getBiasGenPacket: Converts the bias voltage value into the equivalent binary value to send to the Bias Generator
+//
+// TODO: This will need doing differently for TARGET_TEXEL.
 //---------------------------------------------------------------------------------------------------------------------------------------
 #ifdef EXISTS_BIASGEN
 
-int getBiasGenPacket(float decimalVal, bool transistorType)
+uint32_t getBiasGenPacket(float decimalVal, bool transistorType)
 {
     if(decimalVal > BIASGEN_MAX_CURRENT)
     {
@@ -199,7 +201,7 @@ int getBiasGenPacket(float decimalVal, bool transistorType)
         fineCurrent = BIASGEN_SCALING_FACTOR*decimalVal/masterCurrent[coarseCurrent];
 
         // Create 12-bit binary packet
-        int binaryVal = (coarseCurrent << BIASGEN_COURSE_SHIFT) | (fineCurrent << BIASGEN_FINE_SHIFT) | (transistorType);
+        uint32_t binaryVal = (coarseCurrent << BIASGEN_COURSE_SHIFT) | (fineCurrent << BIASGEN_FINE_SHIFT) | (transistorType);
 
         // printf("Current: %.6f uA \t Decimal value: %d \t Binary: ", decimalVal, binaryVal);
 

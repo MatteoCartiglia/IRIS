@@ -62,7 +62,7 @@ int getRelevantFileRows_BiasGen(std::string substring, BIASGEN_command biasGen[]
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getBiasGenPacket: Converts the bias voltage value into the equivalent binary value to send to the Bias Generator
 //---------------------------------------------------------------------------------------------------------------------------------------
-int getBiasGenPacket(float decimalVal, bool transistorType);
+uint32_t getBiasGenPacket(float decimalVal, bool transistorType);
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 // getAERpacket: Generates the equivalent AER binary value for the user-selected options

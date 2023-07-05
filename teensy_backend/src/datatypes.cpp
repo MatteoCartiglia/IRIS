@@ -25,9 +25,11 @@ Pkt::Pkt(const BIASGEN_command &biasGen) : header(static_cast<std::underlying_ty
 {
     body[0] = biasGen.biasNo >> 8;
     body[1] = biasGen.biasNo & 0xFF;
-    body[2] = biasGen.currentValue_binary >> 8;
-    body[3] = biasGen.currentValue_binary & 0xFF;
-    body[4] = biasGen.transistorType;
+    body[2] = biasGen.currentValue_binary >> 24;
+    body[3] = biasGen.currentValue_binary >> 16;
+    body[4] = biasGen.currentValue_binary >> 8;
+    body[5] = biasGen.currentValue_binary & 0xFF;
+    body[6] = biasGen.transistorType;
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------------

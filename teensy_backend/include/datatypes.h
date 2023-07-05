@@ -102,10 +102,12 @@ struct DAC_command
 struct BIASGEN_command
 {
     BIASGEN_command(){};
-    BIASGEN_command(const Pkt &pkt) : biasNo((pkt.body[0] << 8) | pkt.body[1]), currentValue_binary((pkt.body[2] << 8) | pkt.body[3]), transistorType(pkt.body[4]){};
+    BIASGEN_command(const Pkt &pkt) : biasNo((pkt.body[0] << 8) | pkt.body[1]),
+                                      currentValue_binary((pkt.body[2] << 24) | (pkt.body[3] << 16) | (pkt.body[4] << 8) | pkt.body[5]),
+                                      transistorType(pkt.body[6]){};
 
     std::uint16_t biasNo;
-    std::uint16_t currentValue_binary;
+    std::uint32_t currentValue_binary;
     bool transistorType;
 
     std::string name;
