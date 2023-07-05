@@ -24,7 +24,7 @@
 // Texel -> Teensy => AO bus via MCP23017 I²C bus
 // AOREQ and AOACK directly connected to Teensy
 
-#define ENCODER_INPUT_SAVE_FILENAME_CSV "../imgui_frontend/data/recordings/untitled.csv"
+#define ENCODER_INPUT_SAVE_FILENAME_CSV "./untitled.csv"
 
 #define ENCODER_REQ  2
 #define ENCODER_ACK  3
