@@ -202,7 +202,6 @@ int getBiasGenPacket(float decimalVal, bool transistorType)
         int binaryVal = (coarseCurrent << BIASGEN_COURSE_SHIFT) | (fineCurrent << BIASGEN_FINE_SHIFT) | (transistorType);
 
         // printf("Current: %.6f uA \t Decimal value: %d \t Binary: ", decimalVal, binaryVal);
-        // printBinaryValue(binaryVal, BIASGEN_PACKET_SIZE);
 
         return binaryVal;
     }
