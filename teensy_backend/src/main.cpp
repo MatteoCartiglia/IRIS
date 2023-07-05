@@ -82,7 +82,7 @@ TeensyOut outputDecoder(DECODER_REQ, DECODER_ACK, outputDecoder_dataPins, DECODE
 DAC dac{DAC_RESET, DAC_A0, DAC_A1};
 #endif
 
-#ifdef EXISTS_BIASGEN
+#if defined(EXISTS_BIASGEN) && !defined(TARGET_TEXEL)
 SPIConfig biasGen{BIASGEN_SCK_PIN, BIASGEN_RESET_PIN, BIASGEN_MOSI_PIN, BIASGEN_ENABLE_PIN, 0};
 #endif
 
@@ -131,7 +131,7 @@ void setup()
 
     delay(5000);
 
-#ifdef EXISTS_BIASGEN
+#if defined(EXISTS_BIASGEN) && !defined(TARGET_TEXEL)
     biasGen.setupBG();
 #endif
 
@@ -180,7 +180,11 @@ void loop()
         case PktType::Pkt_setBiasGen:
         {
             BIASGEN_command biasGenCommand(inputBuffer);
+#ifdef TARGET_TEXEL
+            texel.setBias(biasGenCommand.biasNo, biasGenCommand.currentValue_binary);
+#else
             biasGen.writeSPI(biasGenCommand.biasNo, biasGenCommand.currentValue_binary);
+#endif
             delay(100);
             sendTeensyStatus(TeensyStatus::Success);
             Serial.print("BIASGEN command received. Bias ");

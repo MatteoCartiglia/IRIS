@@ -1,10 +1,9 @@
 #ifndef CONSTANTS_TEXEL_H
 #define CONSTANTS_TEXEL_H
 
-//#define EXISTS_BIASGEN
-
 #define EXISTS_ENCODER
 #define EXISTS_OUTPUT_DECODER
+#define EXISTS_BIASGEN
 
 #define SERIAl_PORT_NAME "/dev/ttyACM0"
 
@@ -80,7 +79,8 @@ constexpr int AI_bus_pins[] = {0, 1, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26,
 
 
 // BIASGEN
-#define BIASGEN_BIASFILE "data/defaultBiasValues/TEXEL_BIASGEN_POR.csv"
-#define BIASGEN_FILENAME_LOAD "data/customBiasValues/BIASGEN/"
+
+#define BIASGEN_BIASFILE "./TEXEL_BIASGEN.csv"
+#define BIASGEN_FILENAME_LOAD "."
 
 #endif

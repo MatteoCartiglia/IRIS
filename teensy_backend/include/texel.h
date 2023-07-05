@@ -15,6 +15,11 @@ public:
     void reset(uint8_t parameter);
     void write(uint32_t data) { aerToTexel.dataWrite(data); }
     uint32_t readAObus() { return U8_AO00_15.readGPIOAB() | (U9_AO16_31.readGPIOAB() << 16); }
+    void setBias(uint8_t biasNum, uint32_t value)
+    {
+        write(TEXEL_AE_REGWRITE | ((value << TEXEL_AE_REGDATA_SHIFT) & TEXEL_AE_REGDATA_MASK) | (biasNum & TEXEL_AE_REGADDR_MASK) );
+    }
+    
 private:
     TeensyOut aerToTexel;
     Adafruit_MCP23017 U8_AO00_15;
