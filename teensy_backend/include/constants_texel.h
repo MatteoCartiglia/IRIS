@@ -83,4 +83,6 @@ constexpr int AI_bus_pins[] = {0, 1, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26,
 #define BIASGEN_BIASFILE "./TEXEL_BIASGEN.csv"
 #define BIASGEN_FILENAME_LOAD "."
 
+#define BIASGEN_CHANNELS 78
+
 #endif

@@ -18,6 +18,8 @@
 #define BIASGEN_FILENAME_LOAD           "data/customBiasValues/BIASGEN/"
 
 #ifdef EXISTS_BIASGEN
+    #define BIASGEN_CHANNELS 54
+
     #define BIASGEN_MOSI_PIN                11
     #define BIASGEN_SCK_PIN                 13
     #define BIASGEN_ENABLE_PIN              10
