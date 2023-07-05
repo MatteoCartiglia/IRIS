@@ -19,6 +19,32 @@
 
 #define RESET_DELAY_US  100
 
+// Fields in packets to and from chip
+
+constexpr uint32_t TEXEL_AE_CORE_MASK       = 0x80000000;
+constexpr uint32_t TEXEL_AE_REGSPK_MASK     = 0x40000000;
+constexpr uint32_t TEXEL_AE_RW_MASK         = 0x20000000;
+constexpr uint32_t TEXEL_AE_REGADDR_MASK    = 0x0000003F;
+constexpr uint32_t TEXEL_AE_REGDATA_MASK    = 0x1FFFFFC0;
+constexpr uint32_t TEXEL_AE_REGDATA_SHIFT   = 6;
+constexpr uint32_t TEXEL_AEI_SPKUNUSED_MASK = 0x1FFFE000;
+constexpr uint32_t TEXEL_AEI_SPKADDR_MASK   = 0x00001FFF;
+constexpr uint32_t TEXEL_AEI_SPKADDRX_MASK  = 0x0000000F;
+constexpr uint32_t TEXEL_AEI_SPKADDRY_MASK  = 0x00001FF0;
+constexpr uint32_t TEXEL_AEI_SPKADDRY_SHIFT = 4;
+constexpr uint32_t TEXEL_AEO_SPKUNUSED_MASK = 0x1FFFFF80;
+constexpr uint32_t TEXEL_AEO_SPKADDR_MASK   = 0x0000007F;
+constexpr uint32_t TEXEL_AEO_SPKADDRX_MASK  = 0x0000000F;
+constexpr uint32_t TEXEL_AEO_SPKADDRY_MASK  = 0x00000070;
+constexpr uint32_t TEXEL_AEO_SPKADDRY_SHIFT = 4;
+
+constexpr uint32_t TEXEL_AE_CORE_1          = 0x00000000;
+constexpr uint32_t TEXEL_AE_CORE_2          = 0x10000000;
+
+constexpr uint32_t TEXEL_AE_TYPE_MASK       = 0x60000000;
+constexpr uint32_t TEXEL_AE_REGWRITE        = 0x60000000;
+constexpr uint32_t TEXEL_AE_REGREAD         = 0x40000000;
+constexpr uint32_t TEXEL_AE_SPIKE           = 0x00000000;
 
 // ENCODER
 // Texel -> Teensy => AO bus via MCP23017 I²C bus
