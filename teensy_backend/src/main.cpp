@@ -187,11 +187,6 @@ void loop()
 #endif
             delay(100);
             sendTeensyStatus(TeensyStatus::Success);
-            Serial.print("BIASGEN command received. Bias ");
-            Serial.print(biasGenCommand.biasNo);
-            Serial.print(" set to approx. ");
-            Serial.print(biasGen.getBiasGenDecimal(biasGenCommand.currentValue_binary), 6);
-            Serial.print(" uA.");
             break;
         }
 #endif
