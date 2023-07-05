@@ -37,7 +37,7 @@
 // Teensy -> Texel => AI bus
 // Data, req and ack are active high.
 
-#define INPUT_INTERFACE_FILENAME_LOAD "data/IIValues/"
+#define INPUT_INTERFACE_FILENAME_LOAD "."
 
 #define DECODER_REQ 4
 #define DECODER_ACK 5
