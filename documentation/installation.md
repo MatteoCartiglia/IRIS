@@ -14,6 +14,9 @@ You can download Visual Studio here: https://code.visualstudio.com/Download
 2. **Install required dependencies (PlatformIO IDE plugin, GLFW)**
 
 Search for `PlatformIO IDE` extention in Visual Studio Code and install it.
+For Linux, Please also install the venv package (in base python) and restart IDE
+```sudo apt-get install python3-venv```
+(Otherwise, you will recieve "Python Interpretor path not found" error. [See this Git issue for details](https://github.com/platformio/platformio-core-installer/issues/1774))
 
 Install Homebrew (https://brew.sh).
 - Run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` in terminal
