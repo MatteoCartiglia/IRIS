@@ -2,6 +2,7 @@
 **/.DS_Store
 
 # Ignore files and directories created by building or running frontend in situ 
+/imgui_frontend/imgui.ini
 /imgui_frontend/src/.obj/*
 /imgui_frontend/alive_interface
 /imgui_frontend/data/customBiasValues/*
