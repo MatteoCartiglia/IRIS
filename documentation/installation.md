@@ -83,3 +83,87 @@ Test Structure Biases [DAC Values] saves the data in the `data/customBiasValues/
 
 
 Press `update` every time you change the biases. To send the input to the ALIVE chip, press `Send Packet to Teensy`.
+
+## [Set up PlatformIO Core (CLI)](https://docs.platformio.org/en/stable/core/index.html#piocore)
+
+This is to get access to the MCU via comand line with PlatformIO
+
+`piocore` consists of 2 standalone tools in a system:
+
+* [``platformio`` or ``pio`` (short alias)](https://docs.platformio.org/en/stable/core/userguide/index.html#piocore-userguide)
+* [``piodebuggdb``](https://docs.platformio.org/en/stable/core/userguide/cmd_debug.html#cmd-debug)
+
+If you have already installed PIO plugin in VS Code, you do not need to install
+`piocore` separately. Just link these tools with your shell:
+
+
+# Unix and Unix-like
+
+In Unix and Unix-like systems, you can create symbolic links (symlinks) 
+in your ``$HOME/.local/bin/`` directory to the necessary PlatformIO executables.
+This will allow you to execute ``platformio`` commands from any terminal emulator 
+as long as you're logged in as the user PlatformIO is installed and configured for.
+
+First, if it's not already the case, you should export your ``$HOME/.local/bin/``
+directory to the PATH environmental variable. If you use Bash as your default shell, 
+you can do it by editing either ``~/.profile`` or ``~/.bash_profile`` and adding the
+following line:
+    ``` export PATH=$PATH:$HOME/.local/bin```
+
+Now that is done, or if ``$HOME/.local/bin/`` was already exported to your PATH environmental variable, you can create the symlinks by opening your system terminal app and paste these
+commands.
+
+```
+    ln -s ~/.platformio/penv/bin/platformio ~/.local/bin/platformio
+    ln -s ~/.platformio/penv/bin/pio ~/.local/bin/pio
+    ln -s ~/.platformio/penv/bin/piodebuggdb ~/.local/bin/piodebuggdb
+```
+After everything's done, just restart your session (log out and log back in) and you're good to go.
+
+or (Not recomended way) you Can directly do
+
+```echo 'export PATH=$PATH:~/.platformio/penv/bin' >> ~/.bashrc```
+
+Then you are ready to go with building and uploading projects via comandline
+
+## Create a PlatformIO Project
+
+- 1. Create a new PlatformIO project or navigate to an existing one using the terminal. You can create a new project with the following command:
+
+```bash
+pio project init --board=teensy36
+```
+
+Replace teensy36 with the appropriate Teensy board identifier if you're using a different one.
+
+- 2. Write Your Code
+Open the main source file of your project (src/main.cpp by default) and write your Teensy code.
+
+- 3. Connect Teensy
+Connect your Teensy microcontroller to your computer via USB.
+
+- 4. Build the Project
+Build your project using the following command:
+
+```bash
+pio run
+```
+- 5. Upload the Code
+Upload the compiled code to the Teensy using the following command:
+
+```bash
+pio run -t upload
+```
+This will compile the code and upload it to the connected Teensy.
+
+- 6. Monitor Serial Output (Optional)
+If your code involves serial communication, you can monitor the serial output using:
+
+```bash
+pio device monitor
+```
+This will open a serial monitor and display the output from the Teensy.
+
+Remember to adapt the commands based on your specific project and Teensy board. The board identifier, such as teensy36, should match your Teensy model.
+
+Please note that the exact steps may vary based on your project structure and requirements. Refer to the PlatformIO documentation for any additional details specific to your use case [PlatformIO Documentation](https://docs.platformio.org/en/latest/)
