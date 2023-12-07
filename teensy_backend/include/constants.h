@@ -9,6 +9,8 @@
 #include "constants_spaic.h"
 #elif defined(TARGET_TEXEL)
 #include "constants_texel.h"
+#elif defined(TARGET_BIOAMP)
+#include "constants_bioamp.h"
 #else
 #error "No known TARGET_* defined"
 #endif
