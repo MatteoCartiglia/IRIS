@@ -86,7 +86,7 @@ Press `update` every time you change the biases. To send the input to the ALIVE 
 
 ## [Set up PlatformIO Core (CLI)](https://docs.platformio.org/en/stable/core/index.html#piocore)
 
-This is to get access to the MCU via the comandline with PlatformIO.
+This is to get access to the MCU via the command line with PlatformIO.
 
 `piocore` consists of 2 standalone tools in a system:
 
@@ -107,7 +107,7 @@ Or (not the recommended way) you can directly do
 
 ```echo 'export PATH=$PATH:~/.platformio/penv/bin' >> ~/.bashrc```
 
-Then you are ready to go with building and uploading projects via the comandline.
+Then you are ready to go with building and uploading projects via the command line.
 
 ## Create a PlatformIO Project
 
