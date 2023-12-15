@@ -83,3 +83,72 @@ Test Structure Biases [DAC Values] saves the data in the `data/customBiasValues/
 
 
 Press `update` every time you change the biases. To send the input to the ALIVE chip, press `Send Packet to Teensy`.
+
+## [Set up PlatformIO Core (CLI)](https://docs.platformio.org/en/stable/core/index.html#piocore)
+
+This is to get access to the MCU via the command line with PlatformIO.
+
+`piocore` consists of 2 standalone tools in a system:
+
+* [``platformio`` or ``pio`` (short alias)](https://docs.platformio.org/en/stable/core/userguide/index.html#piocore-userguide)
+* [``piodebuggdb``](https://docs.platformio.org/en/stable/core/userguide/cmd_debug.html#cmd-debug)
+
+If you have already installed the PIO plugin in VS Code, you do not need to install `piocore` separately. Just link these tools with your shell:
+
+# Unix and Unix-like
+
+In Unix and Unix-like systems, you can create symbolic links (symlinks) in your ``$HOME/.local/bin/`` directory to the necessary PlatformIO executables. This will allow you to execute ``platformio`` commands from any terminal emulator as long as you're logged in as the user PlatformIO is installed and configured for. 
+
+If it's not already the case, you should consult the OS specific guidelines at the PlatformIO CLI installation manual [here](https://docs.platformio.org/en/latest/core/installation/shell-commands.html). After everything's done, just restart your session (log out and log back in) and you're good to go.
+
+In some cases, Linux users might have to install udev rules for PlatformIO supported boards/devices. The instructions can be found [here](https://docs.platformio.org/en/latest/core/installation/udev-rules.html) for the same. 
+
+Or (not the recommended way) you can directly do
+
+```echo 'export PATH=$PATH:~/.platformio/penv/bin' >> ~/.bashrc```
+
+Then you are ready to go with building and uploading projects via the command line.
+
+## Create a PlatformIO Project
+
+- 1. Create a new PlatformIO project or navigate to an existing one using the terminal. You can create a new project with the following command:
+
+```bash
+pio project init --board=teensyxx
+```
+
+Replace teensyxx with the appropriate Teensy board identifier if you're using a different one.
+
+The ```pio project init``` command requires specifying board identifier ID. It can be found using ```pio boards``` command. More details [here](https://docs.platformio.org/en/latest/core/quickstart.html#setting-up-the-project). 
+
+- 2. Write Your Code
+Open the main source file of your project (src/main.cpp by default) and write your Teensy code.
+
+- 3. Connect Teensy
+Connect your Teensy microcontroller to your computer via USB.
+
+- 4. Build the Project
+Build your project using the following command:
+
+```bash
+pio run
+```
+- 5. Upload the Code
+Upload the compiled code to the Teensy using the following command:
+
+```bash
+pio run -t upload
+```
+This will compile the code and upload it to the connected Teensy.
+
+- 6. Monitor Serial Output (Optional)
+If your code involves serial communication, you can monitor the serial output using:
+
+```bash
+pio device monitor
+```
+This will open a serial monitor and display the output from the Teensy.
+
+Remember to adapt the commands based on your specific project and Teensy (or any other board) board. The board identifier, such as teensyxx, should match your Teensy model.
+
+Please note that the exact steps may vary based on your project structure and requirements. Refer to the PlatformIO documentation for any additional details specific to your use case [PlatformIO Documentation](https://docs.platformio.org/en/latest/)
